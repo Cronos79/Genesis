@@ -3,6 +3,8 @@
 * Notice: (C) Copyright 2022 by CronoGames, Inc. All Rights Reserved.
 */
 #include "GenWindow.h"
+#include "Utilitys/GenException.h"
+#include "../../../../../Genesis2/resource.h"
 
 // Window Class Stuff
 GenWindow::WindowClass GenWindow::WindowClass::wndClass;
@@ -18,12 +20,12 @@ GenWindow::WindowClass::WindowClass() noexcept
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
-	wc.hIcon = nullptr;
+	wc.hIcon = nullptr; //static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(102), IMAGE_BITMAP, 512,512, 0)); //#TODO: get a ico file
 	wc.hCursor = nullptr;
 	wc.hbrBackground = nullptr;
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = GetName();
-	wc.hIconSm = nullptr;
+	wc.hIconSm = nullptr;//static_cast<HICON>(LoadImage(hInst, MAKEINTRESOURCE(102), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE));
 	RegisterClassEx(&wc);
 }
 
@@ -44,7 +46,7 @@ HINSTANCE GenWindow::WindowClass::GetInstance() noexcept
 
 
 // Window Stuff
-GenWindow::GenWindow(int width, int height, const char* name) noexcept
+GenWindow::GenWindow(int width, int height, const char* name)
 {
 	// calculate window size based on desired client region size
 	RECT wr;
@@ -60,6 +62,10 @@ GenWindow::GenWindow(int width, int height, const char* name) noexcept
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
+	if (hWnd == nullptr)
+	{
+		throw GENHR_LAST_EXCEPT();
+	}
 	// show window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
@@ -68,7 +74,7 @@ void GenWindow::SetTitle(const std::string& title)
 {
 	if (SetWindowText(hWnd, title.c_str()) == 0)
 	{
-		//throw CHWND_LAST_EXCEPT(); // #TODO: error handle
+		throw GENHR_LAST_EXCEPT();
 	}
 }
 
@@ -93,7 +99,7 @@ bool GenWindow::CursorEnabled() const noexcept
 	return cursorEnabled;
 }
 
-std::optional<int> GenWindow::ProcessMessages() noexcept
+std::optional<int> GenWindow::ProcessMessages()
 {
 	MSG msg;
 	// while queue has messages, remove and dispatch them (but do not block on empty queue)
@@ -181,7 +187,7 @@ LRESULT CALLBACK GenWindow::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, L
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT GenWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+LRESULT GenWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	/*if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 	{

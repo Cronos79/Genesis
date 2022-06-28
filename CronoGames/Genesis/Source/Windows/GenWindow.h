@@ -31,7 +31,7 @@ private:
 		HINSTANCE hInst;
 	};
 public:
-	GenWindow(int width, int height, const char* name) noexcept;
+	GenWindow(int width, int height, const char* name);
 	~GenWindow();
 	GenWindow(const GenWindow&) = delete;
 	GenWindow& operator=(const GenWindow&) = delete;
@@ -40,7 +40,7 @@ public:
 	void EnableCursor() noexcept;
 	void DisableCursor() noexcept;
 	bool CursorEnabled() const noexcept;
-	static std::optional<int> ProcessMessages() noexcept;
+	static std::optional<int> ProcessMessages();
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -50,7 +50,7 @@ private:
 	void DisableImGuiMouse() noexcept;
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
-	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	Keyboard kbd;
 	Mouse mouse;

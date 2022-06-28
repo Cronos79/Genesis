@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Game\Genesis.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
     <ClCompile Include="Source\imgui\imgui_demo.cpp" />
     <ClCompile Include="Source\imgui\imgui_draw.cpp" />
@@ -97,6 +98,8 @@
     <ClCompile Include="Source\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\imgui\imgui_tables.cpp" />
     <ClCompile Include="Source\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Utilitys\GenException.cpp" />
+    <ClCompile Include="Source\Utilitys\GenTimer.cpp" />
     <ClCompile Include="Source\Windows\GenWindow.cpp" />
     <ClCompile Include="Source\Windows\GenWinMain.cpp" />
     <ClCompile Include="Source\Windows\Keyboard.cpp" />
@@ -104,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Source\Game\Genesis.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />
     <ClInclude Include="Source\imgui\imgui.h" />
     <ClInclude Include="Source\imgui\imgui_impl_dx11.h" />
@@ -112,6 +116,8 @@
     <ClInclude Include="Source\imgui\imstb_rectpack.h" />
     <ClInclude Include="Source\imgui\imstb_textedit.h" />
     <ClInclude Include="Source\imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Utilitys\GenException.h" />
+    <ClInclude Include="Source\Utilitys\GenTimer.h" />
     <ClInclude Include="Source\Windows\GenWin.h" />
     <ClInclude Include="Source\Windows\GenWindow.h" />
     <ClInclude Include="Source\Windows\Keyboard.h" />
@@ -119,6 +125,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Genesis.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Icons\man.bmp" />
+    <Image Include="Content\Icons\man.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

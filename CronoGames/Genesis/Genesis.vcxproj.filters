@@ -34,6 +34,18 @@
     <Filter Include="Source\Source Files\Graphics\imgui">
       <UniqueIdentifier>{e627516b-cc05-4974-bc7a-150d4d66dc85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Header Files\Utilitys">
+      <UniqueIdentifier>{10c73b39-40bd-45e0-be70-96e64600832f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files\Utilitys">
+      <UniqueIdentifier>{e9e1b796-c9d4-45ca-be44-917b5187a38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Header Files\Game">
+      <UniqueIdentifier>{9d054f18-da63-498e-a2d2-d41e6ffa2dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files\Game">
+      <UniqueIdentifier>{60140cf2-0ce2-4b71-91a2-3ad4b0b65350}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Windows\GenWinMain.cpp">
@@ -68,6 +80,15 @@
     </ClCompile>
     <ClCompile Include="Source\imgui\imgui_widgets.cpp">
       <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilitys\GenException.cpp">
+      <Filter>Source\Source Files\Utilitys</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Genesis.cpp">
+      <Filter>Source\Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utilitys\GenTimer.cpp">
+      <Filter>Source\Source Files\Utilitys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,10 +131,27 @@
     <ClInclude Include="Source\imgui\imstb_truetype.h">
       <Filter>Source\Header Files\Graphics\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Utilitys\GenException.h">
+      <Filter>Source\Header Files\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Genesis.h">
+      <Filter>Source\Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilitys\GenTimer.h">
+      <Filter>Source\Header Files\Utilitys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Genesis.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Icons\man.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Content\Icons\man.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
