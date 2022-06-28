@@ -1,39 +1,34 @@
 /*
-* Author: Matt Brock
-* Copyright: 
+* Creator: Matt Brock
+* Notice: (C) Copyright 2022 by CronoGames, Inc. All Rights Reserved.
 */
+#include "GenWindow.h"
 
-#include "windows.h"
-
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR cmd, int)
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR cmdLine, int)
 {
+	GenWindow wnd(1920, 1080, "Genesis");
 
-	const auto pClassName = "GenWindowClass";
-	// register window class
-	WNDCLASSEX wc = { 0 };
-	wc.cbSize = sizeof(wc);
-	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = DefWindowProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
-	wc.hIcon = nullptr;
-	wc.hCursor = nullptr;
-	wc.hbrBackground = nullptr;
-	wc.lpszMenuName = nullptr;
-	wc.lpszClassName = pClassName;
-	wc.hIconSm = nullptr;
-	RegisterClassEx(&wc);
-	// create window instance
-	HWND hWnd = CreateWindowEx(
-		0, pClassName,
-		"Genesis",
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		200, 200, 640, 480,
-		nullptr, nullptr, hInstance, nullptr
-	);
-	// show the damn window
-	ShowWindow(hWnd, SW_SHOW);
-	while (true);
-	return 0;
+	MSG msg;
+	bool running = true;
+	while (running)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			switch (msg.message)
+			{
+			case WM_QUIT:
+			{
+				running = false;
+				break;
+			}
+			default:
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	// wParam here is the value passed to PostQuitMessage
+	return msg.wParam;
 }

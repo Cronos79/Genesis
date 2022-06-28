@@ -22,10 +22,98 @@
     <Filter Include="Source\Header Files\Windows">
       <UniqueIdentifier>{8c25f59c-23c7-4717-8e46-c7ad0c9cf1f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Header Files\Graphics">
+      <UniqueIdentifier>{cd8ede11-2cdd-4096-b8a1-4ac47599bd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files\Graphics">
+      <UniqueIdentifier>{f2a54053-85fc-4e44-af6c-ad3619234417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Header Files\Graphics\imgui">
+      <UniqueIdentifier>{1056ecb1-8971-4d69-a7ed-5cef0515b6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files\Graphics\imgui">
+      <UniqueIdentifier>{e627516b-cc05-4974-bc7a-150d4d66dc85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Windows\GenWinMain.cpp">
       <Filter>Source\Source Files\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Windows\Keyboard.cpp">
+      <Filter>Source\Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\Mouse.cpp">
+      <Filter>Source\Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Windows\GenWindow.cpp">
+      <Filter>Source\Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_demo.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_draw.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_impl_dx11.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_impl_win32.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_tables.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\imgui\imgui_widgets.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Windows\GenWin.h">
+      <Filter>Source\Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Keyboard.h">
+      <Filter>Source\Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\Mouse.h">
+      <Filter>Source\Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Windows\GenWindow.h">
+      <Filter>Source\Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imconfig.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imgui.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imgui_impl_dx11.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imgui_impl_win32.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imgui_internal.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imstb_rectpack.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imstb_textedit.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\imstb_truetype.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Genesis.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
