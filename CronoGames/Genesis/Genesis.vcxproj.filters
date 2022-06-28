@@ -46,6 +46,9 @@
     <Filter Include="Source\Source Files\Game">
       <UniqueIdentifier>{60140cf2-0ce2-4b71-91a2-3ad4b0b65350}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Header Files\Graphics\Shaders">
+      <UniqueIdentifier>{2092a45b-bde2-42a3-b132-ed1557279b2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Windows\GenWinMain.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="Source\Utilitys\GenTimer.cpp">
       <Filter>Source\Source Files\Utilitys</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GenGraphics.cpp">
+      <Filter>Source\Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Source\Utilitys\GenTimer.h">
       <Filter>Source\Header Files\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GenGraphics.h">
+      <Filter>Source\Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

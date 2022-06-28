@@ -11,6 +11,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "./imgui/imgui_impl_win32.h"
+#include "Graphics/GenGraphics.h"
 
 class GenWindow
 {
@@ -41,6 +42,7 @@ public:
 	void DisableCursor() noexcept;
 	bool CursorEnabled() const noexcept;
 	static std::optional<int> ProcessMessages();
+	GenGraphics& Gfx();
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -61,4 +63,5 @@ private:
 	HWND hWnd;
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;
+	std::unique_ptr<GenGraphics> pGfx;
 };

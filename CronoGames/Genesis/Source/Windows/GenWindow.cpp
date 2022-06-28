@@ -68,6 +68,8 @@ GenWindow::GenWindow(int width, int height, const char* name)
 	}
 	// show window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	// create graphics object
+	pGfx = std::make_unique<GenGraphics>(hWnd);
 }
 
 void GenWindow::SetTitle(const std::string& title)
@@ -119,6 +121,11 @@ std::optional<int> GenWindow::ProcessMessages()
 
 	// return empty optional when not quitting app
 	return {};
+}
+
+GenGraphics& GenWindow::Gfx()
+{
+	return *pGfx;
 }
 
 GenWindow::~GenWindow()

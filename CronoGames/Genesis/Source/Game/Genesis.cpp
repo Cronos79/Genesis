@@ -27,8 +27,12 @@ int Genesis::Start()
 
 void Genesis::Update()
 {
-	const float dt = timer.Mark() * 1000;
-	std::ostringstream oss;
-	oss << "Time: " << std::setprecision(6) << std::fixed << dt << "s\n";
-	OutputDebugString(oss.str().c_str());
+	//const float dt = timer.Mark() * 1000;
+	//std::ostringstream oss;
+	//oss << "Time: " << std::setprecision(6) << std::fixed << dt << "s\n";
+	//OutputDebugString(oss.str().c_str());
+
+	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
+	wnd.Gfx().ClearBuffer(c, c, 1.0f);
+	wnd.Gfx().EndFrame();
 }
