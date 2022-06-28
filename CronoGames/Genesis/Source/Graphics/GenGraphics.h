@@ -13,14 +13,14 @@ public:
 	GenGraphics(HWND hWnd);
 	GenGraphics(const GenGraphics&) = delete;
 	GenGraphics& operator=(const GenGraphics&) = delete;
-	~GenGraphics();
+	~GenGraphics() = default;
 	void EndFrame();
 	void ClearBuffer(float red, float green, float blue) noexcept;
 private:
 	DxgiInfoManager infoManager;
-	ID3D11Device* pDevice = nullptr;
-	IDXGISwapChain* pSwap = nullptr;
-	ID3D11DeviceContext* pContext = nullptr;
-	ID3D11RenderTargetView* pTarget = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
 };
 

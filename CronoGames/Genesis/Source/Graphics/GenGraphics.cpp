@@ -7,6 +7,8 @@
 
 #pragma comment(lib,"d3d11.lib")
 
+namespace wrl = Microsoft::WRL;
+
 GenGraphics::GenGraphics(HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC sd = {};
@@ -26,18 +28,20 @@ GenGraphics::GenGraphics(HWND hWnd)
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
-//	UINT swapCreateFlags = 0u;
-//#ifndef NDEBUG
-//	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG; // #TODO Use this when ready for release
-//#endif
+	UINT swapCreateFlags = 0u;
+#ifndef NDEBUG
+	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+	// for checking results of d3d functions
+	HRESULT hr;
 
 	// create device and front/back buffers, and swap chain and rendering context
-	HRESULT hr;
 	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,
+		swapCreateFlags,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -48,34 +52,9 @@ GenGraphics::GenGraphics(HWND hWnd)
 		&pContext
 	));
 	// gain access to texture subresource in swap chain (back buffer)
-	ID3D11Resource* pBackBuffer = nullptr;
-	GFX_THROW_INFO(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer)));
-	GFX_THROW_INFO(pDevice->CreateRenderTargetView(
-		pBackBuffer,
-		nullptr,
-		&pTarget
-	));
-	pBackBuffer->Release();
-}
-
-GenGraphics::~GenGraphics()
-{
-	if (pTarget != nullptr)
-	{
-		pTarget->Release();
-	}
-	if (pContext != nullptr)
-	{
-		pContext->Release();
-	}
-	if (pSwap != nullptr)
-	{
-		pSwap->Release();
-	}
-	if (pDevice != nullptr)
-	{
-		pDevice->Release();
-	}
+	wrl::ComPtr<ID3D11Resource> pBackBuffer;
+	GFX_THROW_INFO(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
+	GFX_THROW_INFO(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget));
 }
 
 void GenGraphics::EndFrame()
@@ -100,5 +79,5 @@ void GenGraphics::EndFrame()
 void GenGraphics::ClearBuffer(float red, float green, float blue) noexcept
 {
 	const float color[] = { red,green,blue,1.0f };
-	pContext->ClearRenderTargetView(pTarget, color);
+	pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
