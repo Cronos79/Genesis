@@ -3,6 +3,7 @@
 * Notice: (C) Copyright 2022 by CronoGames, Inc. All Rights Reserved.
 */
 #include "GenGraphics.h"
+#include "Utilitys/GenException.h"
 
 #pragma comment(lib,"d3d11.lib")
 
@@ -25,12 +26,18 @@ GenGraphics::GenGraphics(HWND hWnd)
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
+//	UINT swapCreateFlags = 0u;
+//#ifndef NDEBUG
+//	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG; // #TODO Use this when ready for release
+//#endif
+
 	// create device and front/back buffers, and swap chain and rendering context
-	D3D11CreateDeviceAndSwapChain(
+	HRESULT hr;
+	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		D3D11_CREATE_DEVICE_DEBUG,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -39,15 +46,15 @@ GenGraphics::GenGraphics(HWND hWnd)
 		&pDevice,
 		nullptr,
 		&pContext
-	);
+	));
 	// gain access to texture subresource in swap chain (back buffer)
 	ID3D11Resource* pBackBuffer = nullptr;
-	pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer));
-	pDevice->CreateRenderTargetView(
+	GFX_THROW_INFO(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer)));
+	GFX_THROW_INFO(pDevice->CreateRenderTargetView(
 		pBackBuffer,
 		nullptr,
 		&pTarget
-	);
+	));
 	pBackBuffer->Release();
 }
 
@@ -73,7 +80,21 @@ GenGraphics::~GenGraphics()
 
 void GenGraphics::EndFrame()
 {
-	pSwap->Present(1u, 0u);
+	HRESULT hr;
+#ifndef NDEBUG
+	infoManager.Set();
+#endif
+	if (FAILED(hr = pSwap->Present(1u, 0u)))
+	{
+		if (hr == DXGI_ERROR_DEVICE_REMOVED)
+		{
+			throw GFX_DEVICE_REMOVED_EXCEPT(pDevice->GetDeviceRemovedReason());
+		}
+		else
+		{
+			throw GFX_EXCEPT(hr);
+		}
+	}
 }
 
 void GenGraphics::ClearBuffer(float red, float green, float blue) noexcept

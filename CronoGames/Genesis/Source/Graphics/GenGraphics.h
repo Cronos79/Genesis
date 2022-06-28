@@ -5,6 +5,7 @@
 #pragma once
 #include "./Windows/GenWin.h"
 #include <d3d11.h>
+#include "Utilitys/GenException.h"
 
 class GenGraphics
 {
@@ -16,6 +17,7 @@ public:
 	void EndFrame();
 	void ClearBuffer(float red, float green, float blue) noexcept;
 private:
+	DxgiInfoManager infoManager;
 	ID3D11Device* pDevice = nullptr;
 	IDXGISwapChain* pSwap = nullptr;
 	ID3D11DeviceContext* pContext = nullptr;
