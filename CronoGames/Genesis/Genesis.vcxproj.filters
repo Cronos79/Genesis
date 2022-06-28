@@ -163,4 +163,12 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Source\Shaders\PixelShader.hlsl">
+      <Filter>Source\Header Files\Graphics\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\VertexShader.hlsl">
+      <Filter>Source\Header Files\Graphics\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
