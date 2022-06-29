@@ -5,6 +5,8 @@
 #pragma once
 #include "Windows/GenWindow.h"
 #include "Utilitys/GenTimer.h"
+#include <vector>
+#include "Graphics/Drawable.h"
 class Genesis
 {
 public:
@@ -16,5 +18,7 @@ private:
 private:
 	GenWindow wnd;
 	GenTimer timer;
+	std::vector<std::unique_ptr<class Drawable>> drawables;
+	static constexpr size_t nDrawables = 180;
 };
 

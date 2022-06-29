@@ -55,7 +55,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WIN32;IS_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -91,7 +91,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Game\Genesis.cpp" />
+    <ClCompile Include="Source\Graphics\Bindable.cpp" />
+    <ClCompile Include="Source\Graphics\Box.cpp" />
+    <ClCompile Include="Source\Graphics\Drawable.cpp" />
+    <ClCompile Include="Source\Graphics\GDIPlusManager.cpp" />
     <ClCompile Include="Source\Graphics\GenGraphics.cpp" />
+    <ClCompile Include="Source\Graphics\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\InputLayout.cpp" />
+    <ClCompile Include="Source\Graphics\Melon.cpp" />
+    <ClCompile Include="Source\Graphics\PixelShader.cpp" />
+    <ClCompile Include="Source\Graphics\Pyramid.cpp" />
+    <ClCompile Include="Source\Graphics\Sampler.cpp" />
+    <ClCompile Include="Source\Graphics\Sheet.cpp" />
+    <ClCompile Include="Source\Graphics\SkinnedBox.cpp" />
+    <ClCompile Include="Source\Graphics\Surface.cpp" />
+    <ClCompile Include="Source\Graphics\Texture.cpp" />
+    <ClCompile Include="Source\Graphics\Topology.cpp" />
+    <ClCompile Include="Source\Graphics\TransformCbuf.cpp" />
+    <ClCompile Include="Source\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\VertexShader.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
     <ClCompile Include="Source\imgui\imgui_demo.cpp" />
     <ClCompile Include="Source\imgui\imgui_draw.cpp" />
@@ -109,7 +127,33 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Game\Genesis.h" />
+    <ClInclude Include="Source\Graphics\Bindable.h" />
+    <ClInclude Include="Source\Graphics\BindableBase.h" />
+    <ClInclude Include="Source\Graphics\Box.h" />
+    <ClInclude Include="Source\Graphics\Cone.h" />
+    <ClInclude Include="Source\Graphics\ConstantBuffers.h" />
+    <ClInclude Include="Source\Graphics\Cube.h" />
+    <ClInclude Include="Source\Graphics\Drawable.h" />
+    <ClInclude Include="Source\Graphics\DrawableBase.h" />
+    <ClInclude Include="Source\Graphics\GDIPlusManager.h" />
     <ClInclude Include="Source\Graphics\GenGraphics.h" />
+    <ClInclude Include="Source\Graphics\IndexBuffer.h" />
+    <ClInclude Include="Source\Graphics\IndexedTriangleList.h" />
+    <ClInclude Include="Source\Graphics\InputLayout.h" />
+    <ClInclude Include="Source\Graphics\Melon.h" />
+    <ClInclude Include="Source\Graphics\PixelShader.h" />
+    <ClInclude Include="Source\Graphics\Plane.h" />
+    <ClInclude Include="Source\Graphics\Pyramid.h" />
+    <ClInclude Include="Source\Graphics\Sampler.h" />
+    <ClInclude Include="Source\Graphics\Sheet.h" />
+    <ClInclude Include="Source\Graphics\SkinnedBox.h" />
+    <ClInclude Include="Source\Graphics\Sphere.h" />
+    <ClInclude Include="Source\Graphics\Surface.h" />
+    <ClInclude Include="Source\Graphics\Texture.h" />
+    <ClInclude Include="Source\Graphics\Topology.h" />
+    <ClInclude Include="Source\Graphics\TransformCbuf.h" />
+    <ClInclude Include="Source\Graphics\VertexBuffer.h" />
+    <ClInclude Include="Source\Graphics\VertexShader.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />
     <ClInclude Include="Source\imgui\imgui.h" />
     <ClInclude Include="Source\imgui\imgui_impl_dx11.h" />
@@ -119,6 +163,7 @@
     <ClInclude Include="Source\imgui\imstb_textedit.h" />
     <ClInclude Include="Source\imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Utilitys\GenException.h" />
+    <ClInclude Include="Source\Utilitys\GenMath.h" />
     <ClInclude Include="Source\Utilitys\GenTimer.h" />
     <ClInclude Include="Source\Windows\GenWin.h" />
     <ClInclude Include="Source\Windows\GenWindow.h" />
@@ -133,9 +178,45 @@
     <Image Include="Content\Icons\man.png" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Source\Shaders\ColorBlendPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\ColorBlendVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\ColorIndexPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\ColorIndexVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Source\Shaders\PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\TexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Source\Shaders\TextureVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
