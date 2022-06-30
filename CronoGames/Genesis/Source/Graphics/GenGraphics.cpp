@@ -118,6 +118,14 @@ GenGraphics::GenGraphics(HWND hWnd, int wndWidth, int wndHeight)
 
 void GenGraphics::EndFrame()
 {
+	// imgui frame end
+	if (imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
+
 	HRESULT hr;
 #ifndef NDEBUG
 	infoManager.Set();
@@ -133,6 +141,21 @@ void GenGraphics::EndFrame()
 			throw GFX_EXCEPT(hr);
 		}
 	}
+}
+
+void GenGraphics::BeginFrame(float red, float green, float blue) noexcept
+{
+	// imgui begin frame
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	const float color[] = { red,green,blue,1.0f };
+	pContext->ClearRenderTargetView(pTarget.Get(), color);
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void GenGraphics::ClearBuffer(float red, float green, float blue) noexcept
@@ -156,5 +179,30 @@ void GenGraphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
 DirectX::XMMATRIX GenGraphics::GetProjection() const noexcept
 {
 	return projection;
+}
+
+void GenGraphics::SetCamera(DirectX::FXMMATRIX cam) noexcept
+{
+	camera = cam;
+}
+
+DirectX::XMMATRIX GenGraphics::GetCamera() const noexcept
+{
+	return camera;
+}
+
+void GenGraphics::EnableImgui() noexcept
+{
+	imguiEnabled = true;
+}
+
+void GenGraphics::DisableImgui() noexcept
+{
+	imguiEnabled = false;
+}
+
+bool GenGraphics::IsImguiEnabled() const noexcept
+{
+	return imguiEnabled;
 }
 

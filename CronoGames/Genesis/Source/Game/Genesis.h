@@ -8,6 +8,7 @@
 #include <vector>
 #include "Graphics/Drawable.h"
 #include "imgui/ImguiManager.h"
+#include "Graphics/GenCamera.h"
 class Genesis
 {
 public:
@@ -18,6 +19,7 @@ private:
 	void Update();
 	void DisplayFPS(float dt);
 private:
+	GenCamera cam;
 	ImguiManager imgui;
 	GenWindow wnd;
 	GenTimer timer;

@@ -95,6 +95,7 @@
     <ClCompile Include="Source\Graphics\Box.cpp" />
     <ClCompile Include="Source\Graphics\Drawable.cpp" />
     <ClCompile Include="Source\Graphics\GDIPlusManager.cpp" />
+    <ClCompile Include="Source\Graphics\GenCamera.cpp" />
     <ClCompile Include="Source\Graphics\GenGraphics.cpp" />
     <ClCompile Include="Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\InputLayout.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Source\Graphics\Drawable.h" />
     <ClInclude Include="Source\Graphics\DrawableBase.h" />
     <ClInclude Include="Source\Graphics\GDIPlusManager.h" />
+    <ClInclude Include="Source\Graphics\GenCamera.h" />
     <ClInclude Include="Source\Graphics\GenGraphics.h" />
     <ClInclude Include="Source\Graphics\IndexBuffer.h" />
     <ClInclude Include="Source\Graphics\IndexedTriangleList.h" />

@@ -165,6 +165,9 @@
     <ClCompile Include="Source\imgui\ImguiManager.cpp">
       <Filter>Source\Source Files\Graphics\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\GenCamera.cpp">
+      <Filter>Source\Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\GenWin.h">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="Source\imgui\ImguiManager.h">
       <Filter>Source\Header Files\Graphics\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GenCamera.h">
+      <Filter>Source\Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
