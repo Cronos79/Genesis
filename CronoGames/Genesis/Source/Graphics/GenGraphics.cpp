@@ -8,6 +8,7 @@
 #include <d3dcompiler.h>
 #include <cmath>
 #include <DirectXMath.h>
+#include "imgui/imgui_impl_dx11.h"
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -110,6 +111,8 @@ GenGraphics::GenGraphics(HWND hWnd)
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	pContext->RSSetViewports(1u, &vp);
+
+	ImGui_ImplDX11_Init(this->pDevice.Get(), this->pContext.Get());
 }
 
 void GenGraphics::EndFrame()

@@ -7,6 +7,7 @@
 #include "Utilitys/GenTimer.h"
 #include <vector>
 #include "Graphics/Drawable.h"
+#include "imgui/ImguiManager.h"
 class Genesis
 {
 public:
@@ -15,7 +16,9 @@ public:
 	int Start();
 private:
 	void Update();
+	void DisplayFPS(float dt);
 private:
+	ImguiManager imgui;
 	GenWindow wnd;
 	GenTimer timer;
 	std::vector<std::unique_ptr<class Drawable>> drawables;

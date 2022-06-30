@@ -111,6 +111,7 @@
     <ClCompile Include="Source\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\VertexShader.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
+    <ClCompile Include="Source\imgui\ImguiManager.cpp" />
     <ClCompile Include="Source\imgui\imgui_demo.cpp" />
     <ClCompile Include="Source\imgui\imgui_draw.cpp" />
     <ClCompile Include="Source\imgui\imgui_impl_dx11.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Source\Graphics\VertexShader.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />
     <ClInclude Include="Source\imgui\imgui.h" />
+    <ClInclude Include="Source\imgui\ImguiManager.h" />
     <ClInclude Include="Source\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Source\imgui\imgui_impl_win32.h" />
     <ClInclude Include="Source\imgui\imgui_internal.h" />

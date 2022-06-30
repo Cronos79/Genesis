@@ -162,6 +162,9 @@
     <ClCompile Include="Source\Graphics\GenGraphics.cpp">
       <Filter>Source\Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\imgui\ImguiManager.cpp">
+      <Filter>Source\Source Files\Graphics\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\GenWin.h">
@@ -295,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\SkinnedBox.h">
       <Filter>Source\Header Files\Graphics\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\imgui\ImguiManager.h">
+      <Filter>Source\Header Files\Graphics\imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

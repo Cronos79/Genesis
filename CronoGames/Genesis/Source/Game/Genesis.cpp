@@ -14,6 +14,7 @@
 #include "Graphics/Surface.h"
 #include "Graphics/GDIPlusManager.h"
 #include "Graphics/Drawable.h"
+#include "imgui/imgui_impl_dx11.h"
 
 GDIPlusManager gdipm;
 
@@ -94,7 +95,7 @@ int Genesis::Start()
 		Update();
 	}
 }
-
+static float fpstime;
 void Genesis::Update()
 {
 	//const float dt = timer.Mark() * 1000;
@@ -104,10 +105,44 @@ void Genesis::Update()
 
 	const auto dt = timer.Mark();
 	wnd.Gfx().ClearBuffer(0.07f, 0.0f, 0.12f);
+
+
 	for (auto& d : drawables)
 	{
 		d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
+	DisplayFPS(dt);
 	wnd.Gfx().EndFrame();
+}
+
+void Genesis::DisplayFPS(float dt)
+{
+	static float fpstime;
+	fpstime += (dt * 1000);
+	// FPS
+	static int fpsCounter = 0;
+	static std::string fpsString = "FPS: 0";
+	fpsCounter += 1;
+	if (fpstime > 1000.0)
+	{
+		fpsString = "FPS: " + std::to_string(fpsCounter) + "\n";
+		fpsCounter = 0;
+		fpstime = 0;
+	}
+
+	// Start the Dear ImGui frame
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	//Create ImGui Test Window
+	ImGui::Begin("App info");
+	//GenTile* tile = currentLevel->GetWorld()->chunk->   //GetTile("Cube_50");
+	//ImGui::Text(tile->test.c_str());
+	ImGui::Text(fpsString.c_str());
+	ImGui::End();
+	//Assemble Together Draw Data
+	ImGui::Render();
+	//Render Draw Data
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
