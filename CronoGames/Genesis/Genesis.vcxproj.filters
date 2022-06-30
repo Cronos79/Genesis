@@ -61,6 +61,12 @@
     <Filter Include="Source\Source Files\Graphics\Binables">
       <UniqueIdentifier>{cdc6b1d8-2b9d-44f2-a91a-483d804c33ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Header Files\Graphics\Lights">
+      <UniqueIdentifier>{890a3ff0-dd98-4223-8e55-ee5233e1bab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Source Files\Graphics\Lights">
+      <UniqueIdentifier>{f5acd080-9ab2-4c34-8f79-3ba6c794bd63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Windows\GenWinMain.cpp">
@@ -105,9 +111,6 @@
     <ClCompile Include="Source\Utilitys\GenTimer.cpp">
       <Filter>Source\Source Files\Utilitys</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Melon.cpp">
-      <Filter>Source\Source Files\Graphics\Drawables</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Drawable.cpp">
       <Filter>Source\Source Files\Graphics\Drawables</Filter>
     </ClCompile>
@@ -135,17 +138,8 @@
     <ClCompile Include="Source\Graphics\VertexShader.cpp">
       <Filter>Source\Source Files\Graphics\Binables</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\Pyramid.cpp">
-      <Filter>Source\Source Files\Graphics\Drawables</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Box.cpp">
-      <Filter>Source\Source Files\Graphics\Drawables</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\GDIPlusManager.cpp">
       <Filter>Source\Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Sheet.cpp">
-      <Filter>Source\Source Files\Graphics\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Surface.cpp">
       <Filter>Source\Source Files\Graphics\Drawables</Filter>
@@ -156,9 +150,6 @@
     <ClCompile Include="Source\Graphics\Sampler.cpp">
       <Filter>Source\Source Files\Graphics\Binables</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\SkinnedBox.cpp">
-      <Filter>Source\Source Files\Graphics\Drawables</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\GenGraphics.cpp">
       <Filter>Source\Source Files\Graphics</Filter>
     </ClCompile>
@@ -167,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\GenCamera.cpp">
       <Filter>Source\Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\PointLight.cpp">
+      <Filter>Source\Source Files\Graphics\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SolidSphere.cpp">
+      <Filter>Source\Source Files\Graphics\Drawables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +218,6 @@
     <ClInclude Include="Source\Graphics\GenGraphics.h">
       <Filter>Source\Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Melon.h">
-      <Filter>Source\Header Files\Graphics\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\DrawableBase.h">
       <Filter>Source\Header Files\Graphics\Drawables</Filter>
     </ClInclude>
@@ -236,7 +230,7 @@
     <ClInclude Include="Source\Graphics\Bindable.h">
       <Filter>Source\Header Files\Graphics\Binables</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\BindableBase.h">
+    <ClInclude Include="Source\Graphics\BindableCommon.h">
       <Filter>Source\Header Files\Graphics\Binables</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ConstantBuffers.h">
@@ -269,13 +263,7 @@
     <ClInclude Include="Source\Utilitys\GenMath.h">
       <Filter>Source\Header Files\Utilitys</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\Pyramid.h">
-      <Filter>Source\Header Files\Graphics\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\Cone.h">
-      <Filter>Source\Header Files\Graphics\Drawables</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Box.h">
       <Filter>Source\Header Files\Graphics\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Cube.h">
@@ -283,9 +271,6 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\GDIPlusManager.h">
       <Filter>Source\Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Sheet.h">
-      <Filter>Source\Header Files\Graphics\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Plane.h">
       <Filter>Source\Header Files\Graphics\Drawables</Filter>
@@ -299,14 +284,20 @@
     <ClInclude Include="Source\Graphics\Sampler.h">
       <Filter>Source\Header Files\Graphics\Binables</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\SkinnedBox.h">
-      <Filter>Source\Header Files\Graphics\Drawables</Filter>
-    </ClInclude>
     <ClInclude Include="Source\imgui\ImguiManager.h">
       <Filter>Source\Header Files\Graphics\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\GenCamera.h">
       <Filter>Source\Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\PointLight.h">
+      <Filter>Source\Header Files\Graphics\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SolidSphere.h">
+      <Filter>Source\Header Files\Graphics\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utilitys\ConditionalNoexcept.h">
+      <Filter>Source\Header Files\Utilitys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -323,28 +314,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Source\Shaders\PixelShader.hlsl">
+    <FxCompile Include="Source\Shaders\PhongPS.hlsl">
       <Filter>Source\Header Files\Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shaders\VertexShader.hlsl">
+    <FxCompile Include="Source\Shaders\PhongVS.hlsl">
       <Filter>Source\Header Files\Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shaders\ColorBlendPS.hlsl">
+    <FxCompile Include="Source\Shaders\SolidVS.hlsl">
       <Filter>Source\Header Files\Graphics\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shaders\ColorBlendVS.hlsl">
-      <Filter>Source\Header Files\Graphics\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shaders\ColorIndexPS.hlsl">
-      <Filter>Source\Header Files\Graphics\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shaders\ColorIndexVS.hlsl">
-      <Filter>Source\Header Files\Graphics\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shaders\TexturePS.hlsl">
-      <Filter>Source\Header Files\Graphics\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shaders\TextureVS.hlsl">
+    <FxCompile Include="Source\Shaders\SolidPS.hlsl">
       <Filter>Source\Header Files\Graphics\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
