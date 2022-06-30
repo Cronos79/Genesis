@@ -4,15 +4,20 @@
 */
 #pragma once
 #include "GenGraphics.h"
+#include "Utilitys/GenException.h"
 
-class Bindable
+namespace Bind
 {
-public:
-	virtual void Bind(GenGraphics& gfx) noexcept = 0;
-	virtual ~Bindable() = default;
-protected:
-	static ID3D11DeviceContext* GetContext(GenGraphics& gfx) noexcept;
-	static ID3D11Device* GetDevice(GenGraphics& gfx) noexcept;
-	static DxgiInfoManager& GetInfoManager(GenGraphics& gfx) noexcept(IS_DEBUG);
-};
+	class Bindable
+	{
+	public:
+		virtual void Bind(GenGraphics& gfx) noexcept = 0;
+		virtual ~Bindable() = default;
+	protected:
+		static ID3D11DeviceContext* GetContext(GenGraphics& gfx) noexcept;
+		static ID3D11Device* GetDevice(GenGraphics& gfx) noexcept;
+		static DxgiInfoManager& GetInfoManager(GenGraphics& gfx);
+		
+	};
+}
 

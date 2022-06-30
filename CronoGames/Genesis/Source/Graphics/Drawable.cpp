@@ -2,8 +2,11 @@
 #include "IndexBuffer.h"
 #include <cassert>
 #include <typeinfo>
+#include "Utilitys/ConditionalNoexcept.h"
 
-void Drawable::Draw(GenGraphics& gfx) const noexcept(!IS_DEBUG)
+using namespace Bind;
+
+void Drawable::Draw(GenGraphics& gfx) const noxnd
 {
 	for (auto& b : binds)
 	{
@@ -16,13 +19,13 @@ void Drawable::Draw(GenGraphics& gfx) const noexcept(!IS_DEBUG)
 	gfx.DrawIndexed(pIndexBuffer->GetCount());
 }
 
-void Drawable::AddBind(std::unique_ptr<Bindable> bind) noexcept(!IS_DEBUG)
+void Drawable::AddBind(std::unique_ptr<Bindable> bind) noxnd
 {
 	assert("*Must* use AddIndexBuffer to bind index buffer" && typeid(*bind) != typeid(IndexBuffer));
 	binds.push_back(std::move(bind));
 }
 
-void Drawable::AddIndexBuffer(std::unique_ptr<IndexBuffer> ibuf) noexcept(!IS_DEBUG)
+void Drawable::AddIndexBuffer(std::unique_ptr<IndexBuffer> ibuf) noxnd
 {
 	assert("Attempting to add index buffer a second time" && pIndexBuffer == nullptr);
 	pIndexBuffer = ibuf.get();

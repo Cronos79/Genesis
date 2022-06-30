@@ -63,6 +63,7 @@ private:
 	std::string info;
 };
 
+
 class DxgiInfoManager
 {
 public:

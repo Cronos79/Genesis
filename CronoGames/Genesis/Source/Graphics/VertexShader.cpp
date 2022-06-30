@@ -5,25 +5,28 @@
 #include "VertexShader.h"
 #include "Utilitys/GenException.h"
 
-VertexShader::VertexShader(GenGraphics& gfx, const std::wstring& path)
+namespace Bind
 {
-	INFOMAN(gfx);
+	VertexShader::VertexShader(GenGraphics& gfx, const std::wstring& path)
+	{
+		INFOMAN(gfx);
 
-	GFX_THROW_INFO(D3DReadFileToBlob(path.c_str(), &pBytecodeBlob));
-	GFX_THROW_INFO(GetDevice(gfx)->CreateVertexShader(
-		pBytecodeBlob->GetBufferPointer(),
-		pBytecodeBlob->GetBufferSize(),
-		nullptr,
-		&pVertexShader
-	));
-}
+		GFX_THROW_INFO(D3DReadFileToBlob(path.c_str(), &pBytecodeBlob));
+		GFX_THROW_INFO(GetDevice(gfx)->CreateVertexShader(
+			pBytecodeBlob->GetBufferPointer(),
+			pBytecodeBlob->GetBufferSize(),
+			nullptr,
+			&pVertexShader
+		));
+	}
 
-void VertexShader::Bind(GenGraphics& gfx) noexcept
-{
-	GetContext(gfx)->VSSetShader(pVertexShader.Get(), nullptr, 0u);
-}
+	void VertexShader::Bind(GenGraphics& gfx) noexcept
+	{
+		GetContext(gfx)->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+	}
 
-ID3DBlob* VertexShader::GetBytecode() const noexcept
-{
-	return pBytecodeBlob.Get();
+	ID3DBlob* VertexShader::GetBytecode() const noexcept
+	{
+		return pBytecodeBlob.Get();
+	}
 }

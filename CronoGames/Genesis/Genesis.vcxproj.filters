@@ -165,6 +165,9 @@
     <ClCompile Include="Source\Graphics\SolidSphere.cpp">
       <Filter>Source\Source Files\Graphics\Drawables</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Vertex.cpp">
+      <Filter>Source\Source Files\Graphics\Binables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\GenWin.h">
@@ -298,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="Source\Utilitys\ConditionalNoexcept.h">
       <Filter>Source\Header Files\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Vertex.h">
+      <Filter>Source\Header Files\Graphics\Binables</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Color.h">
+      <Filter>Source\Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

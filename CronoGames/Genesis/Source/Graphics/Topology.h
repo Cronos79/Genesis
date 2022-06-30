@@ -5,12 +5,15 @@
 #pragma once
 #include "Bindable.h"
 
-class Topology : public Bindable
+namespace Bind
 {
-public:
-	Topology(GenGraphics& gfx, D3D11_PRIMITIVE_TOPOLOGY type);
-	void Bind(GenGraphics& gfx) noexcept override;
-protected:
-	D3D11_PRIMITIVE_TOPOLOGY type;
-};
+	class Topology : public Bindable
+	{
+	public:
+		Topology(GenGraphics& gfx, D3D11_PRIMITIVE_TOPOLOGY type);
+		void Bind(GenGraphics& gfx) noexcept override;
+	protected:
+		D3D11_PRIMITIVE_TOPOLOGY type;
+	};
+}
 

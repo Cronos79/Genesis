@@ -13,9 +13,14 @@
 #include <memory>
 #include <random>
 
+namespace Bind
+{
+	class Bindable;
+}
+
 class GenGraphics
 {
-	friend class Bindable;
+	friend Bind::Bindable;
 public:
 	GenGraphics(HWND hWnd, int wndWidth, int wndHeight);
 	GenGraphics(const GenGraphics&) = delete;

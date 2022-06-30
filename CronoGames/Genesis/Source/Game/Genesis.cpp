@@ -44,13 +44,16 @@ void Genesis::Update()
 		wnd.Gfx().EnableImgui();
 	}
 	light.Bind(wnd.Gfx(), cam.GetMatrix());
+	//light2.Bind(wnd.Gfx(), cam.GetMatrix());
 
 	//nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
+	//light2.Draw(wnd.Gfx());
 
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
+	//light2.SpawnControlWindow();
 	//nano.ShowWindow();
 	DisplayFPS(dt);
 	// present

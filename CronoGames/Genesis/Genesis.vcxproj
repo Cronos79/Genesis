@@ -106,6 +106,7 @@
     <ClCompile Include="Source\Graphics\Texture.cpp" />
     <ClCompile Include="Source\Graphics\Topology.cpp" />
     <ClCompile Include="Source\Graphics\TransformCbuf.cpp" />
+    <ClCompile Include="Source\Graphics\Vertex.cpp" />
     <ClCompile Include="Source\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\VertexShader.cpp" />
     <ClCompile Include="Source\imgui\imgui.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="Source\Game\Genesis.h" />
     <ClInclude Include="Source\Graphics\Bindable.h" />
     <ClInclude Include="Source\Graphics\BindableCommon.h" />
+    <ClInclude Include="Source\Graphics\Color.h" />
     <ClInclude Include="Source\Graphics\Cone.h" />
     <ClInclude Include="Source\Graphics\ConstantBuffers.h" />
     <ClInclude Include="Source\Graphics\Cube.h" />
@@ -149,6 +151,7 @@
     <ClInclude Include="Source\Graphics\Texture.h" />
     <ClInclude Include="Source\Graphics\Topology.h" />
     <ClInclude Include="Source\Graphics\TransformCbuf.h" />
+    <ClInclude Include="Source\Graphics\Vertex.h" />
     <ClInclude Include="Source\Graphics\VertexBuffer.h" />
     <ClInclude Include="Source\Graphics\VertexShader.h" />
     <ClInclude Include="Source\imgui\imconfig.h" />

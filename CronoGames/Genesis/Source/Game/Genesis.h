@@ -24,5 +24,6 @@ private:
 	GenTimer timer;
 	float speed_factor = 1.0f;
 	PointLight light;
+	//PointLight light2;
 };
 
