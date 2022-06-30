@@ -5,14 +5,44 @@
 #include "Genesis.h"
 #include "Graphics/GDIPlusManager.h"
 #include "imgui/imgui_impl_dx11.h"
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
 
 GDIPlusManager gdipm;
+
+bool DoTheImportThing(const std::string& pFile) {
+	// Create an instance of the Importer class
+	Assimp::Importer importer;
+
+	// And have it read the given file with some example postprocessing
+	// Usually - if speed is not the most important aspect for you - you'll
+	// probably to request more postprocessing than we do in this example.
+	const aiScene* scene = importer.ReadFile(pFile,
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_SortByPType);
+
+	// If the import failed, report it
+	if (scene == nullptr) {
+		//DoTheErrorLogging(importer.GetErrorString());
+		return false;
+	}
+
+	// Now we can access the file's contents.
+	//DoTheSceneProcessing(scene);
+
+	// We're done. Everything will be cleaned up by the importer destructor
+	return true;
+}
 
 Genesis::Genesis()
 	:
 	wnd(1920, 1080, "Genesis"),
 	light(wnd.Gfx())
 {
+	DoTheImportThing("Cube.fbx");
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, (float)wnd.GetWndDem().height / (float)wnd.GetWndDem().width, 0.5f, 40.0f));
 }
 

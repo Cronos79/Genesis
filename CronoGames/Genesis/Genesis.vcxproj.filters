@@ -67,6 +67,9 @@
     <Filter Include="Source\Source Files\Graphics\Lights">
       <UniqueIdentifier>{f5acd080-9ab2-4c34-8f79-3ba6c794bd63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Header Files\assimp">
+      <UniqueIdentifier>{1c5fa80f-5a66-469e-ae17-c7c4968df818}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Windows\GenWinMain.cpp">
