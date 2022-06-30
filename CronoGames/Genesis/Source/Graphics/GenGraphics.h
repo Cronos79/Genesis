@@ -17,7 +17,7 @@ class GenGraphics
 {
 	friend class Bindable;
 public:
-	GenGraphics(HWND hWnd);
+	GenGraphics(HWND hWnd, int wndWidth, int wndHeight);
 	GenGraphics(const GenGraphics&) = delete;
 	GenGraphics& operator=(const GenGraphics&) = delete;
 	~GenGraphics() = default;

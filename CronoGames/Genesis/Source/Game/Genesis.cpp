@@ -20,7 +20,7 @@ GDIPlusManager gdipm;
 
 Genesis::Genesis()
 	:
-	wnd(800, 600, "Genesis")
+	wnd(1920, 1080, "Genesis")
 {
 	class Factory
 	{
@@ -79,7 +79,7 @@ Genesis::Genesis()
 	drawables.reserve(nDrawables);
 	std::generate_n(std::back_inserter(drawables), nDrawables, Factory{ wnd.Gfx() });
 
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, (float)wnd.GetWndDem().height / (float)wnd.GetWndDem().width, 0.5f, 40.0f));
 }
 
 int Genesis::Start()

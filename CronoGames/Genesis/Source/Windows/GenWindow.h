@@ -15,6 +15,12 @@
 
 class GenWindow
 {
+public:
+	struct WndDem
+	{
+		int width;
+		int height;
+	};
 private:
 	// singleton manages registration/cleanup of window class
 	class WindowClass
@@ -43,6 +49,7 @@ public:
 	bool CursorEnabled() const noexcept;
 	static std::optional<int> ProcessMessages();
 	GenGraphics& Gfx();
+	WndDem GetWndDem();
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -55,11 +62,10 @@ private:
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	Keyboard kbd;
-	Mouse mouse;
+	Mouse mouse;	
 private:
 	bool cursorEnabled = true;
-	int width;
-	int height;
+	WndDem wndDem;
 	HWND hWnd;
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;

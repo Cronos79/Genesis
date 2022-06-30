@@ -9,6 +9,7 @@
 #include <cmath>
 #include <DirectXMath.h>
 #include "imgui/imgui_impl_dx11.h"
+#include "Windows/GenWindow.h"
 
 namespace wrl = Microsoft::WRL;
 namespace dx = DirectX;
@@ -17,7 +18,7 @@ namespace dx = DirectX;
 #pragma comment(lib,"D3DCompiler.lib")
 
 
-GenGraphics::GenGraphics(HWND hWnd)
+GenGraphics::GenGraphics(HWND hWnd, int wndWidth, int wndHeight)
 {
 	DXGI_SWAP_CHAIN_DESC sd = {};
 	sd.BufferDesc.Width = 0;
@@ -79,8 +80,8 @@ GenGraphics::GenGraphics(HWND hWnd)
 	// create depth stensil texture
 	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
 	D3D11_TEXTURE2D_DESC descDepth = {};
-	descDepth.Width = 800u;
-	descDepth.Height = 600u;
+	descDepth.Width = wndWidth;
+	descDepth.Height = wndHeight;
 	descDepth.MipLevels = 1u;
 	descDepth.ArraySize = 1u;
 	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
@@ -104,8 +105,8 @@ GenGraphics::GenGraphics(HWND hWnd)
 
 	// configure viewport
 	D3D11_VIEWPORT vp;
-	vp.Width = 800.0f;
-	vp.Height = 600.0f;
+	vp.Width = wndWidth;
+	vp.Height = wndHeight;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;

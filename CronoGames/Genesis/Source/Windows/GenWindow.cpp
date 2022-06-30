@@ -56,6 +56,8 @@ GenWindow::GenWindow(int width, int height, const char* name)
 	wr.top = 100;
 	wr.bottom = height + wr.top;
 	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+	wndDem.width = wr.right - wr.left;
+	wndDem.height = wr.bottom - wr.top;
 	// create window & get hWnd
 	hWnd = CreateWindow(
 		WindowClass::GetName(), name,
@@ -72,7 +74,7 @@ GenWindow::GenWindow(int width, int height, const char* name)
 	// Init ImGui Win32 Impl
 	ImGui_ImplWin32_Init(hWnd);
 	// create graphics object
-	pGfx = std::make_unique<GenGraphics>(hWnd);
+	pGfx = std::make_unique<GenGraphics>(hWnd, wndDem.width, wndDem.height);
 }
 
 void GenWindow::SetTitle(const std::string& title)
@@ -129,6 +131,11 @@ std::optional<int> GenWindow::ProcessMessages()
 GenGraphics& GenWindow::Gfx()
 {
 	return *pGfx;
+}
+
+GenWindow::WndDem GenWindow::GetWndDem()
+{
+	return wndDem;
 }
 
 GenWindow::~GenWindow()
@@ -288,7 +295,7 @@ LRESULT GenWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		// in client region -> log move, and log enter + capture mouse (if not previously in window)
-		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
+		if (pt.x >= 0 && pt.x < wndDem.width && pt.y >= 0 && pt.y < wndDem.height)
 		{
 			mouse.OnMouseMove(pt.x, pt.y);
 			if (!mouse.IsInWindow())
@@ -351,7 +358,7 @@ LRESULT GenWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnLeftReleased(pt.x, pt.y);
 		// release mouse if outside of window
-		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+		if (pt.x < 0 || pt.x >= wndDem.width || pt.y < 0 || pt.y >= wndDem.height)
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave();
@@ -368,7 +375,7 @@ LRESULT GenWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		const POINTS pt = MAKEPOINTS(lParam);
 		mouse.OnRightReleased(pt.x, pt.y);
 		// release mouse if outside of window
-		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+		if (pt.x < 0 || pt.x >= wndDem.width || pt.y < 0 || pt.y >= wndDem.height)
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave();
