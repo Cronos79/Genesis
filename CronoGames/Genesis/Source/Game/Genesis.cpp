@@ -43,7 +43,7 @@ Genesis::Genesis()
 	light(wnd.Gfx())
 {
 	DoTheImportThing("Cube.fbx");
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, (float)wnd.GetWndDem().height / (float)wnd.GetWndDem().width, 0.5f, 40.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, (float)wnd.GetWndDem().height / (float)wnd.GetWndDem().width, 0.5f, 400.0f)); //#NOTE: This sets the view distance of objects
 }
 
 int Genesis::Start()
@@ -76,7 +76,7 @@ void Genesis::Update()
 	light.Bind(wnd.Gfx(), cam.GetMatrix());
 	//light2.Bind(wnd.Gfx(), cam.GetMatrix());
 
-	//nano.Draw(wnd.Gfx());
+	cube.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 	//light2.Draw(wnd.Gfx());
 
@@ -84,7 +84,7 @@ void Genesis::Update()
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	//light2.SpawnControlWindow();
-	//nano.ShowWindow();
+	cube.ShowWindow();
 	DisplayFPS(dt);
 	// present
 	wnd.Gfx().EndFrame();

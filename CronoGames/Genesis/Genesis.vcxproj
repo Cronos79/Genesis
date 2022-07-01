@@ -102,6 +102,7 @@
     <ClCompile Include="Source\Graphics\GenGraphics.cpp" />
     <ClCompile Include="Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\InputLayout.cpp" />
+    <ClCompile Include="Source\Graphics\Mesh.cpp" />
     <ClCompile Include="Source\Graphics\PixelShader.cpp" />
     <ClCompile Include="Source\Graphics\PointLight.cpp" />
     <ClCompile Include="Source\Graphics\Sampler.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Source\Graphics\IndexBuffer.h" />
     <ClInclude Include="Source\Graphics\IndexedTriangleList.h" />
     <ClInclude Include="Source\Graphics\InputLayout.h" />
+    <ClInclude Include="Source\Graphics\Mesh.h" />
     <ClInclude Include="Source\Graphics\PixelShader.h" />
     <ClInclude Include="Source\Graphics\Plane.h" />
     <ClInclude Include="Source\Graphics\PointLight.h" />

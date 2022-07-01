@@ -8,6 +8,7 @@
 #include "imgui/ImguiManager.h"
 #include "Graphics/GenCamera.h"
 #include "Graphics/PointLight.h"
+#include "Graphics/Mesh.h"
 class Genesis
 {
 public:
@@ -25,5 +26,6 @@ private:
 	float speed_factor = 1.0f;
 	PointLight light;
 	//PointLight light2;
+	Model cube{ wnd.Gfx(),"Cube.fbx" };
 };
 

@@ -171,6 +171,9 @@
     <ClCompile Include="Source\Graphics\Vertex.cpp">
       <Filter>Source\Source Files\Graphics\Binables</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\Mesh.cpp">
+      <Filter>Source\Source Files\Graphics\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Windows\GenWin.h">
@@ -310,6 +313,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Color.h">
       <Filter>Source\Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Mesh.h">
+      <Filter>Source\Header Files\Graphics\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
