@@ -75,6 +75,17 @@ GenWindow::GenWindow(int width, int height, const char* name)
 	ImGui_ImplWin32_Init(hWnd);
 	// create graphics object
 	pGfx = std::make_unique<GenGraphics>(hWnd, wndDem.width, wndDem.height);
+
+	// register mouse raw input device
+	RAWINPUTDEVICE rid;
+	rid.usUsagePage = 0x01; // mouse page
+	rid.usUsage = 0x02; // mouse usage
+	rid.dwFlags = 0;
+	rid.hwndTarget = nullptr;
+	if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == FALSE)
+	{
+		throw GENHR_LAST_EXCEPT();
+	}
 }
 
 void GenWindow::SetTitle(const std::string& title)
