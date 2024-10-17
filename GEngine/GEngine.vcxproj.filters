@@ -16,6 +16,12 @@
     <Filter Include="sec\API\Application">
       <UniqueIdentifier>{92f140f4-2e03-4fc8-a32c-441b79db4c95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sec\Graphics">
+      <UniqueIdentifier>{40865ae2-d479-4e8a-a4cb-ac7f5b806fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\Graphics\D3D12">
+      <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEntry.cpp">
@@ -44,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="GEngineLog.cpp">
       <Filter>sec\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineD3D12.cpp">
+      <Filter>sec\Graphics\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="GEngineLog.h">
       <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineD3D12.h">
+      <Filter>sec\Graphics\D3D12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

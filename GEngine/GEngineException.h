@@ -44,3 +44,13 @@
 #define CHWND_EXCEPT( hr ) HrException( __LINE__,__FILE__,(hr) )
 #define CHWND_LAST_EXCEPT() HrException( __LINE__,__FILE__,GetLastError() )
 #define CHWND_NOGFX_EXCEPT() NoGfxException( __LINE__,__FILE__ )
+
+//#define ThrowIfFailed( hr ) if(FAILED(hr)) { throw CHWND_EXCEPT(hr)
+
+//#ifndef ThrowIfFailed
+//#define ThrowIfFailed(x)                                              \
+//{                                                                     \
+//    HRESULT hr__ = (x);                                               \
+//    if(FAILED(hr__)) { throw CHWND_EXCEPT(hr__); } \
+//}
+//#endif

@@ -33,6 +33,7 @@ public:
 	static std::optional<int> ProcessMessages() noexcept;
 
 	HWND GetHWND();
+	HINSTANCE GetHInst();
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -51,6 +52,7 @@ private:
 	int m_Width;
 	int m_Height;
 	HWND m_hWnd;
+	HINSTANCE m_HInst;
 	std::vector<BYTE> m_RawBuffer;
 	std::string m_CommandLine;
 };

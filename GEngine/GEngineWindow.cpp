@@ -144,6 +144,11 @@ HWND GEngineWindow::GetHWND()
 	return m_hWnd;
 }
 
+HINSTANCE GEngineWindow::GetHInst()
+{
+	return WindowClass::GetInstance();
+}
+
 void GEngineWindow::ConfineCursor() noexcept
 {
 	RECT rect;

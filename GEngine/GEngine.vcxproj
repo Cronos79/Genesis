@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="GEngineApp.cpp" />
     <ClCompile Include="GEngineContext.cpp" />
+    <ClCompile Include="GEngineD3D12.cpp" />
     <ClCompile Include="GEngineException.cpp" />
     <ClCompile Include="GEngineLog.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="GEngineAPI.h" />
     <ClInclude Include="GEngineApp.h" />
     <ClInclude Include="GEngineContext.h" />
+    <ClInclude Include="GEngineD3D12.h" />
     <ClInclude Include="GEngineException.h" />
     <ClInclude Include="GEngineLog.h" />
     <ClInclude Include="genginepch.h" />
