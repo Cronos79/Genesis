@@ -53,7 +53,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	wr.bottom = height + wr.top;
 	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
 	{
-		throw;// CHWND_LAST_EXCEPT();
+		throw CHWND_LAST_EXCEPT();
 	}
 	// create window & get hWnd
 	m_hWnd = CreateWindow(
