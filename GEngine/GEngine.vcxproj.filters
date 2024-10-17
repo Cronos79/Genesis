@@ -33,15 +33,24 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>sec\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="GEngineContext.cpp">
+      <Filter>sec\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineTimer.cpp">
+      <Filter>sec\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineException.cpp">
+      <Filter>sec\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineLog.cpp">
+      <Filter>sec\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEngineApp.h">
       <Filter>sec\API\Application</Filter>
     </ClInclude>
     <ClInclude Include="genginepch.h">
-      <Filter>sec\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="GEngineBase.h">
       <Filter>sec\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineAPI.h">
@@ -60,6 +69,15 @@
       <Filter>sec\Windows</Filter>
     </ClInclude>
     <ClInclude Include="GEngineContext.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineTimer.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineException.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineLog.h">
       <Filter>sec\Common</Filter>
     </ClInclude>
   </ItemGroup>

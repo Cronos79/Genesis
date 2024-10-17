@@ -1,5 +1,4 @@
 #pragma once
-#include "GEngineBase.h"
 #include "WinInclude.h"
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -32,6 +31,8 @@ public:
 	void DisableCursor() noexcept;
 	bool CursorEnabled() const noexcept;
 	static std::optional<int> ProcessMessages() noexcept;
+
+	HWND GetHWND();
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -43,13 +44,13 @@ private:
 	static LRESULT CALLBACK HandleMsgRedirect(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 public:
-	Keyboard kbd;
-	Mouse mouse;
+	Keyboard m_Kbd;
+	Mouse m_Mouse;
 private:
-	bool cursorEnabled = true;
-	int width;
-	int height;
-	HWND hWnd;
-	std::vector<BYTE> rawBuffer;
-	std::string commandLine;
+	bool m_CursorEnabled = true;
+	int m_Width;
+	int m_Height;
+	HWND m_hWnd;
+	std::vector<BYTE> m_RawBuffer;
+	std::string m_CommandLine;
 };

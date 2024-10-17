@@ -1,7 +1,7 @@
 #pragma once
-#include "GEngineBase.h"
 #include "GEngineWindow.h"
 #include "GEngineContext.h"
+#include "GEngineTimer.h"
 
 int main(int argc, char** argv);
 
@@ -14,7 +14,8 @@ public:
 	int Run();
 
 private:
-	GEngineContext context;
+	GEngineContext m_Context;
+	GEngineTimer* m_Timer;
 };
 
 // To be defined in CLIENT

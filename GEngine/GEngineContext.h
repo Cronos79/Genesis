@@ -4,21 +4,21 @@
 
 struct GEngineData
 {
-	GEngineWindow* wnd;
+	GEngineWindow* m_wnd;
 };
 
 class GEngineContext
 {
 public:
-	GEngineContext()
-	{
+	GEngineContext();
 
-	}
+	// Core stuff
+	GEngineData GetContext();
 
-	void InitWindow(int32_t width, int32_t height, std::string title)
-	{
-		context.wnd = new GEngineWindow(width, height, title.c_str());
-	}
+	// Windows stuff
+	void InitWindow(int32_t width, int32_t height, std::string title);
 
-	GEngineData context;
+
+private:
+	GEngineData m_Context;
 };
