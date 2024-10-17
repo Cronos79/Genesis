@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{b7471315-e25e-4326-8516-6166953fe7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Application">
+      <UniqueIdentifier>{c66fc8e4-0a64-42a4-85cc-ee331f005d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Common">
+      <UniqueIdentifier>{48f2768e-94b4-4c69-af88-f35b739b4b7b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GEditorApp.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="GEditorBase.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GEditorApp.cpp">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

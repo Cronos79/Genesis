@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sec">
+      <UniqueIdentifier>{9ada0ff8-88d0-4b12-871a-173b79d11bc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\Common">
+      <UniqueIdentifier>{3b8cbfda-953f-4ba3-804b-f3e055ffd1d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\Windows">
+      <UniqueIdentifier>{69d0b103-1047-4790-8e30-dbe2e0a102cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\API">
+      <UniqueIdentifier>{862590e7-b5e6-423c-b95d-4b67d34be701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\API\Application">
+      <UniqueIdentifier>{92f140f4-2e03-4fc8-a32c-441b79db4c95}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WinEntry.cpp">
+      <Filter>sec\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineApp.cpp">
+      <Filter>sec\API\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineWindow.cpp">
+      <Filter>sec\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>sec\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>sec\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GEngineApp.h">
+      <Filter>sec\API\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="genginepch.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineBase.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineAPI.h">
+      <Filter>sec\API</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineWindow.h">
+      <Filter>sec\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WinInclude.h">
+      <Filter>sec\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>sec\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>sec\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineContext.h">
+      <Filter>sec\Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
