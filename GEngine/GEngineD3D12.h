@@ -23,7 +23,8 @@ public:
 	GEngineD3D12& operator=(const GEngineD3D12& rhs) = delete;
 	~GEngineD3D12();
 
-	void Update(float dt);
+	void BeginRender(float dt);
+	void EndRender(float dt);
 
 	bool CreateDeviceD3D(HWND hWnd);
 	void CleanupDeviceD3D();
@@ -31,6 +32,10 @@ public:
 	void CleanupRenderTarget();
 	void WaitForLastSubmittedFrame();
 	FrameContext* WaitForNextFrameResources();
+
+	ID3D12Device* GetDevice() { return g_pd3dDevice; }
+	ID3D12DescriptorHeap* GetSrvDescHeap() { return g_pd3dSrvDescHeap; }
+	ID3D12GraphicsCommandList* GetCommandList() { return g_pd3dCommandList; }
 
 private:
 	int m_Width;
@@ -42,6 +47,7 @@ private:
 	FrameContext                 g_frameContext[NUM_FRAMES_IN_FLIGHT] = {};
 	UINT                         g_frameIndex = 0;
 
+	FrameContext* frameCtx;
 	#define NUM_BACK_BUFFERS 3
 	ID3D12Device* g_pd3dDevice = nullptr;
 	ID3D12DescriptorHeap* g_pd3dRtvDescHeap = nullptr;

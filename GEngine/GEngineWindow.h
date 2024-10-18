@@ -34,6 +34,8 @@ public:
 
 	HWND GetHWND();
 	HINSTANCE GetHInst();
+	inline int GetWidth() { return m_Width; }
+	inline int GetHeight() { return m_Height; }
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;

@@ -13,23 +13,23 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8ef8be6f-041a-48ed-a9ae-20bf0fbf4d74}</ProjectGuid>
-    <RootNamespace>GEditor</RootNamespace>
+    <ProjectGuid>{b64d8b3f-721e-4330-b550-8c90411c4577}</ProjectGuid>
+    <RootNamespace>GImGui</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -57,7 +57,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\spdlog\include;$(SolutionDir)GEngine</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -74,7 +73,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\spdlog\include;$(SolutionDir)GEngine</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -86,18 +84,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GEngine\GEngine.vcxproj">
-      <Project>{1eec4f95-b29c-460f-a370-f1264db7d31e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GImGui\GImGui.vcxproj">
-      <Project>{b64d8b3f-721e-4330-b550-8c90411c4577}</Project>
-    </ProjectReference>
+    <ClInclude Include="..\vendor\imgui\imconfig.h" />
+    <ClInclude Include="..\vendor\imgui\imgui.h" />
+    <ClInclude Include="..\vendor\imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="..\vendor\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\vendor\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GEditorApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GEditorApp.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

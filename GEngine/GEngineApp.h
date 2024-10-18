@@ -14,7 +14,6 @@ public:
 	int Run();
 
 private:
-	GEngineContext m_Context;
 	GEngineTimer* m_Timer;
 };
 

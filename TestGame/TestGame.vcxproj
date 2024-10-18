@@ -89,6 +89,9 @@
     <ProjectReference Include="..\GEngine\GEngine.vcxproj">
       <Project>{1eec4f95-b29c-460f-a370-f1264db7d31e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\GImGui\GImGui.vcxproj">
+      <Project>{b64d8b3f-721e-4330-b550-8c90411c4577}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestGameApp.h" />

@@ -22,6 +22,9 @@
     <Filter Include="sec\Graphics\D3D12">
       <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sec\API\GameObjects">
+      <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEntry.cpp">
@@ -53,6 +56,15 @@
     </ClCompile>
     <ClCompile Include="GEngineD3D12.cpp">
       <Filter>sec\Graphics\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineObject.cpp">
+      <Filter>sec\API\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineGameObject.cpp">
+      <Filter>sec\API\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineImGuiObject.cpp">
+      <Filter>sec\API\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="GEngineD3D12.h">
       <Filter>sec\Graphics\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineObject.h">
+      <Filter>sec\API\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineGameObject.h">
+      <Filter>sec\API\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineImGuiObject.h">
+      <Filter>sec\API\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

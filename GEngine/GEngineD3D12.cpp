@@ -2,6 +2,10 @@
 #include "GEngineD3D12.h"
 #include "GEngineException.h"
 
+#include <imgui.h>
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx12.h"
+
 
 GEngineD3D12::GEngineD3D12(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd)
 	: m_Width(width), m_Height(height), m_hInstance(hInstance), m_hWnd(hWnd)
@@ -19,8 +23,8 @@ GEngineD3D12::~GEngineD3D12()
 	
 }
 
-//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-void GEngineD3D12::Update(float dt)
+ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+void GEngineD3D12::BeginRender(float dt)
 {
 	// Handle window screen locked
 	if (g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
@@ -28,6 +32,17 @@ void GEngineD3D12::Update(float dt)
 		::Sleep(10);
 	}
 	g_SwapChainOccluded = false;
+
+	//// Start the Dear ImGui frame
+	//ImGui_ImplDX12_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	//ImGui::NewFrame();
+}
+
+void GEngineD3D12::EndRender(float dt)
+{
+	// Rendering
+	//ImGui::Render();
 
 	FrameContext* frameCtx = WaitForNextFrameResources();
 	UINT backBufferIdx = g_pSwapChain->GetCurrentBackBufferIndex();
@@ -44,17 +59,20 @@ void GEngineD3D12::Update(float dt)
 	g_pd3dCommandList->ResourceBarrier(1, &barrier);
 
 	// Render Dear ImGui graphics
-	const float clear_color_with_alpha[4] = { 0.45f, 0.55f, 0.60f, 1.0f };
+	const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 	g_pd3dCommandList->ClearRenderTargetView(g_mainRenderTargetDescriptor[backBufferIdx], clear_color_with_alpha, 0, nullptr);
 	g_pd3dCommandList->OMSetRenderTargets(1, &g_mainRenderTargetDescriptor[backBufferIdx], FALSE, nullptr);
 	g_pd3dCommandList->SetDescriptorHeaps(1, &g_pd3dSrvDescHeap);
-	//ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), g_pd3dCommandList);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), g_pd3dCommandList);
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	g_pd3dCommandList->ResourceBarrier(1, &barrier);
 	g_pd3dCommandList->Close();
 
 	g_pd3dCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)&g_pd3dCommandList);
+
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault(nullptr, (void*)g_pd3dCommandList);
 
 	// Present
 	HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync

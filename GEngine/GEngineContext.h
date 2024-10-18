@@ -13,6 +13,13 @@ class GEngineContext
 {
 public:
 	GEngineContext();
+	GEngineContext(const GEngineContext&) = delete;
+	GEngineContext& operator=(const GEngineContext&) = delete;
+
+	static GEngineContext& GetInstance() {
+		static GEngineContext instance; // Guaranteed to be destroyed and instantiated on first use
+		return instance;
+	}
 
 	// Core stuff
 	GEngineData GetContext();

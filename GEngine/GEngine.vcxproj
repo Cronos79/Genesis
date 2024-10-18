@@ -94,7 +94,10 @@
     <ClCompile Include="GEngineContext.cpp" />
     <ClCompile Include="GEngineD3D12.cpp" />
     <ClCompile Include="GEngineException.cpp" />
+    <ClCompile Include="GEngineGameObject.cpp" />
+    <ClCompile Include="GEngineImGuiObject.cpp" />
     <ClCompile Include="GEngineLog.cpp" />
+    <ClCompile Include="GEngineObject.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
     <ClCompile Include="GEngineWindow.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -107,13 +110,21 @@
     <ClInclude Include="GEngineContext.h" />
     <ClInclude Include="GEngineD3D12.h" />
     <ClInclude Include="GEngineException.h" />
+    <ClInclude Include="GEngineGameObject.h" />
+    <ClInclude Include="GEngineImGuiObject.h" />
     <ClInclude Include="GEngineLog.h" />
+    <ClInclude Include="GEngineObject.h" />
     <ClInclude Include="genginepch.h" />
     <ClInclude Include="GEngineTimer.h" />
     <ClInclude Include="GEngineWindow.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="WinInclude.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GImGui\GImGui.vcxproj">
+      <Project>{b64d8b3f-721e-4330-b550-8c90411c4577}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
