@@ -2,6 +2,10 @@
 #include "GEngineWindow.h"
 #include "GEngineException.h"
 
+#include <imgui.h>
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx12.h"
+
 // Window Class Stuff
 GEngineWindow::WindowClass GEngineWindow::WindowClass::wndClass;
 
@@ -141,7 +145,16 @@ std::optional<int> GEngineWindow::ProcessMessages() noexcept
 
 HWND GEngineWindow::GetHWND()
 {
-	return m_hWnd;
+	if (m_hWnd != nullptr)
+	{
+		return m_hWnd;
+	}
+	return nullptr;
+}
+
+HINSTANCE GEngineWindow::GetHInst()
+{
+	return WindowClass::GetInstance();
 }
 
 void GEngineWindow::ConfineCursor() noexcept
@@ -169,12 +182,12 @@ void GEngineWindow::HideCursor() noexcept
 
 void GEngineWindow::EnableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
 }
 
 void GEngineWindow::DisableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 LRESULT CALLBACK GEngineWindow::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -204,13 +217,16 @@ LRESULT CALLBACK GEngineWindow::HandleMsgRedirect(HWND hWnd, UINT msg, WPARAM wP
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-	/*	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-		{
-			return true;
-		}
-		ImGuiIO imio;
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	{
+		return true;
+	}
+		/*ImGuiIO imio;
 		if (m_imguIisInit)
 		{
 			imio = ImGui::GetIO();

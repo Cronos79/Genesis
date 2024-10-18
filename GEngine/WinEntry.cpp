@@ -13,9 +13,9 @@ int CALLBACK WinMain(
 	LPSTR     lpCmdLine,
 	int       nCmdShow)
 {
-	auto app = CreateGEngineApp();
 	try
 	{
+		auto app = CreateGEngineApp();
 		return app->Run();
 	}
 	catch (const GEngineException& e)
