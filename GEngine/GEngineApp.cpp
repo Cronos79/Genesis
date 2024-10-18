@@ -95,7 +95,7 @@ void GEngineApp::InitImGui()
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(GEngineContext::GetInstance().GetWindow()->GetHWND());
-	ImGui_ImplDX12_Init(GEngineContext::GetInstance().GetGFX()->GetDevice(), NUM_FRAMES_IN_FLIGHT,
+	ImGui_ImplDX12_Init(*GEngineContext::GetInstance().GetGFX()->GetDevice().GetAddressOf(), NUM_FRAMES_IN_FLIGHT,
 		DXGI_FORMAT_R8G8B8A8_UNORM, GEngineContext::GetInstance().GetGFX()->GetSrvDescHeap(),
 		GEngineContext::GetInstance().GetGFX()->GetSrvDescHeap()->GetCPUDescriptorHandleForHeapStart(),
 		GEngineContext::GetInstance().GetGFX()->GetSrvDescHeap()->GetGPUDescriptorHandleForHeapStart());
