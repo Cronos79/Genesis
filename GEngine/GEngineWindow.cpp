@@ -1,5 +1,10 @@
 #include "genginepch.h"
 #include "GEngineWindow.h"
+#include "GEngineException.h"
+
+#include <imgui.h>
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx12.h"
 
 // Window Class Stuff
 GEngineWindow::WindowClass GEngineWindow::WindowClass::wndClass;
@@ -41,8 +46,8 @@ HINSTANCE GEngineWindow::WindowClass::GetInstance() noexcept
 
 GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	:
-	width(width),
-	height(height)
+	m_Width(width),
+	m_Height(height)
 {
 	// calculate window size based on desired client region size
 	RECT wr;
@@ -52,23 +57,23 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	wr.bottom = height + wr.top;
 	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
 	{
-		throw;// CHWND_LAST_EXCEPT();
+		throw CHWND_LAST_EXCEPT();
 	}
 	// create window & get hWnd
-	hWnd = CreateWindow(
+	m_hWnd = CreateWindow(
 		WindowClass::GetName(), name,
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
 	// check for error
-	if (hWnd == nullptr)
+	if (m_hWnd == nullptr)
 	{
-		throw;// CHWND_LAST_EXCEPT();
+		throw CHWND_LAST_EXCEPT();
 	}
 
 	// newly created windows start off as hidden
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
 	// register mouse raw input device
 	RAWINPUTDEVICE rid;
@@ -78,26 +83,26 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	rid.hwndTarget = nullptr;
 	if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == FALSE)
 	{
-		throw;// CHWND_LAST_EXCEPT();
+		throw CHWND_LAST_EXCEPT();
 	}
 }
 
 GEngineWindow::~GEngineWindow()
 {
-	DestroyWindow(hWnd);
+	DestroyWindow(m_hWnd);
 }
 
 void GEngineWindow::SetTitle(const std::string& title)
 {
-	if (SetWindowText(hWnd, title.c_str()) == 0)
+	if (SetWindowText(m_hWnd, title.c_str()) == 0)
 	{
-		throw;// CHWND_LAST_EXCEPT();
+		throw CHWND_LAST_EXCEPT();
 	}
 }
 
 void GEngineWindow::EnableCursor() noexcept
 {
-	cursorEnabled = true;
+	m_CursorEnabled = true;
 	ShowCursor();
 	EnableImGuiMouse();
 	FreeCursor();
@@ -105,7 +110,7 @@ void GEngineWindow::EnableCursor() noexcept
 
 void GEngineWindow::DisableCursor() noexcept
 {
-	cursorEnabled = false;
+	m_CursorEnabled = false;
 	HideCursor();
 	DisableImGuiMouse();
 	ConfineCursor();
@@ -113,7 +118,7 @@ void GEngineWindow::DisableCursor() noexcept
 
 bool GEngineWindow::CursorEnabled() const noexcept
 {
-	return cursorEnabled;
+	return m_CursorEnabled;
 }
 
 std::optional<int> GEngineWindow::ProcessMessages() noexcept
@@ -138,11 +143,25 @@ std::optional<int> GEngineWindow::ProcessMessages() noexcept
 	return {};
 }
 
+HWND GEngineWindow::GetHWND()
+{
+	if (m_hWnd != nullptr)
+	{
+		return m_hWnd;
+	}
+	return nullptr;
+}
+
+HINSTANCE GEngineWindow::GetHInst()
+{
+	return WindowClass::GetInstance();
+}
+
 void GEngineWindow::ConfineCursor() noexcept
 {
 	RECT rect;
-	GetClientRect(hWnd, &rect);
-	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+	GetClientRect(m_hWnd, &rect);
+	MapWindowPoints(m_hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
 	ClipCursor(&rect);
 }
 
@@ -163,12 +182,12 @@ void GEngineWindow::HideCursor() noexcept
 
 void GEngineWindow::EnableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
 }
 
 void GEngineWindow::DisableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 LRESULT CALLBACK GEngineWindow::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -198,13 +217,16 @@ LRESULT CALLBACK GEngineWindow::HandleMsgRedirect(HWND hWnd, UINT msg, WPARAM wP
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-	/*	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-		{
-			return true;
-		}
-		ImGuiIO imio;
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	{
+		return true;
+	}
+		/*ImGuiIO imio;
 		if (m_imguIisInit)
 		{
 			imio = ImGui::GetIO();
@@ -219,11 +241,11 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		return 0;
 		// clear keystate when window loses focus to prevent input getting "stuck"
 	case WM_KILLFOCUS:
-		kbd.ClearState();
+		m_Kbd.ClearState();
 		break;
 	case WM_ACTIVATE:
 		// confine/free cursor on window to foreground/background if cursor disabled
-		if (!cursorEnabled)
+		if (!m_CursorEnabled)
 		{
 			if (wParam & WA_ACTIVE)
 			{
@@ -247,9 +269,9 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			break;
 		}*/
-		if (!(lParam & 0x40000000) || kbd.AutorepeatIsEnabled()) // filter autorepeat
+		if (!(lParam & 0x40000000) || m_Kbd.AutorepeatIsEnabled()) // filter autorepeat
 		{
-			kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+			m_Kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
 	case WM_KEYUP:
@@ -259,7 +281,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			break;
 		}*/
-		kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+		m_Kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
 		// stifle this keyboard message if imgui wants to capture
@@ -267,7 +289,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			break;
 		}*/
-		kbd.OnChar(static_cast<unsigned char>(wParam));
+		m_Kbd.OnChar(static_cast<unsigned char>(wParam));
 		break;
 		/*********** END KEYBOARD MESSAGES ***********/
 
@@ -276,12 +298,12 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		// cursorless exclusive gets first dibs
-		if (!cursorEnabled)
+		if (!m_CursorEnabled)
 		{
-			if (!mouse.IsInWindow())
+			if (!m_Mouse.IsInWindow())
 			{
 				SetCapture(hWnd);
-				mouse.OnMouseEnter();
+				m_Mouse.OnMouseEnter();
 				HideCursor();
 			}
 			break;
@@ -292,13 +314,13 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}*/
 		// in client region -> log move, and log enter + capture mouse (if not previously in window)
-		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
+		if (pt.x >= 0 && pt.x < m_Width && pt.y >= 0 && pt.y < m_Height)
 		{
-			mouse.OnMouseMove(pt.x, pt.y);
-			if (!mouse.IsInWindow())
+			m_Mouse.OnMouseMove(pt.x, pt.y);
+			if (!m_Mouse.IsInWindow())
 			{
 				SetCapture(hWnd);
-				mouse.OnMouseEnter();
+				m_Mouse.OnMouseEnter();
 			}
 		}
 		// not in client -> log move / maintain capture if button down
@@ -306,13 +328,13 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		{
 			if (wParam & (MK_LBUTTON | MK_RBUTTON))
 			{
-				mouse.OnMouseMove(pt.x, pt.y);
+				m_Mouse.OnMouseMove(pt.x, pt.y);
 			}
 			// button up -> release capture / log event for leaving
 			else
 			{
 				ReleaseCapture();
-				mouse.OnMouseLeave();
+				m_Mouse.OnMouseLeave();
 			}
 		}
 		break;
@@ -320,7 +342,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	case WM_LBUTTONDOWN:
 	{
 		SetForegroundWindow(hWnd);
-		if (!cursorEnabled)
+		if (!m_CursorEnabled)
 		{
 			ConfineCursor();
 			HideCursor();
@@ -331,7 +353,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}*/
 		const POINTS pt = MAKEPOINTS(lParam);
-		mouse.OnLeftPressed(pt.x, pt.y);
+		m_Mouse.OnLeftPressed(pt.x, pt.y);
 		break;
 	}
 	case WM_RBUTTONDOWN:
@@ -342,7 +364,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}*/
 		const POINTS pt = MAKEPOINTS(lParam);
-		mouse.OnRightPressed(pt.x, pt.y);
+		m_Mouse.OnRightPressed(pt.x, pt.y);
 		break;
 	}
 	case WM_LBUTTONUP:
@@ -353,12 +375,12 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}*/
 		const POINTS pt = MAKEPOINTS(lParam);
-		mouse.OnLeftReleased(pt.x, pt.y);
+		m_Mouse.OnLeftReleased(pt.x, pt.y);
 		// release mouse if outside of window
-		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+		if (pt.x < 0 || pt.x >= m_Width || pt.y < 0 || pt.y >= m_Height)
 		{
 			ReleaseCapture();
-			mouse.OnMouseLeave();
+			m_Mouse.OnMouseLeave();
 		}
 		break;
 	}
@@ -370,12 +392,12 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}*/
 		const POINTS pt = MAKEPOINTS(lParam);
-		mouse.OnRightReleased(pt.x, pt.y);
+		m_Mouse.OnRightReleased(pt.x, pt.y);
 		// release mouse if outside of window
-		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
+		if (pt.x < 0 || pt.x >= m_Width || pt.y < 0 || pt.y >= m_Height)
 		{
 			ReleaseCapture();
-			mouse.OnMouseLeave();
+			m_Mouse.OnMouseLeave();
 		}
 		break;
 	}
@@ -388,7 +410,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		}*/
 		const POINTS pt = MAKEPOINTS(lParam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
-		mouse.OnWheelDelta(pt.x, pt.y, delta);
+		m_Mouse.OnWheelDelta(pt.x, pt.y, delta);
 		break;
 	}
 	/************** END MOUSE MESSAGES **************/
@@ -396,7 +418,7 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	/************** RAW MOUSE MESSAGES **************/
 	case WM_INPUT:
 	{
-		if (!mouse.RawEnabled())
+		if (!m_Mouse.RawEnabled())
 		{
 			break;
 		}
@@ -412,12 +434,12 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			// bail msg processing if error
 			break;
 		}
-		rawBuffer.resize(size);
+		m_RawBuffer.resize(size);
 		// read in the input data
 		if (GetRawInputData(
 			reinterpret_cast<HRAWINPUT>(lParam),
 			RID_INPUT,
-			rawBuffer.data(),
+			m_RawBuffer.data(),
 			&size,
 			sizeof(RAWINPUTHEADER)) != size)
 		{
@@ -425,11 +447,11 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}
 		// process the raw input data
-		auto& ri = reinterpret_cast<const RAWINPUT&>(*rawBuffer.data());
+		auto& ri = reinterpret_cast<const RAWINPUT&>(*m_RawBuffer.data());
 		if (ri.header.dwType == RIM_TYPEMOUSE &&
 			(ri.data.mouse.lLastX != 0 || ri.data.mouse.lLastY != 0))
 		{
-			mouse.OnRawDelta(ri.data.mouse.lLastX, ri.data.mouse.lLastY);
+			m_Mouse.OnRawDelta(ri.data.mouse.lLastX, ri.data.mouse.lLastY);
 		}
 		break;
 	}

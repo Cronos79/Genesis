@@ -15,9 +15,6 @@
     <ClInclude Include="GEditorApp.h">
       <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="GEditorBase.h">
-      <Filter>src\Common</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GEditorApp.cpp">

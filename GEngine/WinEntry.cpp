@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include "stdint.h"
 #include <exception>
+#include "GEngineException.h"
 
 extern GEngineApp* CreateGEngineApp();
 
@@ -12,30 +13,23 @@ int CALLBACK WinMain(
 	LPSTR     lpCmdLine,
 	int       nCmdShow)
 {
-	auto app = CreateGEngineApp();
 	try
 	{
-		app->Run();
+		auto app = CreateGEngineApp();
+		return app->Run();
+	}
+	catch (const GEngineException& e)
+	{
+		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
+	}
+	catch (const std::exception& e)
+	{
+		MessageBox(nullptr, e.what(), "Standard Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
 	catch (...)
 	{
+		MessageBox(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
-	//try
-	//{
-	//	return App{ lpCmdLine }.Go();
-	//}
-	//catch (const ChiliException& e)
-	//{
-	//	MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
-	//}
-	//catch (const std::exception& e)
-	//{
-	//	MessageBox(nullptr, e.what(), "Standard Exception", MB_OK | MB_ICONEXCLAMATION);
-	//}
-	//catch (...)
-	//{
-	//	MessageBox(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
-	//}
 	return -1;
 }
 
