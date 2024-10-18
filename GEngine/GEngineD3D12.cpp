@@ -34,15 +34,15 @@ void GEngineD3D12::BeginRender(float dt)
 	g_SwapChainOccluded = false;
 
 	//// Start the Dear ImGui frame
-	//ImGui_ImplDX12_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//ImGui::NewFrame();
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 }
 
 void GEngineD3D12::EndRender(float dt)
 {
 	// Rendering
-	//ImGui::Render();
+	ImGui::Render();
 
 	FrameContext* frameCtx = WaitForNextFrameResources();
 	UINT backBufferIdx = g_pSwapChain->GetCurrentBackBufferIndex();
@@ -71,8 +71,13 @@ void GEngineD3D12::EndRender(float dt)
 
 	g_pd3dCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)&g_pd3dCommandList);
 
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault(nullptr, (void*)g_pd3dCommandList);
+	// Update and Render additional Platform Windows
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault(nullptr, (void*)g_pd3dCommandList);
+	}
 
 	// Present
 	HRESULT hr = g_pSwapChain->Present(1, 0);   // Present with vsync

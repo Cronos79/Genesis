@@ -2,6 +2,7 @@
 #include "GEngineWindow.h"
 #include "GEngineContext.h"
 #include "GEngineTimer.h"
+#include "GEngineImGuiObject.h"
 
 int main(int argc, char** argv);
 
@@ -14,7 +15,13 @@ public:
 	int Run();
 
 private:
+	void InitImGui();
+	void ShutdownImGui();
+	void SetDarkThemeColors();
+
+private:
 	GEngineTimer* m_Timer;
+	GEngineImGuiObject* m_gobject;
 };
 
 // To be defined in CLIENT

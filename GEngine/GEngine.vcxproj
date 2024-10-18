@@ -90,14 +90,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DemoWnd.cpp" />
     <ClCompile Include="GEngineApp.cpp" />
     <ClCompile Include="GEngineContext.cpp" />
     <ClCompile Include="GEngineD3D12.cpp" />
     <ClCompile Include="GEngineException.cpp" />
     <ClCompile Include="GEngineGameObject.cpp" />
+    <ClCompile Include="GEngineGameObjectStack.cpp" />
     <ClCompile Include="GEngineImGuiObject.cpp" />
     <ClCompile Include="GEngineLog.cpp" />
     <ClCompile Include="GEngineObject.cpp" />
+    <ClCompile Include="GEngineScene.cpp" />
+    <ClCompile Include="GEngineSceneManager.cpp" />
+    <ClCompile Include="GEngineTestUI.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
     <ClCompile Include="GEngineWindow.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -105,16 +110,21 @@
     <ClCompile Include="WinEntry.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DemoWnd.h" />
     <ClInclude Include="GEngineAPI.h" />
     <ClInclude Include="GEngineApp.h" />
     <ClInclude Include="GEngineContext.h" />
     <ClInclude Include="GEngineD3D12.h" />
     <ClInclude Include="GEngineException.h" />
     <ClInclude Include="GEngineGameObject.h" />
+    <ClInclude Include="GEngineGameObjectStack.h" />
     <ClInclude Include="GEngineImGuiObject.h" />
     <ClInclude Include="GEngineLog.h" />
     <ClInclude Include="GEngineObject.h" />
     <ClInclude Include="genginepch.h" />
+    <ClInclude Include="GEngineScene.h" />
+    <ClInclude Include="GEngineSceneManager.h" />
+    <ClInclude Include="GEngineTestUI.h" />
     <ClInclude Include="GEngineTimer.h" />
     <ClInclude Include="GEngineWindow.h" />
     <ClInclude Include="Keyboard.h" />
