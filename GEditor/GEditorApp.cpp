@@ -13,5 +13,5 @@ GEditorApp::~GEditorApp()
 
 GEngineApp* CreateGEngineApp()
 {
-	return new GEditorApp(1920, 1080, "hi");
+	return new GEditorApp(1920, 1080, "Genesis Editor version: 0.1.0");
 }

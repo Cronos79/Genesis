@@ -40,22 +40,21 @@ public:
 	FrameContext* WaitForNextFrameResources();
 
 	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return m_d3dDevice; }
-	ID3D12DescriptorHeap* GetSrvDescHeap() { return m_pd3dSrvDescHeap; }
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() { return m_pd3dCommandList; }
+	ID3D12DescriptorHeap* GetSrvDescHeap() { return m_d3dSrvDescHeap; }
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() { return m_d3dCommandList; }
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device> m_d3dDevice;
-	ID3D12DescriptorHeap* m_pd3dRtvDescHeap = nullptr;
-	ID3D12DescriptorHeap* m_pd3dSrvDescHeap = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_pd3dCommandQueue;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_pd3dCommandList;
+	ID3D12DescriptorHeap* m_d3dRtvDescHeap = nullptr;
+	ID3D12DescriptorHeap* m_d3dSrvDescHeap = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_d3dCommandQueue;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_d3dCommandList;
 	Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
-	Microsoft::WRL::ComPtr<IDXGISwapChain3> m_pSwapChain;	
+	Microsoft::WRL::ComPtr<IDXGISwapChain3> m_SwapChain;	
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_mainRenderTargetResource[NUM_BACK_BUFFERS] = {};	
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_DepthStencilBuffer; // #TODO: Add me 
 	//Microsoft::WRL::ComPtr<ID3D12Resource> m_SwapChainBuffer[SwapChainBufferCount]; // #TODO: Add me 
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_DirectCmdListAlloc; // #TODO: Add me 
-	Microsoft::WRL::ComPtr<IDXGIFactory4> m_dxgiFactory; // #TODO: Add me
+	Microsoft::WRL::ComPtr<IDXGIFactory6> m_dxgiFactory; 
 
 	D3D12_CPU_DESCRIPTOR_HANDLE  m_mainRenderTargetDescriptor[NUM_BACK_BUFFERS] = {};
 	bool m_SwapChainOccluded = false;
@@ -69,4 +68,5 @@ private:
 	int m_Height;
 	HINSTANCE m_hInstance;
 	HWND m_hWnd;
+	void FlushCommandQueue();
 };

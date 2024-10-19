@@ -78,10 +78,7 @@
     <ClCompile Include="GEngineScene.cpp">
       <Filter>sec\API\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="DemoWnd.cpp">
-      <Filter>sec\API\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="GEngineTestUI.cpp">
+    <ClCompile Include="GEngineUIMainMenu.cpp">
       <Filter>sec\API\Application</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,10 +137,7 @@
     <ClInclude Include="GEngineScene.h">
       <Filter>sec\API\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="DemoWnd.h">
-      <Filter>sec\API\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="GEngineTestUI.h">
+    <ClInclude Include="GEngineUIMainMenu.h">
       <Filter>sec\API\Application</Filter>
     </ClInclude>
   </ItemGroup>

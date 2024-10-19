@@ -10,6 +10,9 @@
     <Filter Include="src\Common">
       <UniqueIdentifier>{48f2768e-94b4-4c69-af88-f35b739b4b7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{e7f49172-5b18-41bb-8585-3f2e05909093}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEditorApp.h">

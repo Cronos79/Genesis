@@ -90,7 +90,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DemoWnd.cpp" />
     <ClCompile Include="GEngineApp.cpp" />
     <ClCompile Include="GEngineContext.cpp" />
     <ClCompile Include="GEngineD3D12.cpp" />
@@ -102,15 +101,14 @@
     <ClCompile Include="GEngineObject.cpp" />
     <ClCompile Include="GEngineScene.cpp" />
     <ClCompile Include="GEngineSceneManager.cpp" />
-    <ClCompile Include="GEngineTestUI.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
+    <ClCompile Include="GEngineUIMainMenu.cpp" />
     <ClCompile Include="GEngineWindow.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="WinEntry.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DemoWnd.h" />
     <ClInclude Include="GEngineAPI.h" />
     <ClInclude Include="GEngineApp.h" />
     <ClInclude Include="GEngineContext.h" />
@@ -124,8 +122,8 @@
     <ClInclude Include="genginepch.h" />
     <ClInclude Include="GEngineScene.h" />
     <ClInclude Include="GEngineSceneManager.h" />
-    <ClInclude Include="GEngineTestUI.h" />
     <ClInclude Include="GEngineTimer.h" />
+    <ClInclude Include="GEngineUIMainMenu.h" />
     <ClInclude Include="GEngineWindow.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />

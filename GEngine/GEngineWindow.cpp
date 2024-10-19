@@ -6,6 +6,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
 
+
 // Window Class Stuff
 GEngineWindow::WindowClass GEngineWindow::WindowClass::wndClass;
 
@@ -60,10 +61,18 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 		throw CHWND_LAST_EXCEPT();
 	}
 	// create window & get hWnd
+		// Get screen dimensions
+	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	// Calculate position to center the window
+	int xPos = (screenWidth - (wr.right - wr.left)) / 2;
+	int yPos = (screenHeight - (wr.bottom - wr.top)) / 2;
+
 	m_hWnd = CreateWindow(
 		WindowClass::GetName(), name,
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+		xPos, yPos, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
 	// check for error
