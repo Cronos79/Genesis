@@ -5,7 +5,7 @@ GEngineContext::GEngineContext()
 {
 	m_Version.Major = 0;
 	m_Version.Minor = 1;
-	m_Version.Patch = 0;
+	m_Version.Patch = 1;
 	std::string version = m_Version.ToString();
 }
 

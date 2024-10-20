@@ -95,9 +95,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEditorApp.h" />
+    <ClInclude Include="UIMainMenu.h" />
+    <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GEditorApp.cpp" />
+    <ClCompile Include="UIMainMenu.cpp" />
+    <ClCompile Include="UIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

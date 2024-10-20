@@ -18,10 +18,22 @@
     <ClInclude Include="GEditorApp.h">
       <Filter>src\Application</Filter>
     </ClInclude>
+    <ClInclude Include="UIMainMenu.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GEditorApp.cpp">
       <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMainMenu.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>src\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

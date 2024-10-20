@@ -1,9 +1,10 @@
 #pragma once
 #include "GEngineImGuiObject.h"
-class GEngineUIMainMenu : public GEngineImGuiObject
+
+class UIMainMenu : public GEngineImGuiObject
 {
 public:
-    GEngineUIMainMenu();
+	UIMainMenu();
 
 	void OnImGuiUpdate() override;
 
@@ -11,9 +12,11 @@ private:
 	void MainMenuBar();
 	bool OpenNewProjectWindow();
 	bool OpenProjectWindow();
+	bool SaveProjectWindow();
 
 private:
 	bool m_OpenNewProject = false;
 	bool m_OpenProject = false;
+	bool m_SaveProject = false;
 };
 

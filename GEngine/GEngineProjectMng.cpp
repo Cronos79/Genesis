@@ -33,6 +33,15 @@ std::filesystem::path GEngineProjectMng::CreateProjectPaths(ProjectData data)
 	{
 		fs::create_directory(fullPath);
 	}
+
+	fs::path hiddenProject = std::format(".{}Data", data.ProjectName);
+	fs::path hiddenProjectPath = fullPath / hiddenProject;
+	if (!fs::exists(hiddenProjectPath))
+	{
+		fs::create_directory(hiddenProjectPath);
+		SetFileAttributesW(hiddenProjectPath.c_str(), FILE_ATTRIBUTE_HIDDEN);
+	}
+
 	fs::path content = "Content";
 	fs::path contentPath = fullPath / content;
 	if (!fs::exists(contentPath))

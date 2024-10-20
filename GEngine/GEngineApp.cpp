@@ -4,9 +4,6 @@
 #include <imgui.h>
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
-#include "GEngineUIMainMenu.h"
-
-
 
 GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
 {
@@ -17,8 +14,7 @@ GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
 	GEngineContext::GetInstance().InitGfx(width, height, GEngineContext::GetInstance().GetWindow()->GetHInst(), GEngineContext::GetInstance().GetWindow()->GetHWND());
 	GEngineContext::GetInstance().InitProjectMng();
 
-	InitImGui();
-	GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->PushOverlay(new GEngineUIMainMenu());
+	InitImGui();	
 }
 
 GEngineApp::~GEngineApp()

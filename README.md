@@ -9,14 +9,25 @@ Genesis is a game engine and editor
 
 - imgui
 
+- Project creator
+
+## Workin on
+
+- Editor UI
+
+- Renderer
+
 ## Roadmap
 
 - [Roadmap board](https://trello.com/b/qLB6MHDe/genesis)
 
-- Add Editor UI
+- Add Asset importer
 
-- Add Renderer
+- Shaders
 
+- Simple demo game
+
+- Networking
 
 ## Authors
 

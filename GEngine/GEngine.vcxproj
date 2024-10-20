@@ -104,7 +104,6 @@
     <ClCompile Include="GEngineScene.cpp" />
     <ClCompile Include="GEngineSceneManager.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
-    <ClCompile Include="GEngineUIMainMenu.cpp" />
     <ClCompile Include="GEngineWindow.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -127,7 +126,6 @@
     <ClInclude Include="GEngineScene.h" />
     <ClInclude Include="GEngineSceneManager.h" />
     <ClInclude Include="GEngineTimer.h" />
-    <ClInclude Include="GEngineUIMainMenu.h" />
     <ClInclude Include="GEngineWindow.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />

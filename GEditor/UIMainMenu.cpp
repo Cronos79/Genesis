@@ -1,15 +1,17 @@
-#include "genginepch.h"
-#include "GEngineUIMainMenu.h"
+#include "UIMainMenu.h"
+
 #include "imgui.h"
 //#include <Windows.h>
 #include "GEngineProjectMng.h"
 #include "GEngineLog.h"
 #include "GEngineContext.h"
+#include "spdlog/fmt/bundled/format.h"
+#include "UIManager.h"
 
-GEngineUIMainMenu::GEngineUIMainMenu()
+UIMainMenu::UIMainMenu()
 	: GEngineImGuiObject("MainMenu") { }
 
-void GEngineUIMainMenu::OnImGuiUpdate()
+void UIMainMenu::OnImGuiUpdate()
 {
 	MainMenuBar();
 	if (m_OpenNewProject)
@@ -20,9 +22,13 @@ void GEngineUIMainMenu::OnImGuiUpdate()
 	{
 		OpenProjectWindow();
 	}
+	if (m_SaveProject)
+	{
+		SaveProjectWindow();
+	}
 }
 
-void GEngineUIMainMenu::MainMenuBar()
+void UIMainMenu::MainMenuBar()
 {
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("File"))
@@ -37,7 +43,7 @@ void GEngineUIMainMenu::MainMenuBar()
 		}
 		if (ImGui::MenuItem("Save"))
 		{
-
+			m_SaveProject = true;
 		}
 		if (ImGui::MenuItem("Exit"))
 		{
@@ -64,12 +70,14 @@ void GEngineUIMainMenu::MainMenuBar()
 	if (ImGui::BeginMenu("About"))
 	{
 		ImGui::Text("Genesis editor");
+		ImGui::Text(std::format("GEngine {}", GEngineContext::GetInstance().GetVersion().ToString()).c_str());
 		ImGui::EndMenu();
 	}
+	ImGui::Text(std::format(" - Project: {}", GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_Data.ProjectName).c_str());
 	ImGui::EndMainMenuBar();
 }
 
-bool GEngineUIMainMenu::OpenNewProjectWindow()
+bool UIMainMenu::OpenNewProjectWindow()
 {
 	ImGui::OpenPopup("NewProject");
 	if (ImGui::BeginPopup("NewProject"))
@@ -95,7 +103,7 @@ bool GEngineUIMainMenu::OpenNewProjectWindow()
 			data.ProjectName = projectName;
 			data.Description = projectDesc;
 			data.EngineVersion = GEngineContext::GetInstance().GetVersion().ToString();
-			
+
 			GEngineProjectMng* mng = new GEngineProjectMng();
 			mng->GESaveProject(data);
 			m_OpenNewProject = false;
@@ -106,28 +114,44 @@ bool GEngineUIMainMenu::OpenNewProjectWindow()
 			m_OpenNewProject = false;
 		}
 		ImGui::EndPopup();
-	}	
+	}
 	return true;
 }
 
-bool GEngineUIMainMenu::OpenProjectWindow()
+bool UIMainMenu::OpenProjectWindow()
 {
 	ImGui::OpenPopup("OpenProject");
 	if (ImGui::BeginPopup("OpenProject"))
 	{
 		ImGui::Text("Click a project name to open it");
 		for (auto project : GEngineContext::GetInstance().GetProjectMng()->GetAllProjects())
-		{			
+		{
 			if (ImGui::Selectable(std::format("ProjectName: {} - EngineVersion: {}", project->m_Data.ProjectName, project->m_Data.EngineVersion).c_str()))
 			{
 				GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
+				UIManager::SetUIOverlay();
 				m_OpenProject = false;
 			}
-		}	
-	
+		}
+
 		if (ImGui::Button("Cancel"))
 		{
 			m_OpenProject = false;
+		}
+		ImGui::EndPopup();
+	}
+	return true;
+}
+
+bool UIMainMenu::SaveProjectWindow()
+{
+	ImGui::OpenPopup("SaveProject");
+	if (ImGui::BeginPopup("SaveProject"))
+	{
+		ImGui::Text("Save a project");
+		if (ImGui::Button("Cancel"))
+		{
+			m_SaveProject = false;
 		}
 		ImGui::EndPopup();
 	}
