@@ -31,6 +31,9 @@
     <Filter Include="sec\API\GameObjects">
       <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sec\Graphics\D3D12\Debug">
+      <UniqueIdentifier>{5ada8ac2-4efa-4d04-b97f-277cf7a09c2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEntry.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="GEngineProjectMng.cpp">
       <Filter>sec\API\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineDXDebugLayer.cpp">
+      <Filter>sec\Graphics\D3D12\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="GEngineProjectMng.h">
       <Filter>sec\API\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineDXDebugLayer.h">
+      <Filter>sec\Graphics\D3D12\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -93,6 +93,7 @@
     <ClCompile Include="GEngineApp.cpp" />
     <ClCompile Include="GEngineContext.cpp" />
     <ClCompile Include="GEngineD3D12.cpp" />
+    <ClCompile Include="GEngineDXDebugLayer.cpp" />
     <ClCompile Include="GEngineException.cpp" />
     <ClCompile Include="GEngineGameObject.cpp" />
     <ClCompile Include="GEngineGameObjectStack.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="GEngineApp.h" />
     <ClInclude Include="GEngineContext.h" />
     <ClInclude Include="GEngineD3D12.h" />
+    <ClInclude Include="GEngineDXDebugLayer.h" />
     <ClInclude Include="GEngineException.h" />
     <ClInclude Include="GEngineGameObject.h" />
     <ClInclude Include="GEngineGameObjectStack.h" />
