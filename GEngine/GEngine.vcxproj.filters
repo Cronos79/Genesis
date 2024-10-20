@@ -22,11 +22,14 @@
     <Filter Include="sec\Graphics\D3D12">
       <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\API\GameObjects">
-      <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sec\API\Scenes">
       <UniqueIdentifier>{19c3ae7e-bbd5-433f-af50-f45fadc2321d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\API\Project">
+      <UniqueIdentifier>{b2f73f21-e939-4369-9394-50a8b2e2a37c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\API\GameObjects">
+      <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="GEngineUIMainMenu.cpp">
       <Filter>sec\API\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineProject.cpp">
+      <Filter>sec\API\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineProjectMng.cpp">
+      <Filter>sec\API\Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,5 +149,14 @@
     <ClInclude Include="GEngineUIMainMenu.h">
       <Filter>sec\API\Application</Filter>
     </ClInclude>
+    <ClInclude Include="GEngineProject.h">
+      <Filter>sec\API\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineProjectMng.h">
+      <Filter>sec\API\Project</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

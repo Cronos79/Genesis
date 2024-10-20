@@ -10,8 +10,10 @@ public:
 private:
 	void MainMenuBar();
 	bool OpenNewProjectWindow();
+	bool OpenProjectWindow();
 
 private:
 	bool m_OpenNewProject = false;
+	bool m_OpenProject = false;
 };
 

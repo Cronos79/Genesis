@@ -16,14 +16,9 @@ private:
 	static std::shared_ptr<spdlog::logger> s_ClientLogger;
 };
 
-std::shared_ptr<spdlog::logger> GEngineLog::s_ClientLogger;
 
-void GEngineLog::Init()
-{
-	spdlog::set_pattern("%^[%T] %@ %n: %v%$");
-	s_ClientLogger = spdlog::stdout_color_mt("GENGINE");
-	s_ClientLogger->set_level(spdlog::level::trace);
-}
+
+
 
 #ifdef _DEBUG
 #define BB_TRACE(...)         ::GEngineLog::GetClientLogger()->trace(__VA_ARGS__)

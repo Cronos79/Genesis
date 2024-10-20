@@ -134,7 +134,7 @@ std::optional<int> GEngineWindow::ProcessMessages() noexcept
 {
 	MSG msg;
 	// while queue has messages, remove and dispatch them (but do not block on empty queue)
-	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		// check for quit because peekmessage does not signal this via return val
 		if (msg.message == WM_QUIT)

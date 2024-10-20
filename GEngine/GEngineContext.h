@@ -1,14 +1,25 @@
 #pragma once
 #include "GEngineWindow.h"
 #include "GEngineD3D12.h"
-#include "GEngineSceneManager.h"
+#include "GEngineProjectMng.h"
 
+struct GEngineVersion
+{
+	int32_t Major;
+	int32_t Minor;
+	int32_t Patch;
+
+	std::string ToString()
+	{
+		return std::format("{}.{}.{}", Major, Minor, Patch);
+	}
+};
 
 struct GEngineData
 {
 	GEngineWindow* m_wnd;
 	GEngineD3D12* m_Gfx;
-	GEngineSceneManager* m_SceneMng;
+	GEngineProjectMng* m_ProjectMng;
 };
 
 class GEngineContext
@@ -27,7 +38,8 @@ public:
 	GEngineData GetContext();
 	GEngineWindow* GetWindow();
 	GEngineD3D12* GetGFX();
-	GEngineSceneManager* GetSceneMng();
+	GEngineProjectMng* GetProjectMng();
+	GEngineVersion GetVersion();
 
 	// Windows stuff
 	void InitWindow(int32_t width, int32_t height, std::string title);
@@ -36,9 +48,10 @@ public:
 	void InitGfx(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd);
 
 	// Scene manager
-	void InitSceneMng();
+	void InitProjectMng();
 
 
 private:
 	GEngineData m_Context;
+	GEngineVersion m_Version;
 };

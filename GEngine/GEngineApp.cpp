@@ -7,6 +7,7 @@
 #include "GEngineUIMainMenu.h"
 
 
+
 GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
 {
 	m_Timer = new GEngineTimer();
@@ -14,11 +15,10 @@ GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
 	BB_TRACE("Genesis starting");
 	GEngineContext::GetInstance().InitWindow(width, height, title);
 	GEngineContext::GetInstance().InitGfx(width, height, GEngineContext::GetInstance().GetWindow()->GetHInst(), GEngineContext::GetInstance().GetWindow()->GetHWND());
-	GEngineContext::GetInstance().InitSceneMng();
+	GEngineContext::GetInstance().InitProjectMng();
 
 	InitImGui();
-
-	GEngineContext::GetInstance().GetSceneMng()->GetCurrentScene()->PushOverlay(new GEngineUIMainMenu());
+	GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->PushOverlay(new GEngineUIMainMenu());
 }
 
 GEngineApp::~GEngineApp()
@@ -40,12 +40,12 @@ int GEngineApp::Run()
 		
 		GEngineContext::GetInstance().GetGFX()->BeginRender(deltaTime);
 
-		for (auto* gobjects : GEngineContext::GetInstance().GetSceneMng()->GetCurrentScene()->GetGameObjects().GetGameObjects())
+		for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
 		{
 			gobjects->OnUpdate(deltaTime);
 		}
 		
-		for (auto* gobjects : GEngineContext::GetInstance().GetSceneMng()->GetCurrentScene()->GetGameObjects().GetGameObjects())
+		for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
 		{
 			if (dynamic_cast<GEngineImGuiObject*>(gobjects))
 			{

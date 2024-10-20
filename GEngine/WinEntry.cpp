@@ -33,8 +33,9 @@ int CALLBACK WinMain(
 	return -1;
 }
 
+#ifdef _DEBUG
 int main(int argc, char** argv)
 {
 	return WinMain(GetModuleHandle(0), 0, ::GetCommandLine(), SW_SHOW);
 }
-
+#endif

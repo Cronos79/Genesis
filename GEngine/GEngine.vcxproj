@@ -25,7 +25,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -99,6 +99,8 @@
     <ClCompile Include="GEngineImGuiObject.cpp" />
     <ClCompile Include="GEngineLog.cpp" />
     <ClCompile Include="GEngineObject.cpp" />
+    <ClCompile Include="GEngineProject.cpp" />
+    <ClCompile Include="GEngineProjectMng.cpp" />
     <ClCompile Include="GEngineScene.cpp" />
     <ClCompile Include="GEngineSceneManager.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
@@ -120,6 +122,8 @@
     <ClInclude Include="GEngineLog.h" />
     <ClInclude Include="GEngineObject.h" />
     <ClInclude Include="genginepch.h" />
+    <ClInclude Include="GEngineProject.h" />
+    <ClInclude Include="GEngineProjectMng.h" />
     <ClInclude Include="GEngineScene.h" />
     <ClInclude Include="GEngineSceneManager.h" />
     <ClInclude Include="GEngineTimer.h" />
@@ -134,7 +138,17 @@
       <Project>{b64d8b3f-721e-4330-b550-8c90411c4577}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
+  </Target>
 </Project>

@@ -1,5 +1,6 @@
 #include "GEditorApp.h"
 
+
 GEditorApp::GEditorApp(int32_t width, int32_t height, std::string title)
 	: GEngineApp(width, height, title)
 {
@@ -13,5 +14,6 @@ GEditorApp::~GEditorApp()
 
 GEngineApp* CreateGEngineApp()
 {
-	return new GEditorApp(1920, 1080, "Genesis Editor version: 0.1.0");
+	std::string title = std::format("Genesis Editor version: {}", GEngineContext::GetInstance().GetVersion().ToString());
+	return new GEditorApp(1920, 1080, title);
 }
