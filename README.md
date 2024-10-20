@@ -5,14 +5,29 @@ Genesis is a game engine and editor
 
 ## Features
 
-- Coming soon
+- D3D12
+
+- imgui
+
+- Project creator
+
+## Workin on
+
+- Editor UI
+
+- Renderer
 
 ## Roadmap
 
-- Create a dx12 window
+- [Roadmap board](https://trello.com/b/qLB6MHDe/genesis)
 
-- add imgui 
+- Add Asset importer
 
+- Shaders
+
+- Simple demo game
+
+- Networking
 
 ## Authors
 

@@ -4,10 +4,15 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+#include <wrl.h>
+
 // Link necessary d3d12 libraries.
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib, "D3D12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+#define NUM_FRAMES_IN_FLIGHT 3
+#define NUM_BACK_BUFFERS 3
 
 struct FrameContext
 {
@@ -31,35 +36,37 @@ public:
 	void CreateRenderTarget();
 	void CleanupRenderTarget();
 	void WaitForLastSubmittedFrame();
+	void OnResize();
 	FrameContext* WaitForNextFrameResources();
 
-	ID3D12Device* GetDevice() { return g_pd3dDevice; }
-	ID3D12DescriptorHeap* GetSrvDescHeap() { return g_pd3dSrvDescHeap; }
-	ID3D12GraphicsCommandList* GetCommandList() { return g_pd3dCommandList; }
+	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return m_d3dDevice; }
+	ID3D12DescriptorHeap* GetSrvDescHeap() { return m_d3dSrvDescHeap; }
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() { return m_d3dCommandList; }
 
 private:
+	Microsoft::WRL::ComPtr<ID3D12Device> m_d3dDevice;
+	ID3D12DescriptorHeap* m_d3dRtvDescHeap = nullptr;
+	ID3D12DescriptorHeap* m_d3dSrvDescHeap = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_d3dCommandQueue;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> m_d3dCommandList;
+	Microsoft::WRL::ComPtr<ID3D12Fence> m_fence;
+	Microsoft::WRL::ComPtr<IDXGISwapChain3> m_SwapChain;	
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_mainRenderTargetResource[NUM_BACK_BUFFERS] = {};	
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_DepthStencilBuffer; // #TODO: Add me 
+	//Microsoft::WRL::ComPtr<ID3D12Resource> m_SwapChainBuffer[SwapChainBufferCount]; // #TODO: Add me 
+	Microsoft::WRL::ComPtr<IDXGIFactory6> m_dxgiFactory; 
+
+	D3D12_CPU_DESCRIPTOR_HANDLE  m_mainRenderTargetDescriptor[NUM_BACK_BUFFERS] = {};
+	bool m_SwapChainOccluded = false;
+	HANDLE m_hSwapChainWaitableObject = nullptr;
+	HANDLE m_fenceEvent = nullptr;
+	UINT64 m_fenceLastSignaledValue = 0;
+	FrameContext m_frameContext[NUM_FRAMES_IN_FLIGHT] = {};
+	UINT m_frameIndex = 0;
+	FrameContext* m_frameCtx;
 	int m_Width;
 	int m_Height;
 	HINSTANCE m_hInstance;
 	HWND m_hWnd;
-
-	#define NUM_FRAMES_IN_FLIGHT 3
-	FrameContext                 g_frameContext[NUM_FRAMES_IN_FLIGHT] = {};
-	UINT                         g_frameIndex = 0;
-
-	FrameContext* frameCtx;
-	#define NUM_BACK_BUFFERS 3
-	ID3D12Device* g_pd3dDevice = nullptr;
-	ID3D12DescriptorHeap* g_pd3dRtvDescHeap = nullptr;
-	ID3D12DescriptorHeap* g_pd3dSrvDescHeap = nullptr;
-	ID3D12CommandQueue* g_pd3dCommandQueue = nullptr;
-	ID3D12GraphicsCommandList* g_pd3dCommandList = nullptr;
-	ID3D12Fence* g_fence = nullptr;
-	HANDLE g_fenceEvent = nullptr;
-	UINT64 g_fenceLastSignaledValue = 0;
-	IDXGISwapChain3* g_pSwapChain = nullptr;
-	bool g_SwapChainOccluded = false;
-	HANDLE g_hSwapChainWaitableObject = nullptr;
-	ID3D12Resource* g_mainRenderTargetResource[NUM_BACK_BUFFERS] = {};
-	D3D12_CPU_DESCRIPTOR_HANDLE  g_mainRenderTargetDescriptor[NUM_BACK_BUFFERS] = {};
+	void FlushCommandQueue();
 };
