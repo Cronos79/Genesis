@@ -32,11 +32,13 @@ public:
 	void DisableCursor() noexcept;
 	bool CursorEnabled() const noexcept;
 	static std::optional<int> ProcessMessages() noexcept;
+	void SetFullScreen(bool isFullScreen);
 
 	HWND GetHWND();
 	HINSTANCE GetHInst();
 	inline int GetWidth() { return m_Width; }
 	inline int GetHeight() { return m_Height; }
+	inline bool GetIsFullScreen() { return m_IsFullScreen; };
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -51,6 +53,7 @@ public:
 	Keyboard m_Kbd;
 	Mouse m_Mouse;
 private:
+	bool m_IsFullScreen = false;
 	bool m_CursorEnabled = true;
 	int m_Width;
 	int m_Height;

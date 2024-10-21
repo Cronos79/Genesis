@@ -13,7 +13,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 class GEngineApp
 {
 public:
-	GEngineApp(int32_t width, int32_t height, std::string title);
+	GEngineApp(int32_t width, int32_t height, std::string title, bool fullScreen);
 	~GEngineApp();
 
 	int Run();

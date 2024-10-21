@@ -6,6 +6,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
 #include "GEngineContext.h"
+#include "GEngineLog.h"
 
 
 // Window Class Stuff
@@ -57,7 +58,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPEDWINDOW, FALSE) == 0)
+	if (AdjustWindowRect(&wr, WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, FALSE) == 0)
 	{
 		throw CHWND_LAST_EXCEPT();
 	}
@@ -73,7 +74,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	m_hWnd = CreateWindowEx(
 		0/*WS_EX_LAYERED*/,
 		WindowClass::GetName(), name,
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPEDWINDOW,
+		WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 		xPos, yPos, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
@@ -100,6 +101,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 
 GEngineWindow::~GEngineWindow()
 {
+	BB_TRACE("Windows shutting down");
 	DestroyWindow(m_hWnd);
 }
 
@@ -152,6 +154,48 @@ while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 
 	// return empty optional when not quitting app
 	return {};
+}
+
+void GEngineWindow::SetFullScreen(bool isFullScreen)
+{
+	DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+	DWORD exStyle = WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW;
+	if (isFullScreen)
+	{
+		style = WS_POPUP | WS_VISIBLE;
+		exStyle = WS_EX_APPWINDOW;
+	}
+
+	SetWindowLongW(m_hWnd, GWL_STYLE, style);
+	SetWindowLongW(m_hWnd, GWL_EXSTYLE, exStyle);
+
+	if (isFullScreen)
+	{
+		HMONITOR monitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO info{};
+		info.cbSize = sizeof(info);
+		if (GetMonitorInfoW(monitor, &info))
+		{
+			RECT wr;
+			wr.left = info.rcMonitor.left;
+			wr.right = info.rcMonitor.right - info.rcMonitor.left;
+			wr.top = info.rcMonitor.top;
+			wr.bottom = info.rcMonitor.bottom - info.rcMonitor.top;
+			if (AdjustWindowRect(&wr, exStyle, FALSE) == 0)
+			{
+				throw CHWND_LAST_EXCEPT();
+			}
+			SetWindowPos(m_hWnd, nullptr,
+				wr.left,
+				wr.top,
+				wr.right - wr.left,
+				wr.bottom - wr.top, SWP_NOZORDER);
+
+			GEngineContext::GetInstance().GetGFX()->SetWindowSize(wr.right - wr.left, wr.bottom - wr.top);
+		}
+	}
+
+	m_IsFullScreen = isFullScreen;
 }
 
 HWND GEngineWindow::GetHWND()

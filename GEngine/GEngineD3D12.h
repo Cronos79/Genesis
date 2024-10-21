@@ -26,10 +26,11 @@ public:
 	inline void SetShouldResize(bool shouldResize) { m_ShouldResize = shouldResize; };
 	inline int32_t GetWidth() { return m_Width; };
 	inline int32_t GetHeight() { return m_Height; };
+	inline void SetWindowSize(int32_t width, int32_t height) { m_Width = width; m_Height = height; SetShouldResize(true); }
 
 	bool InIt();
-	void BeginRender(float dt);
-	void EndRender(float dt);
+	void BeginFrame(float dt);
+	void EndFrame(float dt);
 	void Shutdown();
 
 private:

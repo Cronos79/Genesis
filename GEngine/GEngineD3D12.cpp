@@ -18,7 +18,7 @@ GEngineD3D12::GEngineD3D12(int32_t width, int32_t height, HINSTANCE hInstance, H
 
 GEngineD3D12::~GEngineD3D12()
 {
-	
+	//Shutdown();
 }
 
 bool GEngineD3D12::InIt()
@@ -171,8 +171,7 @@ void GEngineD3D12::SignalAndWait()
 	}
 	else
 	{
-		throw CHWND_EXCEPT(hr);
-		throw;
+		//throw CHWND_EXCEPT(hr);
 	}	
 }
 
@@ -189,7 +188,7 @@ void GEngineD3D12::ResizeSwapChain()
 	}
 }
 
-void GEngineD3D12::BeginRender(float dt)
+void GEngineD3D12::BeginFrame(float dt)
 {
 	// Handle window screen locked
 	if (m_SwapChainOccluded && m_SwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
@@ -206,7 +205,7 @@ void GEngineD3D12::BeginRender(float dt)
 	InitCommandList();	
 }
 
-void GEngineD3D12::EndRender(float dt)
+void GEngineD3D12::EndFrame(float dt)
 {
 	ExecuteCommandList();
 

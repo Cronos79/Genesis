@@ -6,7 +6,7 @@
 #include "imgui_impl_dx12.h"
 #include "GEngineContext.h"
 
-GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
+GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title, bool fullScreen)
 {
 	m_Timer = new GEngineTimer();
 	GEngineLog::Init();
@@ -14,6 +14,11 @@ GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title)
 	GEngineContext::GetInstance().InitWindow(width, height, title);
 	GEngineContext::GetInstance().InitGfx(width, height, GEngineContext::GetInstance().GetWindow()->GetHInst(), GEngineContext::GetInstance().GetWindow()->GetHWND());
 	GEngineContext::GetInstance().InitProjectMng();
+
+	if (fullScreen)
+	{
+		GEngineContext::GetInstance().GetWindow()->SetFullScreen(fullScreen);
+	}
 
 	InitImGui();	
 }
@@ -30,31 +35,41 @@ int GEngineApp::Run()
 		if (const auto ecode = GEngineWindow::ProcessMessages())
 		{
 			// if return optional has value, means we're quitting so return exit code
-			//ShutdownImGui();						
+			//ShutdownImGui();				
 			return *ecode;
 		}
-		float deltaTime = m_Timer->Mark();
-		
-		GEngineContext::GetInstance().GetGFX()->BeginRender(deltaTime);
+		if (GEngineContext::GetInstance().IsRunning())
+		{
+			float deltaTime = m_Timer->Mark();
 
-		for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
-		{
-			gobjects->OnUpdate(deltaTime);
-		}
-		
-		for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
-		{
-			if (dynamic_cast<GEngineImGuiObject*>(gobjects))
+			/****************************************************************/
+			if (GEngineContext::GetInstance().GetWindow()->m_Kbd.KeyIsPressed(VK_F11))
 			{
-				gobjects->OnImGuiUpdate();
+				GEngineContext::GetInstance().GetWindow()->SetFullScreen(!GEngineContext::GetInstance().GetWindow()->GetIsFullScreen());
 			}
-		}	
+			if (GEngineContext::GetInstance().GetWindow()->m_Kbd.KeyIsPressed(VK_F12))
+			{
+				//GEngineContext::GetInstance().StopRunning(); // #TODO: Cant stop or breakpoint happens
+			}
+			/****************************************************************/
 
-		GEngineContext::GetInstance().GetGFX()->EndRender(deltaTime);				
-	}
-	if (GEngineContext::GetInstance().GetGFX() != nullptr)
-	{
-		GEngineContext::GetInstance().GetGFX()->Shutdown();
+			GEngineContext::GetInstance().GetGFX()->BeginFrame(deltaTime);
+
+			for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
+			{
+				gobjects->OnUpdate(deltaTime);
+			}
+
+			for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
+			{
+				if (dynamic_cast<GEngineImGuiObject*>(gobjects))
+				{
+					gobjects->OnImGuiUpdate();
+				}
+			}
+
+			GEngineContext::GetInstance().GetGFX()->EndFrame(deltaTime);
+		}
 	}
 }
 
