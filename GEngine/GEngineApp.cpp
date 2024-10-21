@@ -25,7 +25,7 @@ GEngineApp::~GEngineApp()
 
 int GEngineApp::Run()
 {	
-	while (true)
+	while (GEngineContext::GetInstance().IsRunning())
 	{		
 		if (const auto ecode = GEngineWindow::ProcessMessages())
 		{
@@ -51,6 +51,10 @@ int GEngineApp::Run()
 		}	
 
 		GEngineContext::GetInstance().GetGFX()->EndRender(deltaTime);				
+	}
+	if (GEngineContext::GetInstance().GetGFX() != nullptr)
+	{
+		GEngineContext::GetInstance().GetGFX()->Shutdown();
 	}
 }
 

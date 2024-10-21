@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
+#include "GEngineContext.h"
 
 
 // Window Class Stuff
@@ -56,7 +57,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPEDWINDOW, FALSE) == 0)
 	{
 		throw CHWND_LAST_EXCEPT();
 	}
@@ -69,9 +70,10 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	int xPos = (screenWidth - (wr.right - wr.left)) / 2;
 	int yPos = (screenHeight - (wr.bottom - wr.top)) / 2;
 
-	m_hWnd = CreateWindow(
+	m_hWnd = CreateWindowEx(
+		0/*WS_EX_LAYERED*/,
 		WindowClass::GetName(), name,
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPEDWINDOW,
 		xPos, yPos, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
 	);
@@ -243,6 +245,15 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 	switch (msg)
 	{
+	case WM_SIZE:
+		if (GEngineContext::GetInstance().GetGFX() != nullptr)
+		{
+			if (lParam && (HIWORD(lParam) != GEngineContext::GetInstance().GetGFX()->GetHeight() || LOWORD(lParam) != GEngineContext::GetInstance().GetGFX()->GetWidth()))
+			{
+				GEngineContext::GetInstance().GetGFX()->SetShouldResize(true);
+			}			
+		}		
+		break;
 		// we don't want the DefProc to handle this message because
 		// we want our destructor to destroy the window, so return 0 instead of break
 	case WM_CLOSE:

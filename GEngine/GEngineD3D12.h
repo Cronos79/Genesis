@@ -23,15 +23,21 @@ public:
 	inline Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCmdQueue() { return m_CmdQueue; };
 	inline Microsoft::WRL::ComPtr<IDXGIFactory7>& GetDXGIFactory() { return m_dxgiFactory; };
 
-	void Flush(size_t count);
+	inline void SetShouldResize(bool shouldResize) { m_ShouldResize = shouldResize; };
+	inline int32_t GetWidth() { return m_Width; };
+	inline int32_t GetHeight() { return m_Height; };
 
 	bool InIt();
-	ID3D12GraphicsCommandList10* InitCommandList();
-	void ExecuteCommandList();
-	void Shutdown();
-	void SignalAndWait();
 	void BeginRender(float dt);
 	void EndRender(float dt);
+	void Shutdown();
+
+private:
+	ID3D12GraphicsCommandList10* InitCommandList();
+	void ExecuteCommandList();	
+	void Flush(size_t count);
+	void SignalAndWait();	
+	void ResizeSwapChain();
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device14> m_Device;
@@ -44,7 +50,8 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_SwapChain;
 	Microsoft::WRL::ComPtr<IDXGIFactory7> m_dxgiFactory;
 
-
+	bool m_ShouldResize = false;
+	bool m_SwapChainOccluded = false;
 	int32_t m_Width;
 	int32_t m_Height;
 	HINSTANCE m_hInstance;

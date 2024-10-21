@@ -107,8 +107,10 @@ bool GEngineD3D12::InIt()
 	// Create swap chain
 	Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain1;
 	m_dxgiFactory->CreateSwapChainForHwnd(*m_CmdQueue.GetAddressOf(), m_hWnd, &swd, &sfd, nullptr, swapChain1.GetAddressOf());
-	if (!swapChain1->QueryInterface(m_SwapChain.GetAddressOf()))
+	hr = swapChain1->QueryInterface(m_SwapChain.GetAddressOf());
+	if (FAILED(hr))
 	{
+		throw CHWND_EXCEPT(hr);
 		return false;
 	}
 
@@ -174,8 +176,33 @@ void GEngineD3D12::SignalAndWait()
 	}	
 }
 
+void GEngineD3D12::ResizeSwapChain()
+{
+	RECT cr;
+	if (GetClientRect(m_hWnd, &cr))
+	{
+		m_Width = cr.right - cr.left;
+		m_Height = cr.left - cr.top;
+
+		m_SwapChain->ResizeBuffers(SWAP_BUFFER_COUNT, m_Width, m_Height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING);
+		m_ShouldResize = false;
+	}
+}
+
 void GEngineD3D12::BeginRender(float dt)
 {
+	// Handle window screen locked
+	if (m_SwapChainOccluded && m_SwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
+	{
+		::Sleep(10);
+	}
+	m_SwapChainOccluded = false;
+
+	if (m_ShouldResize)
+	{
+		Flush(SWAP_BUFFER_COUNT);
+		ResizeSwapChain();
+	}
 	InitCommandList();	
 }
 
@@ -183,7 +210,8 @@ void GEngineD3D12::EndRender(float dt)
 {
 	ExecuteCommandList();
 
-	m_SwapChain->Present(1, 0);
+	HRESULT hr = m_SwapChain->Present(1, 0);
+	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
 }
 
 //void GEngineD3D12::BeginRender(float dt)

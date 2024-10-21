@@ -41,6 +41,9 @@ public:
 	GEngineProjectMng* GetProjectMng();
 	GEngineVersion GetVersion();
 
+	inline bool IsRunning() { return m_IsRunning; }
+	inline void StopRunning() { m_IsRunning = false; }
+
 	// Windows stuff
 	void InitWindow(int32_t width, int32_t height, std::string title);
 
@@ -53,4 +56,5 @@ public:
 
 private:
 	GEngineData m_Data;	
+	bool m_IsRunning = true;
 };
