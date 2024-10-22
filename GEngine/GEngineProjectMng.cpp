@@ -68,7 +68,7 @@ std::vector<GEngineProject*> GEngineProjectMng::GetAllProjects()
 		std::string dirPath = entry.path().string();
 		std::string dir = "";
 
-		int last = dirPath.find_last_of('\\');
+		size_t last = dirPath.find_last_of('\\');
 		dir = dirPath.erase(0, last + 1);
 		ProjectData data = GEngineContext::GetInstance().GetProjectMng()->GELoadProject(dir);
 		GEngineProject* proj = new GEngineProject();

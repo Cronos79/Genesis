@@ -8,7 +8,7 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#define SWAP_BUFFER_COUNT 2
+constexpr auto SWAP_BUFFER_COUNT = 2;
 
 class GEngineD3D12
 {
@@ -24,8 +24,8 @@ public:
 	inline Microsoft::WRL::ComPtr<IDXGIFactory7>& GetDXGIFactory() { return m_dxgiFactory; };
 
 	inline void SetShouldResize(bool shouldResize) { m_ShouldResize = shouldResize; };
-	inline int32_t GetWidth() { return m_Width; };
-	inline int32_t GetHeight() { return m_Height; };
+	inline int32_t GetWidth() const { return m_Width; };
+	inline int32_t GetHeight() const { return m_Height; };
 	inline void SetWindowSize(int32_t width, int32_t height) { m_Width = width; m_Height = height; SetShouldResize(true); }
 
 	bool InIt();
@@ -39,7 +39,8 @@ private:
 	void Flush(size_t count);
 	void SignalAndWait();	
 	void ResizeSwapChain();
-
+	bool GetBuffers();
+	void ReleaseBuffers();
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device14> m_Device;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_CmdQueue;
@@ -50,6 +51,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList10> m_CmdList;
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_SwapChain;
 	Microsoft::WRL::ComPtr<IDXGIFactory7> m_dxgiFactory;
+	Microsoft::WRL::ComPtr<ID3D12Resource2> m_Buffers[SWAP_BUFFER_COUNT];
 
 	bool m_ShouldResize = false;
 	bool m_SwapChainOccluded = false;

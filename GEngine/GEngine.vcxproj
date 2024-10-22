@@ -62,6 +62,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26498;4005;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -81,6 +82,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>26498;4005;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +104,7 @@
     <ClCompile Include="GEngineObject.cpp" />
     <ClCompile Include="GEngineProject.cpp" />
     <ClCompile Include="GEngineProjectMng.cpp" />
+    <ClCompile Include="GEngineRenderer.cpp" />
     <ClCompile Include="GEngineScene.cpp" />
     <ClCompile Include="GEngineSceneManager.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
@@ -125,6 +128,7 @@
     <ClInclude Include="genginepch.h" />
     <ClInclude Include="GEngineProject.h" />
     <ClInclude Include="GEngineProjectMng.h" />
+    <ClInclude Include="GEngineRenderer.h" />
     <ClInclude Include="GEngineScene.h" />
     <ClInclude Include="GEngineSceneManager.h" />
     <ClInclude Include="GEngineTimer.h" />

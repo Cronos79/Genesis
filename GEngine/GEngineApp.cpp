@@ -49,7 +49,9 @@ int GEngineApp::Run()
 			}
 			if (GEngineContext::GetInstance().GetWindow()->m_Kbd.KeyIsPressed(VK_F12))
 			{
+				//std::exit(0);
 				//GEngineContext::GetInstance().StopRunning(); // #TODO: Cant stop or breakpoint happens
+				//DestroyWindow(GEngineContext::GetInstance().GetWindow()->GetHWND());
 			}
 			/****************************************************************/
 
@@ -71,6 +73,7 @@ int GEngineApp::Run()
 			GEngineContext::GetInstance().GetGFX()->EndFrame(deltaTime);
 		}
 	}
+	return 0;
 }
 
  void GEngineApp::InitImGui()

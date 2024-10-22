@@ -114,6 +114,12 @@ bool GEngineD3D12::InIt()
 		return false;
 	}
 
+	// Get buffers
+	if (!GetBuffers())
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -165,7 +171,7 @@ void GEngineD3D12::SignalAndWait()
 	{
 		if (WaitForSingleObject(m_FenceEvent, 20000) != WAIT_OBJECT_0)
 		{
-			CHWND_LAST_EXCEPT();
+			//CHWND_LAST_EXCEPT();
 			std::exit(-1);
 		}
 	}
@@ -177,6 +183,8 @@ void GEngineD3D12::SignalAndWait()
 
 void GEngineD3D12::ResizeSwapChain()
 {
+	ReleaseBuffers();
+
 	RECT cr;
 	if (GetClientRect(m_hWnd, &cr))
 	{
@@ -185,6 +193,31 @@ void GEngineD3D12::ResizeSwapChain()
 
 		m_SwapChain->ResizeBuffers(SWAP_BUFFER_COUNT, m_Width, m_Height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING);
 		m_ShouldResize = false;
+	}
+
+	GetBuffers();
+}
+
+bool GEngineD3D12::GetBuffers()
+{
+	HRESULT hr;
+	for (UINT i = 0; i < SWAP_BUFFER_COUNT; ++i)
+	{
+		hr = m_SwapChain->GetBuffer(i, IID_PPV_ARGS(&m_Buffers[i]));
+		if (FAILED(hr))
+		{
+			BB_ERROR("m_SwapChain get buffer failed");
+			return false;
+		}
+	}
+	return true;
+}
+
+void GEngineD3D12::ReleaseBuffers()
+{
+	for (size_t i = 0; i < SWAP_BUFFER_COUNT; ++i)
+	{
+		m_Buffers[i].Reset();
 	}
 }
 
