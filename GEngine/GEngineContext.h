@@ -20,6 +20,7 @@ struct GEngineData
 	GEngineWindow* m_wnd;
 	GEngineD3D12* m_Gfx;
 	GEngineProjectMng* m_ProjectMng;
+	GEngineVersion m_Version;
 };
 
 class GEngineContext
@@ -35,11 +36,13 @@ public:
 	}
 
 	// Core stuff
-	GEngineData GetContext();
 	GEngineWindow* GetWindow();
 	GEngineD3D12* GetGFX();
 	GEngineProjectMng* GetProjectMng();
 	GEngineVersion GetVersion();
+
+	inline bool IsRunning() { return m_IsRunning; }
+	inline void StopRunning() { m_IsRunning = false; }
 
 	// Windows stuff
 	void InitWindow(int32_t width, int32_t height, std::string title);
@@ -52,6 +55,6 @@ public:
 
 
 private:
-	GEngineData m_Context;
-	GEngineVersion m_Version;
+	GEngineData m_Data;	
+	bool m_IsRunning = true;
 };
