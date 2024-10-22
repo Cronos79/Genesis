@@ -5,7 +5,7 @@ GEngineContext::GEngineContext()
 {
 	m_Data.m_Version.Major = 0;
 	m_Data.m_Version.Minor = 1;
-	m_Data.m_Version.Patch = 1;
+	m_Data.m_Version.Patch = 2;
 }
 
 GEngineWindow* GEngineContext::GetWindow()

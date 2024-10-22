@@ -32,6 +32,7 @@ public:
 	void BeginFrame(float dt);
 	void EndFrame(float dt);
 	void Shutdown();
+	void Test();
 
 private:
 	ID3D12GraphicsCommandList10* InitCommandList();
@@ -41,6 +42,7 @@ private:
 	void ResizeSwapChain();
 	bool GetBuffers();
 	void ReleaseBuffers();
+	void SetDarkThemeColors();
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device14> m_Device;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_CmdQueue;
@@ -52,6 +54,11 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_SwapChain;
 	Microsoft::WRL::ComPtr<IDXGIFactory7> m_dxgiFactory;
 	Microsoft::WRL::ComPtr<ID3D12Resource2> m_Buffers[SWAP_BUFFER_COUNT];
+	size_t m_CurrentBufferIndex = 0;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_rtvDescHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> m_srvDescHeap;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE m_rtvHandles[SWAP_BUFFER_COUNT];
 
 	bool m_ShouldResize = false;
 	bool m_SwapChainOccluded = false;

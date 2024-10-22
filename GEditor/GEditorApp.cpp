@@ -5,7 +5,7 @@
 GEditorApp::GEditorApp(int32_t width, int32_t height, std::string title, bool fullScreen)
 	: GEngineApp(width, height, title, fullScreen)
 {
-	//UIManager::SetUIOverlay();
+	UIManager::SetUIOverlay();
 }
 
 GEditorApp::~GEditorApp()
@@ -16,5 +16,5 @@ GEditorApp::~GEditorApp()
 GEngineApp* CreateGEngineApp()
 {
 	std::string title = std::format("Genesis Editor version: {}", GEngineContext::GetInstance().GetVersion().ToString());
-	return new GEditorApp(1920, 1080, title, true);
+	return new GEditorApp(1920, 1080, title, false);
 }

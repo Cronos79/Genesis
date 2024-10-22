@@ -18,7 +18,7 @@ GEngineD3D12::GEngineD3D12(int32_t width, int32_t height, HINSTANCE hInstance, H
 
 GEngineD3D12::~GEngineD3D12()
 {
-	//Shutdown();
+	
 }
 
 bool GEngineD3D12::InIt()
@@ -114,11 +114,79 @@ bool GEngineD3D12::InIt()
 		return false;
 	}
 
+	// Create rtv heap
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDesc{};
+	rtvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtvDesc.NumDescriptors = SWAP_BUFFER_COUNT;
+	rtvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	rtvDesc.NodeMask = 0;
+
+	hr = m_Device->CreateDescriptorHeap(&rtvDesc, IID_PPV_ARGS(m_rtvDescHeap.GetAddressOf()));
+	if (FAILED(hr))
+	{
+		BB_ERROR("CreateDescriptorHeap rtvDesc failed");
+		return false;
+	}
+
+	// Create handles to view
+	auto firstHandle = m_rtvDescHeap->GetCPUDescriptorHandleForHeapStart();
+	auto handleSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	for (size_t i = 0; i < SWAP_BUFFER_COUNT; ++i)
+	{
+		m_rtvHandles[i] = firstHandle;
+		m_rtvHandles[i].ptr += handleSize * i;
+	}
+
+	
+	D3D12_DESCRIPTOR_HEAP_DESC srvDesc = {};
+	srvDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	srvDesc.NumDescriptors = 1;
+	srvDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	hr = m_Device->CreateDescriptorHeap(&srvDesc, IID_PPV_ARGS(&m_srvDescHeap));
+	if (FAILED(hr))
+	{
+		BB_ERROR("CreateDescriptorHeap srvDesc failed");
+		return false;
+	}
+	
+
 	// Get buffers
 	if (!GetBuffers())
 	{
 		return false;
 	}
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoTaskBarIcon = true;
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	SetDarkThemeColors();
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplWin32_Init(m_hWnd);
+	ImGui_ImplDX12_Init(*m_Device.GetAddressOf(), SWAP_BUFFER_COUNT, // #TODO: SWAP_BUFFER_COUNT is this correct or should it be 3
+		DXGI_FORMAT_R8G8B8A8_UNORM, *m_srvDescHeap.GetAddressOf(),
+		m_srvDescHeap->GetCPUDescriptorHandleForHeapStart(),
+		m_srvDescHeap->GetGPUDescriptorHandleForHeapStart());
 
 	return true;
 }
@@ -136,13 +204,16 @@ void GEngineD3D12::ExecuteCommandList()
 	{
 		ID3D12CommandList* lists[] = { *m_CmdList.GetAddressOf() };
 		m_CmdQueue->ExecuteCommandLists(1, lists);
-		SignalAndWait();
+		//SignalAndWait(); // #TODO: Check if this needs to be here
 	}
 }
 
 void GEngineD3D12::Shutdown()
 {
 	BB_TRACE("D3D12 Shutting down");
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	Flush(SWAP_BUFFER_COUNT);
 
@@ -209,6 +280,14 @@ bool GEngineD3D12::GetBuffers()
 			BB_ERROR("m_SwapChain get buffer failed");
 			return false;
 		}
+
+		D3D12_RENDER_TARGET_VIEW_DESC rendViewDesc{};
+		rendViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		rendViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		rendViewDesc.Texture2D.MipSlice = 0;
+		rendViewDesc.Texture2D.PlaneSlice = 0;
+
+		m_Device->CreateRenderTargetView(*m_Buffers[i].GetAddressOf(), &rendViewDesc, m_rtvHandles[i]);
 	}
 	return true;
 }
@@ -219,6 +298,39 @@ void GEngineD3D12::ReleaseBuffers()
 	{
 		m_Buffers[i].Reset();
 	}
+}
+
+void GEngineD3D12::SetDarkThemeColors()
+{
+	auto& colors = ImGui::GetStyle().Colors;
+	colors[ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
+
+	// Headers
+	colors[ImGuiCol_Header] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+	colors[ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
+	colors[ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+	// Buttons
+	colors[ImGuiCol_Button] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+	colors[ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
+	colors[ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+	// Frame BG
+	colors[ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+	colors[ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
+	colors[ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+	// Tabs
+	colors[ImGuiCol_Tab] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+	colors[ImGuiCol_TabHovered] = ImVec4{ 0.38f, 0.3805f, 0.381f, 1.0f };
+	colors[ImGuiCol_TabActive] = ImVec4{ 0.28f, 0.2805f, 0.281f, 1.0f };
+	colors[ImGuiCol_TabUnfocused] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+	colors[ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
+
+	// Title
+	colors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+	colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 }
 
 void GEngineD3D12::BeginFrame(float dt)
@@ -235,79 +347,61 @@ void GEngineD3D12::BeginFrame(float dt)
 		Flush(SWAP_BUFFER_COUNT);
 		ResizeSwapChain();
 	}
-	InitCommandList();	
+
+	// Start the Dear ImGui frame
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	InitCommandList();
+	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();	
+
+ 	D3D12_RESOURCE_BARRIER barrier = {};
+ 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+ 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+ 	barrier.Transition.pResource = *m_Buffers[m_CurrentBufferIndex].GetAddressOf();
+ 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+ 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+ 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	m_CmdList->ResourceBarrier(1, &barrier);
 }
 
 void GEngineD3D12::EndFrame(float dt)
 {
-	ExecuteCommandList();
+	// 	// Rendering
+	ImGui::Render();
 
-	HRESULT hr = m_SwapChain->Present(1, 0);
-	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
+
+
+	// Render Dear ImGui graphics
+	const float clear_color_with_alpha[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
+	m_CmdList->ClearRenderTargetView(m_rtvHandles[m_CurrentBufferIndex], clear_color_with_alpha, 0, nullptr);
+	m_CmdList->OMSetRenderTargets(1, &m_rtvHandles[m_CurrentBufferIndex], FALSE, nullptr);
+	m_CmdList->SetDescriptorHeaps(1, m_srvDescHeap.GetAddressOf());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), *m_CmdList.GetAddressOf());
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = *m_Buffers[m_CurrentBufferIndex].GetAddressOf();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	m_CmdList->ResourceBarrier(1, &barrier);
+
+	ExecuteCommandList();	
+
+	// Update and Render additional Platform Windows
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault(nullptr, (void*)m_CmdList.GetAddressOf());
+	}
+
+	// Present 
+	//HRESULT hr = m_SwapChain->Present(0, 0); // Present without vsync
+	HRESULT hr = m_SwapChain->Present(1, 0); // Present with vsync	
+	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);	
+
+	SignalAndWait();
 }
-
-//void GEngineD3D12::BeginRender(float dt)
-//{
-	//// Handle window screen locked
-	//if (m_SwapChainOccluded && m_SwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
-	//{
-	//	::Sleep(10);
-	//}
-	//m_SwapChainOccluded = false;
-
-	////// Start the Dear ImGui frame
-	//ImGui_ImplDX12_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//ImGui::NewFrame();
-//}
-
-// void GEngineD3D12::EndRender(float dt)
-// {
-// 	// Rendering
-// 	ImGui::Render();
-// 
-// 	FrameContext* frameCtx = WaitForNextFrameResources();
-// 	UINT backBufferIdx = m_SwapChain->GetCurrentBackBufferIndex();
-// 	frameCtx->CommandAllocator->Reset();
-// 
-// 	D3D12_RESOURCE_BARRIER barrier = {};
-// 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-// 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-// 	barrier.Transition.pResource = *m_mainRenderTargetResource[backBufferIdx].GetAddressOf();
-// 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-// 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-// 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-// 	m_d3dCommandList->Reset(frameCtx->CommandAllocator, nullptr);
-// 	m_d3dCommandList->ResourceBarrier(1, &barrier);
-// 
-// 	// Render Dear ImGui graphics
-// 	const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-// 	m_d3dCommandList->ClearRenderTargetView(m_mainRenderTargetDescriptor[backBufferIdx], clear_color_with_alpha, 0, nullptr);
-// 	m_d3dCommandList->OMSetRenderTargets(1, &m_mainRenderTargetDescriptor[backBufferIdx], FALSE, nullptr);
-// 	m_d3dCommandList->SetDescriptorHeaps(1, &m_d3dSrvDescHeap);
-// 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), *m_d3dCommandList.GetAddressOf());
-// 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-// 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-// 	m_d3dCommandList->ResourceBarrier(1, &barrier);
-// 	m_d3dCommandList->Close();
-// 
-// 	m_d3dCommandQueue->ExecuteCommandLists(1, (ID3D12CommandList* const*)m_d3dCommandList.GetAddressOf());
-// 
-// 	// Update and Render additional Platform Windows
-// 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-// 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-// 	{
-// 		ImGui::UpdatePlatformWindows();
-// 		ImGui::RenderPlatformWindowsDefault(nullptr, (void*)m_d3dCommandList.GetAddressOf());
-// 	}
-// 
-// 	// Present
-// 	HRESULT hr = m_SwapChain->Present(1, 0);   // Present with vsync
-// 	//HRESULT hr = m_SwapChain->Present(0, 0); // Present without vsync
-// 	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
-// 
-// 	UINT64 fenceValue = m_fenceLastSignaledValue + 1;
-// 	m_d3dCommandQueue->Signal(*m_fence.GetAddressOf(), fenceValue);
-// 	m_fenceLastSignaledValue = fenceValue;
-// 	frameCtx->FenceValue = fenceValue;
-// }
