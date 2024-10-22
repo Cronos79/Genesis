@@ -3,6 +3,8 @@
 
 Genesis is a game engine and editor
 
+Current Alpha version 0.1.2
+
 ## Features
 
 - D3D12

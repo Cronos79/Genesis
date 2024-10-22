@@ -31,6 +31,12 @@
     <Filter Include="sec\API\GameObjects">
       <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sec\Graphics\D3D12\Debug">
+      <UniqueIdentifier>{5ada8ac2-4efa-4d04-b97f-277cf7a09c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sec\Graphics\Renderer">
+      <UniqueIdentifier>{edb254c6-20d9-4125-ab35-d03c3124706a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEntry.cpp">
@@ -86,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="GEngineProjectMng.cpp">
       <Filter>sec\API\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineDXDebugLayer.cpp">
+      <Filter>sec\Graphics\D3D12\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineRenderer.cpp">
+      <Filter>sec\Graphics\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +160,12 @@
     </ClInclude>
     <ClInclude Include="GEngineProjectMng.h">
       <Filter>sec\API\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineDXDebugLayer.h">
+      <Filter>sec\Graphics\D3D12\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineRenderer.h">
+      <Filter>sec\Graphics\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

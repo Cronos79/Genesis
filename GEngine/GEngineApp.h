@@ -13,15 +13,10 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 class GEngineApp
 {
 public:
-	GEngineApp(int32_t width, int32_t height, std::string title);
+	GEngineApp(int32_t width, int32_t height, std::string title, bool fullScreen = false);
 	~GEngineApp();
 
 	int Run();
-
-private:
-	void InitImGui();
-	void ShutdownImGui();
-	void SetDarkThemeColors();
 
 private:
 	GEngineTimer* m_Timer;

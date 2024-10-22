@@ -46,3 +46,13 @@
 #define STRICT
 
 #include <Windows.h>
+
+#include <d3d12.h>
+#include <dxgi1_6.h>
+
+#ifdef _DEBUG
+#include "d3d12sdkLayers.h"
+#include <dxgidebug.h>
+#endif // _DEBUG
+
+#include "GEngineException.h"

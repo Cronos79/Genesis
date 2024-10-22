@@ -47,7 +47,7 @@ void UIMainMenu::MainMenuBar()
 		}
 		if (ImGui::MenuItem("Exit"))
 		{
-			// PostQuitMessage(0); // #TODO: Breaks imgui on exit
+			std::exit(0);
 		}
 		ImGui::EndMenu();
 	}
