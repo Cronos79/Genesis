@@ -107,6 +107,7 @@
     <ClCompile Include="GEngineRenderer.cpp" />
     <ClCompile Include="GEngineScene.cpp" />
     <ClCompile Include="GEngineSceneManager.cpp" />
+    <ClCompile Include="GEngineShader.cpp" />
     <ClCompile Include="GEngineTimer.cpp" />
     <ClCompile Include="GEngineWindow.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="GEngineRenderer.h" />
     <ClInclude Include="GEngineScene.h" />
     <ClInclude Include="GEngineSceneManager.h" />
+    <ClInclude Include="GEngineShader.h" />
     <ClInclude Include="GEngineTimer.h" />
     <ClInclude Include="GEngineWindow.h" />
     <ClInclude Include="Keyboard.h" />
@@ -144,6 +146,28 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PSTestTriangle.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.7</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.7</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="RSTestTriangle.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ROOTSIG</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rootsig_1.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ROOTSIG</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rootsig_1.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RootSignature</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RootSignature</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VSTestTriangle.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.7</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.7</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

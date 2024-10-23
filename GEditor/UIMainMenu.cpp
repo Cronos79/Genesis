@@ -1,7 +1,6 @@
 #include "UIMainMenu.h"
 
 #include "imgui.h"
-//#include <Windows.h>
 #include "GEngineProjectMng.h"
 #include "GEngineLog.h"
 #include "GEngineContext.h"
@@ -106,12 +105,34 @@ bool UIMainMenu::OpenNewProjectWindow()
 
 			GEngineProjectMng* mng = new GEngineProjectMng();
 			mng->GESaveProject(data);
-			m_OpenNewProject = false;
+			bool wasFound = false;
+			for (auto project : GEngineContext::GetInstance().GetProjectMng()->GetAllProjects())
+			{
+				if (project->m_Data.ProjectName == data.ProjectName)
+				{
+					GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
+					UIManager::SetUIOverlay();
+					wasFound = true;
+				}				
+			}
+			if (!wasFound)
+			{
+				BB_INFO("Project creation error");
+				ImGui::Text("Project creation error");
+				m_OpenNewProject = true;
+			}
+			else
+			{
+				BB_INFO("Project Created!");
+				m_OpenNewProject = false;
+			}
+			
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel"))
 		{
 			m_OpenNewProject = false;
+			
 		}
 		ImGui::EndPopup();
 	}
