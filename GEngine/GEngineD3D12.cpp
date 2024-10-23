@@ -354,6 +354,7 @@ void GEngineD3D12::BeginFrame(float dt)
 	ImGui::NewFrame();
 
 	InitCommandList();
+
 	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();	
 
  	D3D12_RESOURCE_BARRIER barrier = {};
@@ -370,8 +371,6 @@ void GEngineD3D12::EndFrame(float dt)
 {
 	// 	// Rendering
 	ImGui::Render();
-
-
 
 	// Render Dear ImGui graphics
 	const float clear_color_with_alpha[4] = { 0.0f, 1.0f, 1.0f, 1.0f };

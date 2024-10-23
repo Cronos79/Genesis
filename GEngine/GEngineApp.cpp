@@ -27,7 +27,9 @@ GEngineApp::~GEngineApp()
 }
 
 int GEngineApp::Run()
-{	
+{
+	
+
 	while (GEngineContext::GetInstance().IsRunning())
 	{		
 		if (const auto ecode = GEngineWindow::ProcessMessages())
@@ -54,7 +56,7 @@ int GEngineApp::Run()
 			/****************************************************************/
 
 			GEngineContext::GetInstance().GetGFX()->BeginFrame(deltaTime);
-
+			
 			for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects().GetGameObjects())
 			{
 				gobjects->OnUpdate(deltaTime);

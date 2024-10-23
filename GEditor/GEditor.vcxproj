@@ -97,13 +97,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEditorApp.h" />
+    <ClInclude Include="TestTriangle.h" />
     <ClInclude Include="UIMainMenu.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UIPanels.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GEditorApp.cpp" />
+    <ClCompile Include="TestTriangle.cpp" />
     <ClCompile Include="UIMainMenu.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UIPanels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

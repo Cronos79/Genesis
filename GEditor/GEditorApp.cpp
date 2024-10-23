@@ -1,11 +1,13 @@
 #include "GEditorApp.h"
 #include "UIManager.h"
+#include "TestTriangle.h"
 
 
 GEditorApp::GEditorApp(int32_t width, int32_t height, std::string title, bool fullScreen)
 	: GEngineApp(width, height, title, fullScreen)
 {
 	UIManager::SetUIOverlay();
+	GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->PushGameObject(new TestTriangle());
 }
 
 GEditorApp::~GEditorApp()

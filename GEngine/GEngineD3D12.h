@@ -22,6 +22,7 @@ public:
 	inline Microsoft::WRL::ComPtr<ID3D12Device14>& GetDevice() { return m_Device; };
 	inline Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCmdQueue() { return m_CmdQueue; };
 	inline Microsoft::WRL::ComPtr<IDXGIFactory7>& GetDXGIFactory() { return m_dxgiFactory; };
+	inline Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList10> GetCmdList() { return m_CmdList; }
 
 	inline void SetShouldResize(bool shouldResize) { m_ShouldResize = shouldResize; };
 	inline int32_t GetWidth() const { return m_Width; };
@@ -32,8 +33,6 @@ public:
 	void BeginFrame(float dt);
 	void EndFrame(float dt);
 	void Shutdown();
-	void Test();
-
 private:
 	ID3D12GraphicsCommandList10* InitCommandList();
 	void ExecuteCommandList();	
@@ -43,6 +42,8 @@ private:
 	bool GetBuffers();
 	void ReleaseBuffers();
 	void SetDarkThemeColors();
+	
+	
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device14> m_Device;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_CmdQueue;
