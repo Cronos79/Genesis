@@ -28,8 +28,6 @@ GEngineApp::~GEngineApp()
 
 int GEngineApp::Run()
 {
-	
-
 	while (GEngineContext::GetInstance().IsRunning())
 	{		
 		if (const auto ecode = GEngineWindow::ProcessMessages())

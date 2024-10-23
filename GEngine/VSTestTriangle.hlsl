@@ -1,7 +1,15 @@
 #include "RSTestTriangle.hlsl"
 
 [RootSignature(ROOTSIG)]
-float4 main( float2 pos : Position ) : SV_Position
+void main(
+    // == IN ==
+    in float2 pos : Position,
+    // == OUT ==
+    out float4 o_pos : SV_Position
+)
 {
-	return float4(pos.xy, 0.0f, 1.0f);
+    float2 px;
+    px.x = pos.x; 
+    px.y = pos.y;
+    o_pos = float4(px, 0.0f, 1.0f);
 }

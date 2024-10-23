@@ -1,5 +1,5 @@
 /*
-* Root Signature layout
+*   Root Signature Layout
 */
 
 #define ROOTSIG \

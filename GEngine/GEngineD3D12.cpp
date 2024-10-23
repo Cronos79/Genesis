@@ -204,7 +204,7 @@ void GEngineD3D12::ExecuteCommandList()
 	{
 		ID3D12CommandList* lists[] = { *m_CmdList.GetAddressOf() };
 		m_CmdQueue->ExecuteCommandLists(1, lists);
-		//SignalAndWait(); // #TODO: Check if this needs to be here
+		SignalAndWait(); // #TODO: Check if this needs to be here
 	}
 }
 
@@ -355,29 +355,8 @@ void GEngineD3D12::BeginFrame(float dt)
 
 	InitCommandList();
 
-	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();	
+	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
- 	D3D12_RESOURCE_BARRIER barrier = {};
- 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
- 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
- 	barrier.Transition.pResource = *m_Buffers[m_CurrentBufferIndex].GetAddressOf();
- 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
- 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
- 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	m_CmdList->ResourceBarrier(1, &barrier);
-}
-
-void GEngineD3D12::EndFrame(float dt)
-{
-	// 	// Rendering
-	ImGui::Render();
-
-	// Render Dear ImGui graphics
-	const float clear_color_with_alpha[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
-	m_CmdList->ClearRenderTargetView(m_rtvHandles[m_CurrentBufferIndex], clear_color_with_alpha, 0, nullptr);
-	m_CmdList->OMSetRenderTargets(1, &m_rtvHandles[m_CurrentBufferIndex], FALSE, nullptr);
-	m_CmdList->SetDescriptorHeaps(1, m_srvDescHeap.GetAddressOf());
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), *m_CmdList.GetAddressOf());
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -387,7 +366,30 @@ void GEngineD3D12::EndFrame(float dt)
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	m_CmdList->ResourceBarrier(1, &barrier);
 
-	ExecuteCommandList();	
+	const float clear_color_with_alpha[4] = { 0.0f, 1.0f, 1.0f, 1.0f };
+	m_CmdList->ClearRenderTargetView(m_rtvHandles[m_CurrentBufferIndex], clear_color_with_alpha, 0, nullptr);
+	m_CmdList->OMSetRenderTargets(1, &m_rtvHandles[m_CurrentBufferIndex], FALSE, nullptr);	
+}
+
+void GEngineD3D12::EndFrame(float dt)
+{
+	// 	// Rendering
+	ImGui::Render();
+
+	// Render Dear ImGui graphics	
+	m_CmdList->SetDescriptorHeaps(1, m_srvDescHeap.GetAddressOf());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), *m_CmdList.GetAddressOf());
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = *m_Buffers[m_CurrentBufferIndex].GetAddressOf();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	m_CmdList->ResourceBarrier(1, &barrier);
+
+	ExecuteCommandList();
 
 	// Update and Render additional Platform Windows
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -400,7 +402,7 @@ void GEngineD3D12::EndFrame(float dt)
 	// Present 
 	//HRESULT hr = m_SwapChain->Present(0, 0); // Present without vsync
 	HRESULT hr = m_SwapChain->Present(1, 0); // Present with vsync	
-	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);	
+	m_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
 
 	SignalAndWait();
 }
