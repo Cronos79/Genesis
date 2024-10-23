@@ -7,6 +7,7 @@
 
 #include "GEngineLog.h"
 #include "GEngineDXDebugLayer.h"
+#include "GEngineContext.h"
 
 GEngineD3D12::GEngineD3D12(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd)
 	: m_Width(width), m_Height(height), m_hInstance(hInstance), m_hWnd(hWnd)
@@ -221,7 +222,12 @@ void GEngineD3D12::Shutdown()
 	{
 		CloseHandle(m_FenceEvent);
 	}
-	
+
+	for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects())
+	{
+		 delete gobjects;
+	}
+
 	delete this;
 }
 
@@ -348,22 +354,22 @@ void GEngineD3D12::BeginFrame(float dt)
 		ResizeSwapChain();
 	}
 
+	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
+
 	// Start the Dear ImGui frame
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	InitCommandList();
-
-	m_CurrentBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
+	InitCommandList();	
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource = *m_Buffers[m_CurrentBufferIndex].GetAddressOf();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	m_CmdList->ResourceBarrier(1, &barrier);
 
 	const float clear_color_with_alpha[4] = { 0.0f, 1.0f, 1.0f, 1.0f };

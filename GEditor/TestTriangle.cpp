@@ -5,12 +5,6 @@
 
 void TestTriangle::OnUpdate(float dt)
 {
-	if (m_FirstRun)
-	{
-		m_FirstRun = false;
-		Start();
-	}	
-
 	// == PSO ==
 	GEngineContext::GetInstance().GetGFX()->GetCmdList()->SetPipelineState(*m_Pso.GetAddressOf());
 	GEngineContext::GetInstance().GetGFX()->GetCmdList()->SetGraphicsRootSignature(*m_RootSignature.GetAddressOf());
@@ -35,7 +29,7 @@ void TestTriangle::OnUpdate(float dt)
 	GEngineContext::GetInstance().GetGFX()->GetCmdList()->DrawInstanced(m_NumVerticies, 1, 0, 0);
 }
 
-void TestTriangle::Start()
+void TestTriangle::OnStart()
 {
 	D3D12_HEAP_PROPERTIES hpUpload{};
 	hpUpload.Type = D3D12_HEAP_TYPE_UPLOAD;

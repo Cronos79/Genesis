@@ -8,12 +8,9 @@ class TestTriangle : public GEngineGameObject
 {
 public:
 	void OnUpdate(float dt) override;
+	void OnStart() override;
 
 private:
-	void Start();
-
-private:
-	bool m_FirstRun = true;	
 	size_t m_NumVerticies;
 	D3D12_VERTEX_BUFFER_VIEW vbv{};
 
