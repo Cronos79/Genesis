@@ -12,9 +12,7 @@
 GEngineD3D12::GEngineD3D12(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd)
 	: m_Width(width), m_Height(height), m_hInstance(hInstance), m_hWnd(hWnd)
 {
-	BB_TRACE("D3D12 Starting");
-	GEngineDXDebugLayer::Get().Init();
-	InIt();
+
 }
 
 GEngineD3D12::~GEngineD3D12()
@@ -24,6 +22,9 @@ GEngineD3D12::~GEngineD3D12()
 
 bool GEngineD3D12::InIt()
 {
+	BB_TRACE("D3D12 Starting");
+	GEngineDXDebugLayer::Get().Init();
+
 	HRESULT hr;
 
 	// Create DXGI Factory
@@ -212,23 +213,13 @@ void GEngineD3D12::ExecuteCommandList()
 void GEngineD3D12::Shutdown()
 {
 	BB_TRACE("D3D12 Shutting down");
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
+	
 	Flush(SWAP_BUFFER_COUNT);
 
 	if (m_FenceEvent)
 	{
 		CloseHandle(m_FenceEvent);
-	}
-
-	for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects())
-	{
-		 delete gobjects;
-	}
-
-	delete this;
+	}	
 }
 
 void GEngineD3D12::Flush(size_t count)
@@ -255,7 +246,7 @@ void GEngineD3D12::SignalAndWait()
 	else
 	{
 		//throw CHWND_EXCEPT(hr);
-	}	
+	}
 }
 
 void GEngineD3D12::ResizeSwapChain()

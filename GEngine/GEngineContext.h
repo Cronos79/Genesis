@@ -15,12 +15,18 @@ struct GEngineVersion
 	}
 };
 
+enum GEngineRendererType
+{
+	D3D12
+};
+
 struct GEngineData
 {
 	GEngineWindow* m_wnd;
 	GEngineD3D12* m_Gfx;
 	GEngineProjectMng* m_ProjectMng;
 	GEngineVersion m_Version;
+	bool m_IsRunning = true;	
 };
 
 class GEngineContext
@@ -41,20 +47,23 @@ public:
 	GEngineProjectMng* GetProjectMng();
 	GEngineVersion GetVersion();
 
-	inline bool IsRunning() { return m_IsRunning; }
-	inline void StopRunning() { m_IsRunning = false; }
+	inline bool IsRunning() { return m_Data.m_IsRunning; }
+	inline void StopRunning() { m_Data.m_IsRunning = false; }
 
+	bool Init(GEngineRendererType rType, int32_t width, int32_t height, std::string title, bool fullScreen);
+	void ShutDown();
+private:
 	// Windows stuff
-	void InitWindow(int32_t width, int32_t height, std::string title);
+	bool InitWindow(int32_t width, int32_t height, std::string title);
 
 	// Gfx
-	void InitGfx(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd);
+	bool InitGfx(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd);
 
 	// Scene manager
-	void InitProjectMng();
+	bool InitProjectMng();
 
 
 private:
 	GEngineData m_Data;	
-	bool m_IsRunning = true;
+	GEngineRendererType m_RendererType;
 };

@@ -16,7 +16,7 @@ using json = nlohmann::json;
 
 GEngineProjectMng::GEngineProjectMng()
 {
-	m_CurrentProject = new GEngineProject();
+	
 }
 
 std::filesystem::path GEngineProjectMng::CreateProjectPaths(ProjectData data)
@@ -139,6 +139,22 @@ ProjectData GEngineProjectMng::GELoadProject(std::string projectName)
 	pd.EngineVersion = j2["EngineVersion"];
 	pd.Description = j2["Description"];
 	return pd;
+}
+
+void GEngineProjectMng::Init()
+{
+	BB_TRACE("ProjectMng Starting");
+	m_CurrentProject = new GEngineProject();
+}
+
+void GEngineProjectMng::ShutDown()
+{
+	BB_TRACE("ProjectMng Shutting down");
+	for (auto* gobjects : GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects())
+	{
+		gobjects->OnDetach();
+		delete gobjects;
+	}
 }
 
 std::filesystem::path GEngineProjectMng::GetProjectsPath()

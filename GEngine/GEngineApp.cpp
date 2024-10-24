@@ -11,19 +11,11 @@ GEngineApp::GEngineApp(int32_t width, int32_t height, std::string title, bool fu
 	m_Timer = new GEngineTimer();
 	GEngineLog::Init();
 	BB_TRACE("Genesis starting");
-	GEngineContext::GetInstance().InitWindow(width, height, title);
-	GEngineContext::GetInstance().InitGfx(width, height, GEngineContext::GetInstance().GetWindow()->GetHInst(), GEngineContext::GetInstance().GetWindow()->GetHWND());
-	GEngineContext::GetInstance().InitProjectMng();
-
-	if (fullScreen)
-	{
-		GEngineContext::GetInstance().GetWindow()->SetFullScreen(fullScreen);
-	}	
+	GEngineContext::GetInstance().Init(GEngineRendererType::D3D12, width, height, title, fullScreen);	
 }
 
 GEngineApp::~GEngineApp()
 {
-	m_gobject->OnDetach();
 }
 
 int GEngineApp::Run()
@@ -33,7 +25,7 @@ int GEngineApp::Run()
 		if (const auto ecode = GEngineWindow::ProcessMessages())
 		{
 			// if return optional has value, means we're quitting so return exit code
-			//ShutdownImGui();				
+			ShutDown();
 			return *ecode;
 		}
 		if (GEngineContext::GetInstance().IsRunning())
@@ -64,4 +56,9 @@ int GEngineApp::Run()
 		}
 	}
 	return 0;
+}
+
+void GEngineApp::ShutDown()
+{
+	GEngineContext::GetInstance().ShutDown();
 }

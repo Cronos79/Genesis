@@ -27,6 +27,8 @@ public:
 	~GEngineWindow();
 	GEngineWindow(const GEngineWindow&) = delete;
 	GEngineWindow& operator=(const GEngineWindow&) = delete;
+	void Init();
+	void ShutDown();
 	void SetTitle(const std::string& title);
 	void EnableCursor() noexcept;
 	void DisableCursor() noexcept;
@@ -57,6 +59,7 @@ private:
 	bool m_CursorEnabled = true;
 	int m_Width;
 	int m_Height;
+	const char* m_WinName;
 	HWND m_hWnd;
 	HINSTANCE m_HInst;
 	std::vector<BYTE> m_RawBuffer;

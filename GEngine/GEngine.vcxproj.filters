@@ -105,6 +105,9 @@
     <ClCompile Include="GEngineShader.cpp">
       <Filter>src\Common</Filter>
     </ClCompile>
+    <ClCompile Include="GEngineProjectSettings.cpp">
+      <Filter>src\API\Project</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEngineApp.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="GEngineShader.h">
       <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineProjectSettings.h">
+      <Filter>src\API\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

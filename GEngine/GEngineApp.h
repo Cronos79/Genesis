@@ -19,6 +19,9 @@ public:
 	int Run();
 
 private:
+	void ShutDown();
+
+private:
 	GEngineTimer* m_Timer;
 	GEngineImGuiObject* m_gobject;
 };
