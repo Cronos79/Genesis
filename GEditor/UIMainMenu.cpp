@@ -7,6 +7,7 @@
 #include "spdlog/fmt/bundled/format.h"
 #include "UIManager.h"
 #include "GEngineProjectSettings.h"
+#include "TestTriangle.h"
 
 UIMainMenu::UIMainMenu()
 	: GEngineImGuiObject("MainMenu") { }
@@ -152,6 +153,7 @@ bool UIMainMenu::OpenProjectWindow()
 			if (ImGui::Selectable(std::format("ProjectName: {} - EngineVersion: {}", project->m_Data.ProjectName, project->m_Data.EngineVersion).c_str()))
 			{
 				GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
+				GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->PushGameObject(new TestTriangle());
 				UIManager::SetUIOverlay();
 				m_OpenProject = false;
 			}

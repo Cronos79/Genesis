@@ -5,9 +5,9 @@
 
 struct GEngineVersion
 {
-	int32_t Major;
-	int32_t Minor;
-	int32_t Patch;
+	int32_t Major = 0;
+	int32_t Minor = 1;
+	int32_t Patch = 3;
 
 	std::string ToString()
 	{
