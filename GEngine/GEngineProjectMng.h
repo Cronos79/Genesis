@@ -17,6 +17,9 @@ public:
 	void GESaveProject(ProjectData data);
 	ProjectData GELoadProject(std::string name);
 
+	void Init();
+	void ShutDown();
+
 private:
 	std::filesystem::path GetProjectsPath();
 

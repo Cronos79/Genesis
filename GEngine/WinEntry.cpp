@@ -19,10 +19,7 @@ int CALLBACK WinMain(
 	try
 	{
 		auto app = CreateGEngineApp();
-		result = app->Run();
-		GEngineContext::GetInstance().GetGFX()->Shutdown();
-		GEngineDXDebugLayer::Get().Shutdown();
-		return result;
+		return app->Run();	
 	}
 	catch (const GEngineException& e)
 	{

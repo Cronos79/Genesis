@@ -6,6 +6,7 @@
 #include "GEngineContext.h"
 #include "spdlog/fmt/bundled/format.h"
 #include "UIManager.h"
+#include "GEngineProjectSettings.h"
 
 UIMainMenu::UIMainMenu()
 	: GEngineImGuiObject("MainMenu") { }
@@ -112,6 +113,7 @@ bool UIMainMenu::OpenNewProjectWindow()
 				{
 					GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
 					UIManager::SetUIOverlay();
+					project->m_ProjectSettings->SaveSettings();
 					wasFound = true;
 				}				
 			}

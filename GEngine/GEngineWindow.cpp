@@ -50,14 +50,26 @@ HINSTANCE GEngineWindow::WindowClass::GetInstance() noexcept
 GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	:
 	m_Width(width),
-	m_Height(height)
+	m_Height(height),
+	m_WinName(name)
 {
+	
+}
+
+GEngineWindow::~GEngineWindow()
+{
+	
+}
+
+void GEngineWindow::Init()
+{
+	BB_TRACE("Windows starting up");
 	// calculate window size based on desired client region size
 	RECT wr;
 	wr.left = 100;
-	wr.right = width + wr.left;
+	wr.right = m_Width + wr.left;
 	wr.top = 100;
-	wr.bottom = height + wr.top;
+	wr.bottom = m_Height + wr.top;
 	if (AdjustWindowRect(&wr, WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, FALSE) == 0)
 	{
 		throw CHWND_LAST_EXCEPT();
@@ -73,7 +85,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 
 	m_hWnd = CreateWindowEx(
 		0/*WS_EX_LAYERED*/,
-		WindowClass::GetName(), name,
+		WindowClass::GetName(), m_WinName,
 		WS_EX_OVERLAPPEDWINDOW | WS_EX_APPWINDOW | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 		xPos, yPos, wr.right - wr.left, wr.bottom - wr.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
@@ -99,7 +111,7 @@ GEngineWindow::GEngineWindow(int width, int height, const char* name)
 	}
 }
 
-GEngineWindow::~GEngineWindow()
+void GEngineWindow::ShutDown()
 {
 	BB_TRACE("Windows shutting down");
 	DestroyWindow(m_hWnd);
