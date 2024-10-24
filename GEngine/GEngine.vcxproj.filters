@@ -1,174 +1,200 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="sec">
+    <Filter Include="src">
       <UniqueIdentifier>{9ada0ff8-88d0-4b12-871a-173b79d11bc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\Common">
+    <Filter Include="src\Common">
       <UniqueIdentifier>{3b8cbfda-953f-4ba3-804b-f3e055ffd1d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\Windows">
+    <Filter Include="src\Windows">
       <UniqueIdentifier>{69d0b103-1047-4790-8e30-dbe2e0a102cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\API">
+    <Filter Include="src\API">
       <UniqueIdentifier>{862590e7-b5e6-423c-b95d-4b67d34be701}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\API\Application">
+    <Filter Include="src\API\Application">
       <UniqueIdentifier>{92f140f4-2e03-4fc8-a32c-441b79db4c95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\Graphics">
-      <UniqueIdentifier>{40865ae2-d479-4e8a-a4cb-ac7f5b806fbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sec\Graphics\D3D12">
-      <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sec\API\Scenes">
+    <Filter Include="src\API\Scenes">
       <UniqueIdentifier>{19c3ae7e-bbd5-433f-af50-f45fadc2321d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\API\Project">
+    <Filter Include="src\API\Project">
       <UniqueIdentifier>{b2f73f21-e939-4369-9394-50a8b2e2a37c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\API\GameObjects">
+    <Filter Include="src\API\GameObjects">
       <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\Graphics\D3D12\Debug">
+    <Filter Include="src\Graphics">
+      <UniqueIdentifier>{40865ae2-d479-4e8a-a4cb-ac7f5b806fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\D3D12">
+      <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics\D3D12\Debug">
       <UniqueIdentifier>{5ada8ac2-4efa-4d04-b97f-277cf7a09c2b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sec\Graphics\Renderer">
+    <Filter Include="src\Graphics\Renderer">
       <UniqueIdentifier>{edb254c6-20d9-4125-ab35-d03c3124706a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{e7303ef6-8adf-4860-a9f9-65678c208a5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEntry.cpp">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClCompile>
     <ClCompile Include="GEngineApp.cpp">
-      <Filter>sec\API\Application</Filter>
+      <Filter>src\API\Application</Filter>
     </ClCompile>
     <ClCompile Include="GEngineWindow.cpp">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClCompile>
     <ClCompile Include="GEngineContext.cpp">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClCompile>
     <ClCompile Include="GEngineTimer.cpp">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClCompile>
     <ClCompile Include="GEngineException.cpp">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClCompile>
     <ClCompile Include="GEngineLog.cpp">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClCompile>
     <ClCompile Include="GEngineD3D12.cpp">
-      <Filter>sec\Graphics\D3D12</Filter>
+      <Filter>src\Graphics\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="GEngineObject.cpp">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GEngineGameObject.cpp">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GEngineImGuiObject.cpp">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GEngineGameObjectStack.cpp">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GEngineSceneManager.cpp">
-      <Filter>sec\API\Scenes</Filter>
+      <Filter>src\API\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="GEngineScene.cpp">
-      <Filter>sec\API\Scenes</Filter>
+      <Filter>src\API\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="GEngineProject.cpp">
-      <Filter>sec\API\Project</Filter>
+      <Filter>src\API\Project</Filter>
     </ClCompile>
     <ClCompile Include="GEngineProjectMng.cpp">
-      <Filter>sec\API\Project</Filter>
+      <Filter>src\API\Project</Filter>
     </ClCompile>
     <ClCompile Include="GEngineDXDebugLayer.cpp">
-      <Filter>sec\Graphics\D3D12\Debug</Filter>
+      <Filter>src\Graphics\D3D12\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GEngineRenderer.cpp">
-      <Filter>sec\Graphics\Renderer</Filter>
+      <Filter>src\Graphics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineShader.cpp">
+      <Filter>src\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GEngineProjectSettings.cpp">
+      <Filter>src\API\Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GEngineApp.h">
-      <Filter>sec\API\Application</Filter>
+      <Filter>src\API\Application</Filter>
     </ClInclude>
     <ClInclude Include="genginepch.h">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineAPI.h">
-      <Filter>sec\API</Filter>
+      <Filter>src\API</Filter>
     </ClInclude>
     <ClInclude Include="GEngineWindow.h">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClInclude>
     <ClInclude Include="WinInclude.h">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Keyboard.h">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
-      <Filter>sec\Windows</Filter>
+      <Filter>src\Windows</Filter>
     </ClInclude>
     <ClInclude Include="GEngineContext.h">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineTimer.h">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineException.h">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineLog.h">
-      <Filter>sec\Common</Filter>
+      <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineD3D12.h">
-      <Filter>sec\Graphics\D3D12</Filter>
+      <Filter>src\Graphics\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="GEngineObject.h">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GEngineGameObject.h">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GEngineImGuiObject.h">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GEngineGameObjectStack.h">
-      <Filter>sec\API\GameObjects</Filter>
+      <Filter>src\API\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GEngineSceneManager.h">
-      <Filter>sec\API\Scenes</Filter>
+      <Filter>src\API\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="GEngineScene.h">
-      <Filter>sec\API\Scenes</Filter>
+      <Filter>src\API\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="GEngineProject.h">
-      <Filter>sec\API\Project</Filter>
+      <Filter>src\API\Project</Filter>
     </ClInclude>
     <ClInclude Include="GEngineProjectMng.h">
-      <Filter>sec\API\Project</Filter>
+      <Filter>src\API\Project</Filter>
     </ClInclude>
     <ClInclude Include="GEngineDXDebugLayer.h">
-      <Filter>sec\Graphics\D3D12\Debug</Filter>
+      <Filter>src\Graphics\D3D12\Debug</Filter>
     </ClInclude>
     <ClInclude Include="GEngineRenderer.h">
-      <Filter>sec\Graphics\Renderer</Filter>
+      <Filter>src\Graphics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineShader.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GEngineProjectSettings.h">
+      <Filter>src\API\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VSTestTriangle.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSTestTriangle.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="RSTestTriangle.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

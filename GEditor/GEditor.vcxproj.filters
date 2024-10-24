@@ -7,11 +7,11 @@
     <Filter Include="src\Application">
       <UniqueIdentifier>{c66fc8e4-0a64-42a4-85cc-ee331f005d1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Common">
-      <UniqueIdentifier>{48f2768e-94b4-4c69-af88-f35b739b4b7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\UI">
       <UniqueIdentifier>{e7f49172-5b18-41bb-8585-3f2e05909093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameObjects">
+      <UniqueIdentifier>{6d784f88-e38a-4e71-ab9f-97b4d5753425}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,6 +24,12 @@
     <ClInclude Include="UIManager.h">
       <Filter>src\UI</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanels.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTriangle.h">
+      <Filter>src\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GEditorApp.cpp">
@@ -34,6 +40,12 @@
     </ClCompile>
     <ClCompile Include="UIManager.cpp">
       <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanels.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTriangle.cpp">
+      <Filter>src\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

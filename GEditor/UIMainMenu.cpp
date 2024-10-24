@@ -1,12 +1,13 @@
 #include "UIMainMenu.h"
 
 #include "imgui.h"
-//#include <Windows.h>
 #include "GEngineProjectMng.h"
 #include "GEngineLog.h"
 #include "GEngineContext.h"
 #include "spdlog/fmt/bundled/format.h"
 #include "UIManager.h"
+#include "GEngineProjectSettings.h"
+#include "TestTriangle.h"
 
 UIMainMenu::UIMainMenu()
 	: GEngineImGuiObject("MainMenu") { }
@@ -106,12 +107,35 @@ bool UIMainMenu::OpenNewProjectWindow()
 
 			GEngineProjectMng* mng = new GEngineProjectMng();
 			mng->GESaveProject(data);
-			m_OpenNewProject = false;
+			bool wasFound = false;
+			for (auto project : GEngineContext::GetInstance().GetProjectMng()->GetAllProjects())
+			{
+				if (project->m_Data.ProjectName == data.ProjectName)
+				{
+					GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
+					UIManager::SetUIOverlay();
+					project->m_ProjectSettings->SaveSettings();
+					wasFound = true;
+				}				
+			}
+			if (!wasFound)
+			{
+				BB_INFO("Project creation error");
+				ImGui::Text("Project creation error");
+				m_OpenNewProject = true;
+			}
+			else
+			{
+				BB_INFO("Project Created!");
+				m_OpenNewProject = false;
+			}
+			
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel"))
 		{
 			m_OpenNewProject = false;
+			
 		}
 		ImGui::EndPopup();
 	}
@@ -129,6 +153,7 @@ bool UIMainMenu::OpenProjectWindow()
 			if (ImGui::Selectable(std::format("ProjectName: {} - EngineVersion: {}", project->m_Data.ProjectName, project->m_Data.EngineVersion).c_str()))
 			{
 				GEngineContext::GetInstance().GetProjectMng()->SetCurrentProject(project);
+				GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->PushGameObject(new TestTriangle());
 				UIManager::SetUIOverlay();
 				m_OpenProject = false;
 			}

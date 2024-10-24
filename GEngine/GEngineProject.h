@@ -1,6 +1,8 @@
 #pragma once
 #include "GEngineSceneManager.h"
 
+class GEngineProjectSettings;
+
 struct ProjectData
 {
 	std::string ProjectName;
@@ -15,5 +17,6 @@ public:
 
 	ProjectData m_Data;
 	GEngineSceneManager* m_SceneManager;
+	GEngineProjectSettings* m_ProjectSettings;
 };
 

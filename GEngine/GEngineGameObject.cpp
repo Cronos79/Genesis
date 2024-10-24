@@ -7,3 +7,13 @@ GEngineGameObject::GEngineGameObject(std::string objectName)
 
 }
 
+bool GEngineGameObject::IsFirstRun()
+{
+	if (m_FirstRun)
+	{
+		m_FirstRun = false;
+		return true;
+	}
+	return false;
+}
+
