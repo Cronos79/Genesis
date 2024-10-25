@@ -28,11 +28,12 @@ int GEngineApp::Run()
 			ShutDown();
 			return *ecode;
 		}
-		if (GEngineContext::GetInstance().IsRunning())
+		//if ((GEngineContext::GetInstance().GetRenderer() != nullptr) && (GEngineContext::GetInstance().GetRenderer()->GetGFX() != nullptr))
+		if (GEngineContext::GetInstance().GetRenderer() != nullptr)
 		{
 			float deltaTime = m_Timer->Mark();
 
-			GEngineContext::GetInstance().GetGFX()->BeginFrame(deltaTime);
+			GEngineContext::GetInstance().GetRenderer()->GetGFX()->BeginFrame(deltaTime);
 			
 			for (auto* gobjects : GEngineContext::GetInstance().GetProjectMng()->GetCurrentProject()->m_SceneManager->GetCurrentScene()->GetGameObjects())
 			{
@@ -52,7 +53,7 @@ int GEngineApp::Run()
 				}
 			}
 
-			GEngineContext::GetInstance().GetGFX()->EndFrame(deltaTime);
+			GEngineContext::GetInstance().GetRenderer()->GetGFX()->EndFrame(deltaTime);
 		}
 	}
 	return 0;

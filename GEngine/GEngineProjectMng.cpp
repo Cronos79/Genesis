@@ -70,7 +70,7 @@ std::vector<GEngineProject*> GEngineProjectMng::GetAllProjects()
 
 		size_t last = dirPath.find_last_of('\\');
 		dir = dirPath.erase(0, last + 1);
-		ProjectData data = GEngineContext::GetInstance().GetProjectMng()->GELoadProject(dir);
+		ProjectData data = GEngineContext::GetInstance().GetProjectMng()->GELoadProjectData(dir);
 		GEngineProject* proj = new GEngineProject();
 		proj->m_Data = data;
 		p.push_back(proj);
@@ -90,7 +90,7 @@ void GEngineProjectMng::SetCurrentProject(GEngineProject* project)
 	m_CurrentProject = project;
 }
 
-void GEngineProjectMng::GESaveProject(ProjectData data)
+void GEngineProjectMng::GESaveProjectData(ProjectData data)
 {
 	data.EngineVersion = GEngineContext::GetInstance().GetVersion().ToString();
 	std::string fileName = data.ProjectName + ".gproj";
@@ -111,7 +111,7 @@ void GEngineProjectMng::GESaveProject(ProjectData data)
 	}
 }
 
-ProjectData GEngineProjectMng::GELoadProject(std::string projectName)
+ProjectData GEngineProjectMng::GELoadProjectData(std::string projectName)
 {
 	std::string fileName = projectName + ".gproj";
 	std::string line;

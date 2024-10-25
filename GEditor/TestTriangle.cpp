@@ -6,27 +6,27 @@
 void TestTriangle::OnUpdate(float dt)
 {
 	// == PSO ==
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->SetPipelineState(*m_Pso.GetAddressOf());
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->SetGraphicsRootSignature(*m_RootSignature.GetAddressOf());
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->SetPipelineState(*m_Pso.GetAddressOf());
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->SetGraphicsRootSignature(*m_RootSignature.GetAddressOf());
 	// == IA ==
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->IASetVertexBuffers(0, 1, &vbv);
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->IASetVertexBuffers(0, 1, &vbv);
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// == RS ==
 	D3D12_VIEWPORT vp;
 	vp.TopLeftX = vp.TopLeftY = 0;
-	vp.Width = GEngineContext::GetInstance().GetGFX()->GetWidth();
-	vp.Height = GEngineContext::GetInstance().GetGFX()->GetHeight();
+	vp.Width = GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetWidth();
+	vp.Height = GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetHeight();
 	vp.MinDepth = 1.f;
 	vp.MaxDepth = 0.f;
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->RSSetViewports(1, &vp);
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->RSSetViewports(1, &vp);
 	RECT scRect;
 	scRect.left = scRect.top = 0;
-	scRect.right = GEngineContext::GetInstance().GetGFX()->GetWidth();
-	scRect.bottom = GEngineContext::GetInstance().GetGFX()->GetHeight();
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->RSSetScissorRects(1, &scRect);
+	scRect.right = GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetWidth();
+	scRect.bottom = GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetHeight();
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->RSSetScissorRects(1, &scRect);
 
 	// Draw
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->DrawInstanced(m_NumVerticies, 1, 0, 0);
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->DrawInstanced(m_NumVerticies, 1, 0, 0);
 }
 
 void TestTriangle::OnStart()
@@ -78,8 +78,8 @@ void TestTriangle::OnStart()
 	rd.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 	//ComPointer<ID3D12Resource2> uploadBuffer, vertexBuffer;
-	GEngineContext::GetInstance().GetGFX()->GetDevice()->CreateCommittedResource(&hpUpload, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(m_UploadBuffer.GetAddressOf()));
-	GEngineContext::GetInstance().GetGFX()->GetDevice()->CreateCommittedResource(&hpDefault, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(m_VertexBuffer.GetAddressOf()));
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetDevice()->CreateCommittedResource(&hpUpload, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(m_UploadBuffer.GetAddressOf()));
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetDevice()->CreateCommittedResource(&hpDefault, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(m_VertexBuffer.GetAddressOf()));
 
 	// Copy void* --> CPU Resource
 	void* uploadBufferAddress;
@@ -92,9 +92,9 @@ void TestTriangle::OnStart()
 
 	// Copy CPU Resource --> GPU Resource
 	//auto* cmdList = DXContext::Get().InitCommandList();
-	GEngineContext::GetInstance().GetGFX()->GetCmdList()->CopyBufferRegion(*m_VertexBuffer.GetAddressOf(), 0, *m_UploadBuffer.GetAddressOf(), 0, 1024);
-	GEngineContext::GetInstance().GetGFX()->ExecuteCommandList();
-	GEngineContext::GetInstance().GetGFX()->InitCommandList();
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetCmdList()->CopyBufferRegion(*m_VertexBuffer.GetAddressOf(), 0, *m_UploadBuffer.GetAddressOf(), 0, 1024);
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->ExecuteCommandList();
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->InitCommandList();
 
 	// === Shaders ===
 	GEngineShader rootSignatureShader("RSTestTriangle.cso");
@@ -103,7 +103,7 @@ void TestTriangle::OnStart()
 
 	// === Create root signature ===
 	//ComPointer<ID3D12RootSignature> rootSignature;
-	HRESULT hr = GEngineContext::GetInstance().GetGFX()->GetDevice()->CreateRootSignature(0, rootSignatureShader.GetBuffer(), rootSignatureShader.GetSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf()));
+	HRESULT hr = GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetDevice()->CreateRootSignature(0, rootSignatureShader.GetBuffer(), rootSignatureShader.GetSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf()));
 
 	// === Pipeline state ===
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gfxPsod{};
@@ -175,7 +175,7 @@ void TestTriangle::OnStart()
 	gfxPsod.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 
 	//ComPointer<ID3D12PipelineState> pso;
-	GEngineContext::GetInstance().GetGFX()->GetDevice()->CreateGraphicsPipelineState(&gfxPsod, IID_PPV_ARGS(m_Pso.GetAddressOf()));
+	GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetDevice()->CreateGraphicsPipelineState(&gfxPsod, IID_PPV_ARGS(m_Pso.GetAddressOf()));
 
 	// === Vertex buffer view ===
 	//D3D12_VERTEX_BUFFER_VIEW vbv{};

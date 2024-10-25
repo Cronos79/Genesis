@@ -203,7 +203,7 @@ void GEngineWindow::SetFullScreen(bool isFullScreen)
 				wr.right - wr.left,
 				wr.bottom - wr.top, SWP_NOZORDER);
 
-			GEngineContext::GetInstance().GetGFX()->SetWindowSize(wr.right - wr.left, wr.bottom - wr.top);
+			GEngineContext::GetInstance().GetRenderer()->GetGFX()->SetWindowSize(wr.right - wr.left, wr.bottom - wr.top);
 		}
 	}
 
@@ -302,11 +302,11 @@ LRESULT GEngineWindow::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	switch (msg)
 	{
 	case WM_SIZE:
-		if (GEngineContext::GetInstance().GetGFX() != nullptr)
+		if ((GEngineContext::GetInstance().GetRenderer() != nullptr) && (GEngineContext::GetInstance().GetRenderer()->GetGFX() != nullptr))
 		{
-			if (lParam && (HIWORD(lParam) != GEngineContext::GetInstance().GetGFX()->GetHeight() || LOWORD(lParam) != GEngineContext::GetInstance().GetGFX()->GetWidth()))
+			if (lParam && (HIWORD(lParam) != GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetHeight() || LOWORD(lParam) != GEngineContext::GetInstance().GetRenderer()->GetGFX()->GetWidth()))
 			{
-				GEngineContext::GetInstance().GetGFX()->SetShouldResize(true);
+				GEngineContext::GetInstance().GetRenderer()->GetGFX()->SetShouldResize(true);
 			}			
 		}		
 		break;

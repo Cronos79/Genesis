@@ -25,20 +25,17 @@
     <Filter Include="src\API\GameObjects">
       <UniqueIdentifier>{1532f0cc-17e0-450d-9670-e2b203633d11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Graphics">
-      <UniqueIdentifier>{40865ae2-d479-4e8a-a4cb-ac7f5b806fbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphics\D3D12">
-      <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphics\D3D12\Debug">
-      <UniqueIdentifier>{5ada8ac2-4efa-4d04-b97f-277cf7a09c2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphics\Renderer">
-      <UniqueIdentifier>{edb254c6-20d9-4125-ab35-d03c3124706a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{e7303ef6-8adf-4860-a9f9-65678c208a5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{edb254c6-20d9-4125-ab35-d03c3124706a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer\D3D12">
+      <UniqueIdentifier>{616b1fe9-559a-4fc1-8ec4-558fa016df6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer\D3D12\Debug">
+      <UniqueIdentifier>{5ada8ac2-4efa-4d04-b97f-277cf7a09c2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +67,7 @@
       <Filter>src\Common</Filter>
     </ClCompile>
     <ClCompile Include="GEngineD3D12.cpp">
-      <Filter>src\Graphics\D3D12</Filter>
+      <Filter>src\Renderer\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="GEngineObject.cpp">
       <Filter>src\API\GameObjects</Filter>
@@ -97,10 +94,10 @@
       <Filter>src\API\Project</Filter>
     </ClCompile>
     <ClCompile Include="GEngineDXDebugLayer.cpp">
-      <Filter>src\Graphics\D3D12\Debug</Filter>
+      <Filter>src\Renderer\D3D12\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GEngineRenderer.cpp">
-      <Filter>src\Graphics\Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="GEngineShader.cpp">
       <Filter>src\Common</Filter>
@@ -144,7 +141,7 @@
       <Filter>src\Common</Filter>
     </ClInclude>
     <ClInclude Include="GEngineD3D12.h">
-      <Filter>src\Graphics\D3D12</Filter>
+      <Filter>src\Renderer\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="GEngineObject.h">
       <Filter>src\API\GameObjects</Filter>
@@ -171,10 +168,10 @@
       <Filter>src\API\Project</Filter>
     </ClInclude>
     <ClInclude Include="GEngineDXDebugLayer.h">
-      <Filter>src\Graphics\D3D12\Debug</Filter>
+      <Filter>src\Renderer\D3D12\Debug</Filter>
     </ClInclude>
     <ClInclude Include="GEngineRenderer.h">
-      <Filter>src\Graphics\Renderer</Filter>
+      <Filter>src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="GEngineShader.h">
       <Filter>src\Common</Filter>

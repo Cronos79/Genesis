@@ -106,7 +106,7 @@ bool UIMainMenu::OpenNewProjectWindow()
 			data.EngineVersion = GEngineContext::GetInstance().GetVersion().ToString();
 
 			GEngineProjectMng* mng = new GEngineProjectMng();
-			mng->GESaveProject(data);
+			mng->GESaveProjectData(data);
 			bool wasFound = false;
 			for (auto project : GEngineContext::GetInstance().GetProjectMng()->GetAllProjects())
 			{

@@ -12,9 +12,10 @@ GEngineWindow* GEngineContext::GetWindow()
 	return m_Data.m_wnd;
 }
 
-GEngineD3D12* GEngineContext::GetGFX()
+
+GEngineRenderer* GEngineContext::GetRenderer()
 {
-	return m_Data.m_Gfx;
+	return m_Data.m_Renderer;
 }
 
 GEngineProjectMng* GEngineContext::GetProjectMng()
@@ -38,7 +39,7 @@ bool GEngineContext::Init(GEngineRendererType rType, int32_t width, int32_t heig
 		result = InitWindow(width, height, title);
 		if (result)
 		{
-			result = InitGfx(width, height, m_Data.m_wnd->GetHInst(), m_Data.m_wnd->GetHWND());
+			result = InitRenderer();
 			if (!result) { return false; }
 
 			result = InitProjectMng();
@@ -52,8 +53,6 @@ bool GEngineContext::Init(GEngineRendererType rType, int32_t width, int32_t heig
 			return result;
 		}
 	}
-	default:
-		return false;
 	}
 	return false;
 }
@@ -68,9 +67,9 @@ void GEngineContext::ShutDown()
 		delete m_Data.m_ProjectMng;
 		m_Data.m_ProjectMng = nullptr;
 
-		m_Data.m_Gfx->Shutdown();
-		delete m_Data.m_Gfx;
-		m_Data.m_Gfx = nullptr;
+		m_Data.m_Renderer->Shutdown();
+		delete m_Data.m_Renderer;
+		m_Data.m_Renderer = nullptr;
 
 		m_Data.m_wnd->ShutDown();
 		delete m_Data.m_wnd;
@@ -95,12 +94,12 @@ bool GEngineContext::InitWindow(int32_t width, int32_t height, std::string title
 	return false;
 }
 
-bool GEngineContext::InitGfx(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd)
+bool GEngineContext::InitRenderer()
 {
-	m_Data.m_Gfx = new GEngineD3D12(width, height, hInstance, hWnd);
-	if (m_Data.m_Gfx)
+	m_Data.m_Renderer = new GEngineRenderer();
+	if (m_Data.m_Renderer)
 	{
-		m_Data.m_Gfx->InIt();
+		m_Data.m_Renderer->Init();
 		return true;
 	}
 	return false;

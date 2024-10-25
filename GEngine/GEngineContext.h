@@ -1,7 +1,7 @@
 #pragma once
 #include "GEngineWindow.h"
-#include "GEngineD3D12.h"
 #include "GEngineProjectMng.h"
+#include "GEngineRenderer.h"
 
 struct GEngineVersion
 {
@@ -23,7 +23,7 @@ enum GEngineRendererType
 struct GEngineData
 {
 	GEngineWindow* m_wnd;
-	GEngineD3D12* m_Gfx;
+	GEngineRenderer* m_Renderer;
 	GEngineProjectMng* m_ProjectMng;
 	GEngineVersion m_Version;
 	bool m_IsRunning = true;	
@@ -43,7 +43,7 @@ public:
 
 	// Core stuff
 	GEngineWindow* GetWindow();
-	GEngineD3D12* GetGFX();
+	GEngineRenderer* GetRenderer();
 	GEngineProjectMng* GetProjectMng();
 	GEngineVersion GetVersion();
 
@@ -57,7 +57,7 @@ private:
 	bool InitWindow(int32_t width, int32_t height, std::string title);
 
 	// Gfx
-	bool InitGfx(int32_t width, int32_t height, HINSTANCE hInstance, HWND hWnd);
+	bool InitRenderer();
 
 	// Scene manager
 	bool InitProjectMng();

@@ -14,8 +14,8 @@ public:
 	GEngineProject* GetCurrentProject();
 	void SetCurrentProject(GEngineProject* project);
 
-	void GESaveProject(ProjectData data);
-	ProjectData GELoadProject(std::string name);
+	void GESaveProjectData(ProjectData data);
+	ProjectData GELoadProjectData(std::string name);
 
 	void Init();
 	void ShutDown();
