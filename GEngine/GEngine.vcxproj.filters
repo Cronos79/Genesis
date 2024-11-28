@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Win\EntryPoint.cpp" />
+    <ClCompile Include="App\EngineApp.cpp" />
+    <ClCompile Include="Win\Window.cpp" />
+    <ClCompile Include="Core\GContext.cpp" />
+    <ClCompile Include="Win\Keyboard.cpp" />
+    <ClCompile Include="Win\Mouse.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Logger\Log.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Win\WinInclude.h" />
+    <ClInclude Include="App\EngineApp.h" />
+    <ClInclude Include="Win\Window.h" />
+    <ClInclude Include="Core\GContext.h" />
+    <ClInclude Include="Core\CommonHeaders.h" />
+    <ClInclude Include="Win\Keyboard.h" />
+    <ClInclude Include="Win\Mouse.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Logger\Log.h" />
+    <ClInclude Include="Graphics\GraphicsIncludes.h" />
+  </ItemGroup>
+</Project>
