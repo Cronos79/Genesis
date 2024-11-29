@@ -18,33 +18,96 @@
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
 #include "Graphics.h"
-#include "GEngine/Logger/Log.h"
 
 namespace Genesis
 {
-	Graphics::Graphics()
+	Graphics::Graphics(GraphicsAPI api)
 	{
+		m_API = api;
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11Core = new DX11Core();
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
 	}
-
 	Graphics::~Graphics()
 	{
 	}
-
 	void Graphics::Init()
 	{
-		LOG_INFO("Graphics initialized");
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11Core->Init();
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
 	}
-
-	void Graphics::BeginFrame()
-	{
-	}
-
-	void Graphics::EndFrame()
-	{
-	}
-	
 	void Graphics::Shutdown()
 	{
-		LOG_INFO("Graphics Shutdown");
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11Core->Shutdown();
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
 	}
-}
+	void Graphics::BeginFrame()
+	{
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11Core->BeginFrame();
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
+	}
+	void Graphics::EndFrame()
+	{
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11Core->EndFrame();
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
+	}
+} // namespace Genesis

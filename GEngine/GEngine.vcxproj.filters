@@ -9,6 +9,15 @@
     <ClCompile Include="Win\Mouse.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Logger\Log.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Graphics\D3D11\DX11Core.cpp" />
+    <ClCompile Include="Core\GenException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
@@ -21,5 +30,18 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Logger\Log.h" />
     <ClInclude Include="Graphics\GraphicsIncludes.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="Graphics\D3D11\DX11Core.h" />
+    <ClInclude Include="Core\GenException.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

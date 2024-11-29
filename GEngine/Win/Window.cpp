@@ -20,6 +20,7 @@
 #include "Window.h"
 #include "GEngine/Core/GContext.h"
 #include "../Logger/Log.h"
+#include <imgui_impl_win32.h>
 
 Genesis::Window::WindowClass Genesis::Window::WindowClass::wndClass;
 
@@ -90,8 +91,31 @@ namespace Genesis
 		}
 		// newly created windows start off as hidden
 		ShowWindow(GContext::Get().GetHWnd(), SW_SHOWDEFAULT);
+
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+		//io.ConfigViewportsNoAutoMerge = true;
+		//io.ConfigViewportsNoTaskBarIcon = true;
+
+		// Setup Dear ImGui style
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsLight();
+
+		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+		ImGuiStyle& imstyle = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			imstyle.WindowRounding = 0.0f;
+			imstyle.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
 		// Init ImGui Win32 Impl
-		//ImGui_ImplWin32_Init(hWnd);
+		ImGui_ImplWin32_Init(GContext::Get().GetHWnd());
 		// register mouse raw input device
 		RAWINPUTDEVICE rid;
 		rid.usUsagePage = 0x01; // mouse page
@@ -102,11 +126,13 @@ namespace Genesis
 		{
 			throw;
 		}
+		m_isInitialized = true;
 		LOG_INFO("Window initialized");
 	}
 
 	Window::~Window()
 	{
+		ImGui_ImplWin32_Shutdown();
 		DestroyWindow(GContext::Get().GetHWnd());
 	}
 
@@ -174,11 +200,15 @@ namespace Genesis
 
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
-	/*	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		if (!m_isInitialized)
+		{
+			return DefWindowProc(hWnd, msg, wParam, lParam);
+		}
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 		{
 			return true;
 		}
-		const auto& imio = ImGui::GetIO();*/
+		const auto& imio = ImGui::GetIO();
 
 		switch (msg)
 		{
@@ -196,10 +226,10 @@ namespace Genesis
 			// syskey commands need to be handled to track ALT key (VK_MENU) and F10
 		case WM_SYSKEYDOWN:
 			// stifle this keyboard message if imgui wants to capture
-		/*	if (imio.WantCaptureKeyboard)
+			if (imio.WantCaptureKeyboard)
 			{
 				break;
-			}*/
+			}
 			if (!(lParam & 0x40000000) || kbd.AutorepeatIsEnabled()) // filter autorepeat
 			{
 				kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
@@ -208,18 +238,18 @@ namespace Genesis
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
 			// stifle this keyboard message if imgui wants to capture
-			/*if (imio.WantCaptureKeyboard)
+			if (imio.WantCaptureKeyboard)
 			{
 				break;
-			}*/
+			}
 			kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
 			break;
 		case WM_CHAR:
 			// stifle this keyboard message if imgui wants to capture
-		/*	if (imio.WantCaptureKeyboard)
+			if (imio.WantCaptureKeyboard)
 			{
 				break;
-			}*/
+			}
 			kbd.OnChar(static_cast<unsigned char>(wParam));
 			break;
 			/*********** END KEYBOARD MESSAGES ***********/
@@ -229,10 +259,10 @@ namespace Genesis
 		{
 			const POINTS pt = MAKEPOINTS(lParam);		
 			// stifle this mouse message if imgui wants to capture
-		/*	if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			// in client region -> log move, and log enter + capture mouse (if not previously in window)
 			if (pt.x >= 0 && pt.x < GContext::Get().GetWidth() && pt.y >= 0 && pt.y < GContext::Get().GetHeight())
 			{
@@ -263,10 +293,10 @@ namespace Genesis
 		{
 			SetForegroundWindow(hWnd);		
 			// stifle this mouse message if imgui wants to capture
-		/*	if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnLeftPressed(pt.x, pt.y);
 			break;
@@ -274,10 +304,10 @@ namespace Genesis
 		case WM_RBUTTONDOWN:
 		{
 			// stifle this mouse message if imgui wants to capture
-		/*	if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnRightPressed(pt.x, pt.y);
 			break;
@@ -285,10 +315,10 @@ namespace Genesis
 		case WM_LBUTTONUP:
 		{
 			// stifle this mouse message if imgui wants to capture
-		/*	if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnLeftReleased(pt.x, pt.y);
 			// release mouse if outside of window
@@ -302,10 +332,10 @@ namespace Genesis
 		case WM_RBUTTONUP:
 		{
 			// stifle this mouse message if imgui wants to capture
-			/*if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnRightReleased(pt.x, pt.y);
 			// release mouse if outside of window
@@ -319,10 +349,10 @@ namespace Genesis
 		case WM_MOUSEWHEEL:
 		{
 			// stifle this mouse message if imgui wants to capture
-		/*	if (imio.WantCaptureMouse)
+			if (imio.WantCaptureMouse)
 			{
 				break;
-			}*/
+			}
 			const POINTS pt = MAKEPOINTS(lParam);
 			const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 			mouse.OnWheelDelta(pt.x, pt.y, delta);

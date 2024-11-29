@@ -19,17 +19,29 @@
 ******************************************************************************************/
 #pragma once
 #include "GEngine/Graphics/GraphicsIncludes.h"
+#include "D3D11/DX11Core.h"
+
+enum class GraphicsAPI
+{
+	OpenGL,
+	DirectX11,
+	DirectX12,
+	Vulkan
+};
 
 namespace Genesis
 {
 	class Graphics
 	{
 	public:
-		Graphics();
-		~Graphics();
+		Graphics(GraphicsAPI api);
+		~Graphics();	
 		void Init();
-		void BeginFrame();
-		void EndFrame();
 		void Shutdown();
+		void BeginFrame();
+		void EndFrame();	
+	private:
+		GraphicsAPI m_API;
+		DX11Core* m_DX11Core;
 	};
-}
+} // namespace Genesis

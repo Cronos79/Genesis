@@ -60,5 +60,6 @@ namespace Genesis
 		Mouse mouse;
 	private:
 		std::vector<BYTE> rawBuffer;
+		bool m_isInitialized = false;
 	};
 }

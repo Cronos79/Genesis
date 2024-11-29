@@ -17,32 +17,27 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "GContext.h"
-#include "GEngine/Win/Window.h"
+#pragma once
+#include "GEngine/Win/WinInclude.h"
+#include "GEngine/Graphics/GraphicsIncludes.h"
 
 namespace Genesis
 {
-	Window* GContext::GetWindow() const
+	class DX11Core
 	{
-		return m_Window;
-	}
+	public:
+		DX11Core();
+		~DX11Core();
 
-	Genesis::Graphics* GContext::GetGraphics() const
-	{
-		return m_Graphics;
-	}
-
-	void GContext::Init(int32 width, int32 height, std::string title)
-	{
-		m_Window = new Window(width, height, title.c_str());
-		m_Window->SetTitle(title);
-		m_Graphics = new Graphics(GraphicsAPI::DirectX11);
-		m_Graphics->Init();
-	}	
-
-	void GContext::Shutdown()
-	{
-		m_Window->Shutdown();
-		m_Graphics->Shutdown();
-	}
+		void Init();
+		void Shutdown();
+		void BeginFrame();
+		void EndFrame();
+	private:
+		ComPtr<ID3D11Device> m_device;
+		ComPtr<ID3D11DeviceContext> m_deviceContext;
+		ComPtr<IDXGISwapChain> m_swapChain;
+	};
 }
+
+
