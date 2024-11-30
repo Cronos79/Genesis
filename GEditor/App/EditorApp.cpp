@@ -47,7 +47,18 @@ namespace Genesis
 
 	void EditorApp::Update(float deltaTime)
 	{
-		
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		bool show_demo_window = false;
+		if (show_demo_window)
+			ImGui::ShowDemoWindow(&show_demo_window);
+
+		ImGui::Begin("FPS");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+		ImGui::End();
+
+		static float f = 0.0f;
+		f += deltaTime;
+		GContext::Get().GetGraphics()->GetDX11Core()->DrawTriangle(f);
 	}
 
 	void EditorApp::Shutdown()

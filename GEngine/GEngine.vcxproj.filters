@@ -18,6 +18,8 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Graphics\D3D11\DX11Core.cpp" />
     <ClCompile Include="Core\GenException.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Core\GenTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
@@ -40,8 +42,14 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Graphics\D3D11\DX11Core.h" />
     <ClInclude Include="Core\GenException.h" />
+    <ClInclude Include="imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Core\GenTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\VertexShader.hlsl" />
+    <FxCompile Include="Shaders\PixelShader.hlsl" />
   </ItemGroup>
 </Project>

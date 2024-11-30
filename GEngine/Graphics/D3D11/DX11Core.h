@@ -20,6 +20,7 @@
 #pragma once
 #include "GEngine/Win/WinInclude.h"
 #include "GEngine/Graphics/GraphicsIncludes.h"
+#include <GEngine/Core/GenException.h>
 
 namespace Genesis
 {
@@ -27,16 +28,31 @@ namespace Genesis
 	{
 	public:
 		DX11Core();
+		DX11Core(const DX11Core&) = delete;
+		DX11Core& operator=(const DX11Core&) = delete;
 		~DX11Core();
+
+		inline ID3D11Device* GetDevice() const noexcept
+		{
+			return m_device.Get();
+		}
 
 		void Init();
 		void Shutdown();
-		void BeginFrame();
-		void EndFrame();
+		void BeginFrame(float deltaTime);
+		void EndFrame(float deltaTime);
+		void DrawTriangle(float angle);
+	private:		
+		void ClearBuffer(float red, float green, float blue) noexcept;
 	private:
 		ComPtr<ID3D11Device> m_device;
 		ComPtr<ID3D11DeviceContext> m_deviceContext;
-		ComPtr<IDXGISwapChain> m_swapChain;
+		ComPtr<IDXGISwapChain> m_swapChain;		
+		ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+
+		ComPtr<ID3D11Buffer> m_vertexBuffer;
+
+		DxgiInfoManager* infoManager;
 	};
 }
 

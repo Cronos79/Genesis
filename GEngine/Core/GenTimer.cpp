@@ -17,42 +17,27 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#pragma once
-#include "GEngine/Graphics/GraphicsIncludes.h"
-#include "D3D11/DX11Core.h"
+#include "GenTimer.h"
 
-enum class GraphicsAPI
-{
-	OpenGL,
-	DirectX11,
-	DirectX12,
-	Vulkan
-};
+using namespace std::chrono;
 
 namespace Genesis
 {
-	class Graphics
+	GenTimer::GenTimer() noexcept
 	{
-	public:
-		Graphics(GraphicsAPI api);
-		~Graphics();	
-		void Init();
-		void Shutdown();
-		void BeginFrame(float deltaTime);
-		void EndFrame(float deltaTime);
+		last = steady_clock::now();
+	}
 
-		inline DX11Core* GetDX11Core() const noexcept
-		{
-			return m_DX11Core;
-		}
+	float GenTimer::Mark() noexcept
+	{
+		const auto old = last;
+		last = steady_clock::now();
+		const duration<float> frameTime = last - old;
+		return frameTime.count();
+	}
 
-		inline ID3D11Device* GetDevice() const noexcept
-		{
-			return m_DX11Core->GetDevice();
-		}
-
-	private:
-		GraphicsAPI m_API;
-		DX11Core* m_DX11Core;
-	};
-} // namespace Genesis
+	float GenTimer::Peek() const noexcept
+	{
+		return duration<float>(steady_clock::now() - last).count();
+	}
+}

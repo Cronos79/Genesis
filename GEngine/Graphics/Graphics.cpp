@@ -76,14 +76,14 @@ namespace Genesis
 			break;
 		}
 	}
-	void Graphics::BeginFrame()
+	void Graphics::BeginFrame(float deltaTime)
 	{
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core->BeginFrame();
+			m_DX11Core->BeginFrame(deltaTime);
 			break;
 		case GraphicsAPI::DirectX12:
 			break;
@@ -93,14 +93,14 @@ namespace Genesis
 			break;
 		}
 	}
-	void Graphics::EndFrame()
+	void Graphics::EndFrame(float deltaTime)
 	{
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core->EndFrame();
+			m_DX11Core->EndFrame(deltaTime);
 			break;
 		case GraphicsAPI::DirectX12:
 			break;

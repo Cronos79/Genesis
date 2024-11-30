@@ -25,6 +25,7 @@ namespace Genesis
 {
 	EngineApp::EngineApp()
 	{
+		m_timer = new GenTimer();
 	}
 
 	int EngineApp::Run()
@@ -40,10 +41,11 @@ namespace Genesis
 				GContext::Get().Shutdown();
 				return *ecode;
 			}
-			GContext::Get().GetGraphics()->BeginFrame();
+			deltaTime = m_timer->Mark();
+			GContext::Get().GetGraphics()->BeginFrame(deltaTime);
 			HandleInput(deltaTime);
 			Update(deltaTime);
-			GContext::Get().GetGraphics()->EndFrame();
+			GContext::Get().GetGraphics()->EndFrame(deltaTime);
 		}
 		Shutdown();
 		GContext::Get().Shutdown();
