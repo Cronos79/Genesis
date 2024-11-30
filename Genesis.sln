@@ -3,8 +3,37 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35514.174 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{52633F34-B622-4485-9156-8A88820CFE20}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GEditor", "GEditor\GEditor.vcxproj", "{50703B50-0233-40F7-A989-D32A0EE420BB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GEngine", "GEngine\GEngine.vcxproj", "{C3A7C074-F37E-4082-95F7-EA50D1A645E2}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+		Shipping|x64 = Shipping|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Debug|x64.ActiveCfg = Debug|x64
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Debug|x64.Build.0 = Debug|x64
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Release|x64.ActiveCfg = Release|x64
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Release|x64.Build.0 = Release|x64
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Shipping|x64.ActiveCfg = Shipping|x64
+		{50703B50-0233-40F7-A989-D32A0EE420BB}.Shipping|x64.Build.0 = Shipping|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Debug|x64.ActiveCfg = Debug|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Debug|x64.Build.0 = Debug|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Release|x64.ActiveCfg = Release|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Release|x64.Build.0 = Release|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Shipping|x64.ActiveCfg = Shipping|x64
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2}.Shipping|x64.Build.0 = Shipping|x64
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50703B50-0233-40F7-A989-D32A0EE420BB} = {52633F34-B622-4485-9156-8A88820CFE20}
+		{C3A7C074-F37E-4082-95F7-EA50D1A645E2} = {52633F34-B622-4485-9156-8A88820CFE20}
 	EndGlobalSection
 EndGlobal

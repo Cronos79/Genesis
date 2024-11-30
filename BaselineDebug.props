@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OutDir>$(SolutionDir)Build\Bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Build\Bin-int\$(ProjectName)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Baseline.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
