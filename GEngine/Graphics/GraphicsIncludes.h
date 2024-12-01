@@ -37,3 +37,4 @@
 
 
 using namespace Microsoft::WRL;
+namespace dx = DirectX;

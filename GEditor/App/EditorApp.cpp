@@ -48,17 +48,27 @@ namespace Genesis
 	void EditorApp::Update(float deltaTime)
 	{
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		bool show_demo_window = false;
-		if (show_demo_window)
-			ImGui::ShowDemoWindow(&show_demo_window);
-
 		ImGui::Begin("FPS");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+		ImGui::End();		
+
+		ImGui::Begin("Mouse");
+		ImGui::Text("Mouse X %.1f Mouse Y %.1f", (float)GContext::Get().GetWindow()->mouse.GetPosX(), (float)GContext::Get().GetWindow()->mouse.GetPosY());
 		ImGui::End();
 
+		float width = (float)GContext::Get().GetWidth() / 2.0f;
+		float height = (float)GContext::Get().GetHeight() / 2.0f;
 		static float f = 0.0f;
 		f += deltaTime;
-		GContext::Get().GetGraphics()->GetDX11Core()->DrawTriangle(f);
+		GContext::Get().GetGraphics()->GetDX11Core()->DrawTriangle(
+			f, 
+			(float)GContext::Get().GetWindow()->mouse.GetPosX() / width - 1.0f, 
+			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 1.0f);
+		GContext::Get().GetGraphics()->GetDX11Core()->DrawCube(
+			f,
+			(float)GContext::Get().GetWindow()->mouse.GetPosX() / width - 1.0f,
+			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 1.0f,
+			0.0f);
 	}
 
 	void EditorApp::Shutdown()

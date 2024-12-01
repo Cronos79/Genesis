@@ -121,7 +121,7 @@ namespace Genesis
 		m_swapChain->Present(1u, 0u);
 	}
 
-	void DX11Core::DrawTriangle(float angle)
+	void DX11Core::DrawTriangle(float angle, float x, float y)
 	{
 		HRESULT hr;
 
@@ -189,17 +189,16 @@ namespace Genesis
 		// Create constant buffer for transformation matrix
 		struct ConstantBuffer
 		{
-			DirectX::XMMATRIX transform;
+			dx::XMMATRIX transform;
 		};
 		float aspectRatio = (float)GContext::Get().GetHeight() / (float)GContext::Get().GetWidth();
 		const ConstantBuffer cb =
 		{
-				{
-					aspectRatio * std::cos(angle),	std::sin(angle), 0.0f, 0.0f,
-					aspectRatio * -std::sin(angle),	std::cos(angle), 0.0f, 0.0f,
-					0.0f,							0.0f,			 1.0f, 0.0f,
-					0.0f,							0.0f,			 0.0f, 1.0f
-				}
+			dx::XMMatrixTranspose(
+				dx::XMMatrixRotationZ(angle)*
+				dx::XMMatrixScaling(aspectRatio, 1.0f, 1.0f)*
+				dx::XMMatrixTranslation(x, y, 0.0f)
+			)
 		};
 
 		ComPtr<ID3D11Buffer> pConstantBuffer;
@@ -241,6 +240,165 @@ namespace Genesis
 		const D3D11_INPUT_ELEMENT_DESC ied[] =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0  }
+		};
+		GFX_THROW_INFO(m_device->CreateInputLayout(
+			ied, (UINT)std::size(ied),
+			pBlob->GetBufferPointer(),
+			pBlob->GetBufferSize(),
+			&pInputLayout
+		));
+
+		// bind vertex layout
+		m_deviceContext->IASetInputLayout(pInputLayout.Get());
+
+
+		// bind render target
+		m_deviceContext->OMSetRenderTargets(1u, m_renderTargetView.GetAddressOf(), nullptr);
+
+
+		// Set primitive topology to triangle list (groups of 3 vertices)
+		m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+		// configure viewport
+		D3D11_VIEWPORT vp;
+		vp.Width = GContext::Get().GetWidth();
+		vp.Height = GContext::Get().GetHeight();
+		vp.MinDepth = 0;
+		vp.MaxDepth = 1;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		m_deviceContext->RSSetViewports(1u, &vp);
+
+
+		GFX_THROW_INFO_ONLY(m_deviceContext->DrawIndexed((UINT)std::size(indices), 0u, 0u));
+	}
+
+	void DX11Core::DrawCube(float angle, float x, float y, float z)
+	{
+		HRESULT hr;
+
+		struct Vertex
+		{
+			float x;
+			float y;
+			float z;
+			unsigned char r;
+			unsigned char g;
+			unsigned char b;
+			unsigned char a;
+		};
+
+		// create vertex buffer (1 2d triangle at center of screen)
+		const Vertex vertices[] =
+		{
+			{ -1.0f, -1.0f, -1.0f, 255, 0, 0, 1 },
+			{ 1.0f, -1.0f, -1.0f, 0, 255, 0, 1 },
+			{ -1.0f, 1.0f, -1.0f, 0, 0, 255, 1 },
+			{ 1.0f, 1.0f, -1.0f, 255, 255, 0, 1 },
+			{ -1.0f, -1.0f, 1.0f, 255, 0, 255, 1 },
+			{ 1.0f, -1.0f, 1.0f, 0, 255, 255, 1 },
+			{ -1.0f, 1.0f, 1.0f, 0, 0, 0, 1 },
+			{ 1.0f, 1.0f, 1.0f, 255, 255, 255, 1 }
+		};
+		ComPtr<ID3D11Buffer> pVertexBuffer;
+		D3D11_BUFFER_DESC bd = {};
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.CPUAccessFlags = 0u;
+		bd.MiscFlags = 0u;
+		bd.ByteWidth = sizeof(vertices);
+		bd.StructureByteStride = sizeof(Vertex);
+		D3D11_SUBRESOURCE_DATA sd = {};
+		sd.pSysMem = vertices;
+		GFX_THROW_INFO(m_device->CreateBuffer(&bd, &sd, &pVertexBuffer));
+
+		// Bind vertex buffer to pipeline
+		const UINT stride = sizeof(Vertex);
+		const UINT offset = 0u;
+		m_deviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+		// create index buffer
+		const unsigned short indices[] =
+		{
+			0,2,1, 2,3,1,
+			1,3,5, 3,7,5,
+			2,6,3, 3,6,7,
+			4,5,7, 4,7,6,
+			0,4,2, 2,4,6,
+			0,1,4, 1,5,4
+		};
+
+		ComPtr<ID3D11Buffer> pIndexBuffer;
+		D3D11_BUFFER_DESC ibd = {};
+		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		ibd.Usage = D3D11_USAGE_DEFAULT;
+		ibd.CPUAccessFlags = 0u;
+		ibd.MiscFlags = 0u;
+		ibd.ByteWidth = sizeof(indices);
+		ibd.StructureByteStride = sizeof(unsigned short);
+		D3D11_SUBRESOURCE_DATA isd = {};
+		isd.pSysMem = indices;
+		GFX_THROW_INFO(m_device->CreateBuffer(&ibd, &isd, &pIndexBuffer));
+
+		// bind index buffer to pipeline
+		m_deviceContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+
+		// Create constant buffer for transformation matrix
+		struct ConstantBuffer
+		{
+			dx::XMMATRIX transform;
+		};
+		float aspectRatio = (float)GContext::Get().GetHeight() / (float)GContext::Get().GetWidth();
+		const ConstantBuffer cb =
+		{
+			dx::XMMatrixTranspose(
+				dx::XMMatrixRotationZ(angle)*
+				dx::XMMatrixRotationX(angle)*
+				dx::XMMatrixTranslation(x, y, 4.0f)*
+				dx::XMMatrixPerspectiveLH(1.0f, aspectRatio, 0.5f, 10.0f))
+		};
+
+		ComPtr<ID3D11Buffer> pConstantBuffer;
+		D3D11_BUFFER_DESC cbd = {};
+		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbd.Usage = D3D11_USAGE_DYNAMIC;
+		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbd.MiscFlags = 0u;
+		cbd.ByteWidth = sizeof(cb);
+		cbd.StructureByteStride = 0u;
+		D3D11_SUBRESOURCE_DATA csd = {};
+		csd.pSysMem = &cb;
+		GFX_THROW_INFO(m_device->CreateBuffer(&cbd, &csd, &pConstantBuffer));
+
+		// bind constant buffer to vertex shader
+		m_deviceContext->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+
+		// create pixel shader
+		ComPtr<ID3D11PixelShader> pPixelShader;
+		ComPtr<ID3DBlob> pBlob;
+		GFX_THROW_INFO(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
+		GFX_THROW_INFO(m_device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+
+		// bind pixel shader
+		m_deviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+
+		// create vertex shader
+		ComPtr<ID3D11VertexShader> pVertexShader;
+		GFX_THROW_INFO(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+		GFX_THROW_INFO(m_device->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
+
+		// bind vertex shader
+		m_deviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+
+		// input (vertex) layout (2d position only)
+		ComPtr<ID3D11InputLayout> pInputLayout;
+		const D3D11_INPUT_ELEMENT_DESC ied[] =
+		{
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{ "Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0  }
 		};
 		GFX_THROW_INFO(m_device->CreateInputLayout(

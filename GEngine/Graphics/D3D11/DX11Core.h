@@ -41,7 +41,8 @@ namespace Genesis
 		void Shutdown();
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
-		void DrawTriangle(float angle);
+		void DrawTriangle(float angle, float x, float y);
+		void DrawCube(float angle, float x, float y, float z);
 	private:		
 		void ClearBuffer(float red, float green, float blue) noexcept;
 	private:
