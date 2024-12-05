@@ -22,6 +22,7 @@
 #include "GEngine/Graphics/GraphicsIncludes.h"
 #include <GEngine/Core/GenException.h>
 #include "GEngine/Core/CommonHeaders.h"
+#include "GEngine/Graphics/D3D11/Shaders.h"
 
 namespace Genesis
 {
@@ -36,7 +37,6 @@ namespace Genesis
 
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
-		void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 
 		inline ID3D11Device* GetDevice() const noexcept
 		{
@@ -60,6 +60,9 @@ namespace Genesis
 
 	private:
 		bool InitializeDirectX();
+		bool InitializeShaders();
+		bool InitializeScene();
+		void ClearBuffer(float red, float green, float blue) noexcept;
 
 	private:
 		DxgiInfoManager* infoManager;
@@ -67,8 +70,10 @@ namespace Genesis
 		ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 		ComPtr<IDXGISwapChain> m_pSwapChain;
 		ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
-		ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
+		ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;		
+		VertexShader m_VertexShader;
+		PixelShader m_PixelShader;
 
-		bool m_IsInitialized = false;
+		ComPtr<ID3D11Buffer> m_pVertexBuffer;
 	};
 }

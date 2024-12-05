@@ -21,7 +21,6 @@
 #include <sstream>
 #include <vector>
 #include <d3d11.h>
-#include <GEngine/Graphics/D3D11/DX11Core.h>
 #include "GContext.h"
 
 #pragma comment(lib, "dxguid.lib")

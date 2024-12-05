@@ -40,7 +40,6 @@ namespace Genesis
 		void Shutdown();
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
-		void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 
 		inline GraphicsDX11* GetDX11() const noexcept
 		{

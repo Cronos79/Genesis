@@ -111,22 +111,5 @@ namespace Genesis
 			break;
 		}
 	}
-	void GenGraphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
-	{
-		switch (m_API)
-		{
-		case GraphicsAPI::OpenGL:
-			break;
-		case GraphicsAPI::DirectX11:
-			m_DX11->DrawIndexed(count);
-			break;
-		case GraphicsAPI::DirectX12:
-			break;
-		case GraphicsAPI::Vulkan:
-			break;
-		default:
-			break;
-		}
-	}
 
 } // namespace Genesis

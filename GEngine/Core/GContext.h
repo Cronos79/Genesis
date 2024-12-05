@@ -73,7 +73,7 @@ namespace Genesis
 		HWND m_HWnd;
 		Window* m_Window;
 		GenGraphics* m_Graphics;
-		bool m_Running = true;
+		bool m_Running = false;
 
 		// Singleton
 	public:

@@ -18,49 +18,45 @@
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
 #pragma once
-#include "GEngine/Win/WinInclude.h"
 #include "GEngine/Graphics/GraphicsIncludes.h"
-#include <GEngine/Core/GenException.h>
 
 namespace Genesis
 {
-	class DX11Core
+	struct Vertex
 	{
-		friend class GenGraphics;
-		friend class Bindable;
-	public:
-		DX11Core();
-		DX11Core(const DX11Core&) = delete;
-		DX11Core& operator=(const DX11Core&) = delete;
-		~DX11Core();
-
-		inline ID3D11Device* GetDevice() const noexcept
+		Vertex()
 		{
-			return m_device.Get();
+			position = { 0.0f, 0.0f, 0.0f };
+		}
+		Vertex(float x, float y, float z)
+			: position(x, y, z)
+		{
 		}
 
-		void Init();
-		void Shutdown();
-		void BeginFrame(float deltaTime);
-		void EndFrame(float deltaTime);
-		void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
-		void SetProjection(DirectX::FXMMATRIX proj) noexcept;
-		DirectX::XMMATRIX GetProjection() const noexcept;
-		void DrawCube(float angle, float x, float y, float z);
-	private:		
-		void ClearBuffer(float red, float green, float blue) noexcept;
+		dx::XMFLOAT3 position{};
+	};
+
+	class VertexShader
+	{
+	public:
+		bool Initialize(ComPtr<ID3D11Device>& pDevice, const std::wstring& shaderPath, const D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
+		ID3D11VertexShader* GetShader() const noexcept;
+		ID3D10Blob* GetBlob() const noexcept;
+		ID3D11InputLayout* GetInputLayout() const noexcept;
 	private:
-		ComPtr<ID3D11Device> m_device;
-		ComPtr<ID3D11DeviceContext> m_deviceContext;
-		ComPtr<IDXGISwapChain> m_swapChain;		
-		ComPtr<ID3D11RenderTargetView> m_renderTargetView;
-		ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+		ComPtr<ID3D11VertexShader> m_pVertexShader = nullptr;
+		ComPtr<ID3D10Blob> m_pBlob = nullptr;
+		ComPtr<ID3D11InputLayout> m_pInputLayout;
+	};
 
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
-		DirectX::XMMATRIX m_projection;
-
-		DxgiInfoManager* infoManager;
+	class PixelShader
+	{
+	public:
+		bool Initialize(ComPtr<ID3D11Device>& pDevice, const std::wstring& shaderPath);
+		ID3D11PixelShader* GetShader() const noexcept;
+		ID3D10Blob* GetBlob() const noexcept;
+	private:
+		ComPtr<ID3D11PixelShader> m_pPixelShader = nullptr;
+		ComPtr<ID3D10Blob> m_pBlob = nullptr;
 	};
 }
-
-
