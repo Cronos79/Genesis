@@ -55,26 +55,28 @@ namespace Genesis
 		ImGui::Begin("Mouse");
 		ImGui::Text("Mouse X %.1f Mouse Y %.1f", (float)GContext::Get().GetWindow()->mouse.GetPosX(), (float)GContext::Get().GetWindow()->mouse.GetPosY());
 		ImGui::End();
-
+		/*
 		float width = (float)GContext::Get().GetWidth() / 2.0f;
-		float height = (float)GContext::Get().GetHeight() / 2.0f;
+		float height = (float)GContext::Get().GetHeight() / 4.0f;
 		static float f = 0.0f;
-		f += deltaTime;
-		GContext::Get().GetGraphics()->GetDX11Core()->DrawTriangle(
-			f, 
-			(float)GContext::Get().GetWindow()->mouse.GetPosX() / width - 1.0f, 
-			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 1.0f);
+		f += deltaTime;*/
+		/*GContext::Get().GetGraphics()->GetDX11Core()->DrawCube(
+			f,
+			0,
+			0,
+			0.0f);
 		GContext::Get().GetGraphics()->GetDX11Core()->DrawCube(
 			f,
 			(float)GContext::Get().GetWindow()->mouse.GetPosX() / width - 1.0f,
-			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 1.0f,
-			0.0f);
+			0.0f,
+			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 2.0f);*/
 	}
 
 	void EditorApp::Shutdown()
 	{
 		
 	}
+
 }
 
 Genesis::EngineApp* CreateEngineApp()

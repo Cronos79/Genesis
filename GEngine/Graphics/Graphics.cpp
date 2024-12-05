@@ -21,15 +21,16 @@
 
 namespace Genesis
 {
-	Graphics::Graphics(GraphicsAPI api)
+	GenGraphics::GenGraphics(GraphicsAPI api)
 	{
+		infoManager = new DxgiInfoManager();
 		m_API = api;
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core = new DX11Core();
+			m_DX11 = new GraphicsDX11();
 			break;
 		case GraphicsAPI::DirectX12:
 			break;
@@ -39,34 +40,17 @@ namespace Genesis
 			break;
 		}
 	}
-	Graphics::~Graphics()
+	GenGraphics::~GenGraphics()
 	{
 	}
-	void Graphics::Init()
-	{
-		switch (m_API)
-		{
-		case GraphicsAPI::OpenGL:
-			break;
-		case GraphicsAPI::DirectX11:
-			m_DX11Core->Init();
-			break;
-		case GraphicsAPI::DirectX12:
-			break;
-		case GraphicsAPI::Vulkan:
-			break;
-		default:
-			break;
-		}
-	}
-	void Graphics::Shutdown()
+	void GenGraphics::Init()
 	{
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core->Shutdown();
+			m_DX11->Initialize();
 			break;
 		case GraphicsAPI::DirectX12:
 			break;
@@ -76,14 +60,14 @@ namespace Genesis
 			break;
 		}
 	}
-	void Graphics::BeginFrame(float deltaTime)
+	void GenGraphics::Shutdown()
 	{
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core->BeginFrame(deltaTime);
+			m_DX11->Shutdown();
 			break;
 		case GraphicsAPI::DirectX12:
 			break;
@@ -93,14 +77,14 @@ namespace Genesis
 			break;
 		}
 	}
-	void Graphics::EndFrame(float deltaTime)
+	void GenGraphics::BeginFrame(float deltaTime)
 	{
 		switch (m_API)
 		{
 		case GraphicsAPI::OpenGL:
 			break;
 		case GraphicsAPI::DirectX11:
-			m_DX11Core->EndFrame(deltaTime);
+			m_DX11->BeginFrame(deltaTime);
 			break;
 		case GraphicsAPI::DirectX12:
 			break;
@@ -110,4 +94,39 @@ namespace Genesis
 			break;
 		}
 	}
+	void GenGraphics::EndFrame(float deltaTime)
+	{
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11->EndFrame(deltaTime);
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
+	}
+	void GenGraphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
+	{
+		switch (m_API)
+		{
+		case GraphicsAPI::OpenGL:
+			break;
+		case GraphicsAPI::DirectX11:
+			m_DX11->DrawIndexed(count);
+			break;
+		case GraphicsAPI::DirectX12:
+			break;
+		case GraphicsAPI::Vulkan:
+			break;
+		default:
+			break;
+		}
+	}
+
 } // namespace Genesis

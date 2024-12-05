@@ -63,7 +63,7 @@ namespace Genesis
 		}	
 		
 		Window* GetWindow() const;
-		Graphics* GetGraphics() const;
+		GenGraphics* GetGraphics() const;
 
 		void Init(int32 width, int32 height, std::string title);
 		void Shutdown();
@@ -72,7 +72,7 @@ namespace Genesis
 		int32 m_Height;
 		HWND m_HWnd;
 		Window* m_Window;
-		Graphics* m_Graphics;
+		GenGraphics* m_Graphics;
 		bool m_Running = true;
 
 		// Singleton

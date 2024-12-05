@@ -141,11 +141,11 @@ namespace Genesis
 #ifdef NDEBUG
 #define INFOMAN(gfx) HRESULT hr
 #else
-#define INFOMAN(gfx) HRESULT hr; DxgiInfoManager& infoManager = GetInfoManager((gfx))
+#define INFOMAN(gfx) HRESULT hr; DxgiInfoManager* infoManager = GetInfoManager((gfx))
 #endif
 
 #ifdef NDEBUG
 #define INFOMAN_NOHR(gfx)
 #else
-#define INFOMAN_NOHR(gfx) DxgiInfoManager& infoManager = GetInfoManager((gfx))
+#define INFOMAN_NOHR(gfx) DxgiInfoManager* infoManager = GetInfoManager((gfx))
 #endif

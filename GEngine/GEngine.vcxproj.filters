@@ -20,6 +20,9 @@
     <ClCompile Include="Core\GenException.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Core\GenTimer.cpp" />
+    <ClCompile Include="Core\StringConverter.cpp" />
+    <ClCompile Include="Graphics\D3D11\GraphicsDX11.cpp" />
+    <ClCompile Include="Graphics\D3D11\AdapterReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
@@ -44,6 +47,9 @@
     <ClInclude Include="Core\GenException.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
     <ClInclude Include="Core\GenTimer.h" />
+    <ClInclude Include="Core\StringConverter.h" />
+    <ClInclude Include="Graphics\D3D11\GraphicsDX11.h" />
+    <ClInclude Include="Graphics\D3D11\AdapterReader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

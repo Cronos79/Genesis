@@ -30,7 +30,7 @@ namespace Genesis
 
 	int EngineApp::Run()
 	{
-		Init();
+		Init();	
 		float deltaTime = 0.0f;
 		while (GContext::Get().IsRunning())
 		{

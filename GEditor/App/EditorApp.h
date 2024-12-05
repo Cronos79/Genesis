@@ -32,6 +32,7 @@ namespace Genesis
 		void  HandleInput(float deltaTime) override;
 		void  Update(float deltaTime) override;
 		void Shutdown() override;
+	private:
 	};
 }
 

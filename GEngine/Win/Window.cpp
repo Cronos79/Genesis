@@ -91,6 +91,8 @@ namespace Genesis
 		}
 		// newly created windows start off as hidden
 		ShowWindow(GContext::Get().GetHWnd(), SW_SHOWDEFAULT);
+		SetForegroundWindow(GContext::Get().GetHWnd());
+		SetFocus(GContext::Get().GetHWnd());
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();

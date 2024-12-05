@@ -27,7 +27,7 @@ namespace Genesis
 		return m_Window;
 	}
 
-	Genesis::Graphics* GContext::GetGraphics() const
+	Genesis::GenGraphics* GContext::GetGraphics() const
 	{
 		return m_Graphics;
 	}
@@ -36,7 +36,7 @@ namespace Genesis
 	{
 		m_Window = new Window(width, height, title.c_str());
 		m_Window->SetTitle(title);
-		m_Graphics = new Graphics(GraphicsAPI::DirectX11);
+		m_Graphics = new GenGraphics(GraphicsAPI::DirectX11);
 		m_Graphics->Init();
 	}	
 

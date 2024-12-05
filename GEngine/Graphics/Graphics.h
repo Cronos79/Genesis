@@ -19,7 +19,7 @@
 ******************************************************************************************/
 #pragma once
 #include "GEngine/Graphics/GraphicsIncludes.h"
-#include "D3D11/DX11Core.h"
+#include "D3D11/GraphicsDX11.h"
 
 enum class GraphicsAPI
 {
@@ -31,28 +31,30 @@ enum class GraphicsAPI
 
 namespace Genesis
 {
-	class Graphics
+	class GenGraphics
 	{
 	public:
-		Graphics(GraphicsAPI api);
-		~Graphics();	
+		GenGraphics(GraphicsAPI api);
+		~GenGraphics();
 		void Init();
 		void Shutdown();
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
+		void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 
-		inline DX11Core* GetDX11Core() const noexcept
+		inline GraphicsDX11* GetDX11() const noexcept
 		{
-			return m_DX11Core;
+			return m_DX11;
 		}
 
-		inline ID3D11Device* GetDevice() const noexcept
+		inline DxgiInfoManager* GetInfoManager(GenGraphics* gfx) const noexcept
 		{
-			return m_DX11Core->GetDevice();
+			return infoManager;
 		}
 
 	private:
 		GraphicsAPI m_API;
-		DX11Core* m_DX11Core;
+		GraphicsDX11* m_DX11;
+		DxgiInfoManager* infoManager;
 	};
 } // namespace Genesis

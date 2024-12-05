@@ -26,6 +26,8 @@ namespace Genesis
 {
 	class DX11Core
 	{
+		friend class GenGraphics;
+		friend class Bindable;
 	public:
 		DX11Core();
 		DX11Core(const DX11Core&) = delete;
@@ -41,7 +43,9 @@ namespace Genesis
 		void Shutdown();
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
-		void DrawTriangle(float angle, float x, float y);
+		void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
+		void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+		DirectX::XMMATRIX GetProjection() const noexcept;
 		void DrawCube(float angle, float x, float y, float z);
 	private:		
 		void ClearBuffer(float red, float green, float blue) noexcept;
@@ -50,8 +54,10 @@ namespace Genesis
 		ComPtr<ID3D11DeviceContext> m_deviceContext;
 		ComPtr<IDXGISwapChain> m_swapChain;		
 		ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+		ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
+		DirectX::XMMATRIX m_projection;
 
 		DxgiInfoManager* infoManager;
 	};
