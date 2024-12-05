@@ -26,14 +26,15 @@ namespace Genesis
 	{
 		Vertex()
 		{
-			position = { 0.0f, 0.0f, 0.0f };
+			position = { 0.0f, 0.0f, 0.0f, 1.0f };
 		}
-		Vertex(float x, float y, float z)
-			: position(x, y, z)
+		Vertex(float x, float y, float z,float w, float r, float g, float b, float a)
+			: position(x, y, z, w), color(r, g, b, a)
 		{
 		}
 
-		dx::XMFLOAT3 position{};
+		dx::XMFLOAT4 position{};
+		dx::XMFLOAT4 color{};
 	};
 
 	class VertexShader

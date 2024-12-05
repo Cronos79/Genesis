@@ -37,7 +37,8 @@ namespace Genesis
 
 	void EditorApp::Init()
 	{
-		GContext::Get().Init(1920, 1080, "Genesis Editor");		
+		GContext::Get().Init(1920, 1080, "Genesis Editor");	
+		//GContext::Get().Init(800, 600, "Genesis Editor");
 	}
 
 	void EditorApp::HandleInput(float deltaTime)

@@ -76,7 +76,7 @@ namespace Genesis
 		static float f = 0.0f;
 		f += deltaTime;
 		const float c = sin(f) / 2.0f + 0.5f;
-		ClearBuffer(c, c, 1.0f);
+		ClearBuffer(c, c, c);
 	}
 
 	void GraphicsDX11::EndFrame(float deltaTime)
@@ -87,6 +87,8 @@ namespace Genesis
 
 		m_pDeviceContext->IASetInputLayout(m_VertexShader.GetInputLayout());
 		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pDeviceContext->RSSetState(m_pRasterizerState.Get());
+		m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1u);
 
 		m_pDeviceContext->VSSetShader(m_VertexShader.GetShader(), nullptr, 0);
 		m_pDeviceContext->PSSetShader(m_PixelShader.GetShader(), nullptr, 0);
@@ -175,27 +177,30 @@ namespace Genesis
 			GHWND_EXCEPT(hr);
 		}	
 
+		// Create depth stencil state
+		ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+		dsDesc.DepthEnable = TRUE;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS; // #NOTE: LESS_EQUAL will also replace if the pixel is the same
+		
+		hr = m_pDevice->CreateDepthStencilState(&dsDesc, m_pDepthStencilState.GetAddressOf());
+		if (FAILED(hr))
+		{
+			LOG_ERROR("Failed to create depth stencil state");
+			return false;
+		}
+
 		// Create the viewport
 		D3D11_VIEWPORT vp = {};
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 		vp.Width = static_cast<float>(GContext::Get().GetWidth());
 		vp.Height = static_cast<float>(GContext::Get().GetHeight());
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
 
 		m_pDeviceContext->RSSetViewports(1u, &vp);
-
-		// Create depth stencil state
-		ComPtr<ID3D11DepthStencilState> pDepthStencilState;
-		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-		dsDesc.DepthEnable = TRUE;
-		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		ComPtr<ID3D11DepthStencilState> pDSState;
-		
-		GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, &pDSState));
-
-		// Bind depth state
-		m_pDeviceContext->OMSetDepthStencilState(pDSState.Get(), 1u);
 
 		// Create depth stencil texture
 		D3D11_TEXTURE2D_DESC descDepth = {};
@@ -217,6 +222,25 @@ namespace Genesis
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0u;
 		GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencilTexture.Get(), &descDSV, m_pDepthStencilView.GetAddressOf()));
+
+		//Create rasterizer state
+		D3D11_RASTERIZER_DESC rasterizerDesc = {};
+		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+		rasterizerDesc.CullMode = D3D11_CULL_BACK;
+		rasterizerDesc.FrontCounterClockwise = FALSE;
+		rasterizerDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
+		rasterizerDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
+		rasterizerDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+		rasterizerDesc.DepthClipEnable = TRUE;
+		rasterizerDesc.ScissorEnable = FALSE;
+		rasterizerDesc.MultisampleEnable = FALSE;
+		rasterizerDesc.AntialiasedLineEnable = FALSE;
+		hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, m_pRasterizerState.GetAddressOf());
+		if (FAILED(hr))
+		{
+			LOG_ERROR("Failed to create rasterizer state");
+			return false;
+		}
 
 		// Bind depth stencil view to OM
 		m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
@@ -242,7 +266,8 @@ namespace Genesis
 #pragma endregion
 		D3D11_INPUT_ELEMENT_DESC ied[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 } // D3D11_APPEND_ALIGNED_ELEMENT
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // D3D11_APPEND_ALIGNED_ELEMENT
 		};
 		UINT numElements = ARRAYSIZE(ied);
 
@@ -267,9 +292,9 @@ namespace Genesis
 		// Create vertex buffer
 		Vertex vertices[] =
 		{
-			Vertex(0.0f, 0.5f, 0.0f),
-			Vertex(0.5f, -0.5f, 0.0f),
-			Vertex(-0.5f, -0.5f, 0.0f)
+			Vertex(-0.5f, -0.5f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f, 1.0f), // bottom left red
+			Vertex(0.0f, 0.5f, 0.0f, 1.0f,		0.0f, 1.0f, 0.0f, 1.0f), // top middle green
+			Vertex(0.5f, -0.5f, 0.0f, 1.0f,		0.0f, 0.0f, 1.0f, 1.0f), // bottom right blue	
 		};
 
 		D3D11_BUFFER_DESC bd = {};
@@ -297,7 +322,7 @@ namespace Genesis
 	{
 		const float color[] = { red, green, blue, 1.0f };
 		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
-		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
 	}
 
 }

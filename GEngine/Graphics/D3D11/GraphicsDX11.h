@@ -71,9 +71,12 @@ namespace Genesis
 		ComPtr<IDXGISwapChain> m_pSwapChain;
 		ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
 		ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;		
+		ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
 		VertexShader m_VertexShader;
 		PixelShader m_PixelShader;
 
 		ComPtr<ID3D11Buffer> m_pVertexBuffer;
+
+		ComPtr<ID3D11RasterizerState> m_pRasterizerState;
 	};
 }

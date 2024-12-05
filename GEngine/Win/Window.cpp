@@ -68,10 +68,13 @@ namespace Genesis
 		GContext::Get().SetHeight(height);
 		GContext::Get().SetWidth(width);
 		// calculate window size based on desired client region size
+
+		int centerScreenX = GetSystemMetrics(SM_CXSCREEN) / 2;
+		int centerScreenY = GetSystemMetrics(SM_CYSCREEN) / 2;
 		RECT wr;
-		wr.left = 100;
+		wr.left = centerScreenX - width / 2;
 		wr.right = width + wr.left;
-		wr.top = 100;
+		wr.top = centerScreenY - height / 2;
 		wr.bottom = height + wr.top;
 		if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
 		{
@@ -81,7 +84,7 @@ namespace Genesis
 		GContext::Get().SetHWnd(CreateWindowA(
 			WindowClass::GetName(), name,
 			WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-			CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+			wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top,
 			nullptr, nullptr, WindowClass::GetInstance(), this
 		));
 		// check for error
