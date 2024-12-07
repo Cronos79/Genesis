@@ -106,6 +106,7 @@ namespace Genesis
 		void EnableRaw() noexcept;
 		void DisableRaw() noexcept;
 		bool RawEnabled() const noexcept;
+		bool IsEventBufferEmpty() const;
 	private:
 		void OnMouseMove(int x, int y) noexcept;
 		void OnMouseLeave() noexcept;
@@ -128,7 +129,7 @@ namespace Genesis
 		bool rightIsPressed = false;
 		bool isInWindow = false;
 		int wheelDeltaCarry = 0;
-		bool rawEnabled = false;
+		bool rawEnabled = true;
 		std::queue<Event> buffer;
 		std::queue<RawDelta> rawDeltaBuffer;
 	};

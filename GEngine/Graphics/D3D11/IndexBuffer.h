@@ -17,45 +17,58 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "EngineApp.h"
-#include "Gengine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
-#include "../Project/ProjectMng.h"
+#pragma once
+#include "GEngine/Graphics/GraphicsIncludes.h"
 
-namespace Genesis
+class IndexBuffer
 {
-	EngineApp::EngineApp()
+private:
+	IndexBuffer(const IndexBuffer& rhs);
+private:
+	ComPtr<ID3D11Buffer> m_pBuffer;
+	UINT m_BufferSize;
+public:
+	IndexBuffer()
 	{
-		m_timer = new GenTimer();
 	}
 
-	int EngineApp::Run()
+	ID3D11Buffer* Get() const noexcept
 	{
-		Init();	
-		float deltaTime = 0.0f;
-		while (GContext::Get().IsRunning())
+		return m_pBuffer.Get();
+	}
+
+	ID3D11Buffer* const* GetAddressOf() const noexcept
+	{
+		return m_pBuffer.GetAddressOf();
+	}
+
+	UINT BufferSize() const noexcept
+	{
+		return m_BufferSize;
+	}
+
+	HRESULT Initialize(ID3D11Device* pDevice, const DWORD* data, UINT numIndices)
+	{
+		if (m_pBuffer.Get() != nullptr)
 		{
-			if (const auto ecode = GContext::Get().GetWindow()->ProcessMessages())
-			{
-				// if return optional has value, means we're quitting so return exit code
-				Shutdown();
-				GContext::Get().Shutdown();
-				return *ecode;
-			}
-			deltaTime = m_timer->Mark();
-			GContext::Get().GetGraphics()->BeginFrame(deltaTime);
-			HandleInput(deltaTime);
-			UpdateLocal(deltaTime);
-			Update(deltaTime);
-			GContext::Get().GetGraphics()->EndFrame(deltaTime);
+			m_pBuffer.Reset();
 		}
-		Shutdown();
-		GContext::Get().Shutdown();
-		return -1;
+		m_BufferSize = numIndices;
+		D3D11_BUFFER_DESC ibd = {};
+		ibd.Usage = D3D11_USAGE_DEFAULT;
+		ibd.ByteWidth = sizeof(DWORD) * numIndices;
+		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		ibd.CPUAccessFlags = 0u;
+		ibd.MiscFlags = 0u;
+
+		D3D11_SUBRESOURCE_DATA isd = {};
+		isd.pSysMem = data;
+
+		HRESULT hr = pDevice->CreateBuffer(&ibd, &isd, m_pBuffer.GetAddressOf());
+		if (FAILED(hr))
+		{
+			LOG_ERROR("Failed to create index buffer");
+		}
+		return hr;
 	}
-	void EngineApp::UpdateLocal(float deltaTime)
-	{
-		// Update scene
-		ProjectMng::Get().GetCurrentProject().GetCurrentScene().Update(deltaTime);
-	}
-}
+};

@@ -29,9 +29,11 @@ namespace Genesis
 		virtual ~EngineApp() = default;
 		int Run();
 		virtual void Init() = 0;
-		void virtual HandleInput(float deltaTime) = 0;
+		void virtual HandleInput(float deltaTime) = 0;		
 		void virtual Update(float deltaTime) = 0;
 		virtual void Shutdown() = 0;
+	private:
+		void UpdateLocal(float deltaTime);
 	private:
 		GenTimer* m_timer;
 	};

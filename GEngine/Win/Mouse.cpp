@@ -94,6 +94,11 @@ namespace Genesis
 		return rawEnabled;
 	}
 
+	bool Mouse::IsEventBufferEmpty() const
+	{
+		return buffer.empty();
+	}
+
 	void Mouse::OnMouseMove(int newx, int newy) noexcept
 	{
 		x = newx;

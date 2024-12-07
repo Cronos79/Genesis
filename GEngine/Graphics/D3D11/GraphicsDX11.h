@@ -23,6 +23,10 @@
 #include <GEngine/Core/GenException.h>
 #include "GEngine/Core/CommonHeaders.h"
 #include "GEngine/Graphics/D3D11/Shaders.h"
+#include "GEngine/Graphics/D3D11/VertexBuffer.h"
+#include "GEngine/Graphics/D3D11/IndexBuffer.h"
+#include "GEngine/Graphics/D3D11/ConstantBuffer.h"
+#include "GEngine/Graphics/D3D11/Camera.h"
 
 namespace Genesis
 {
@@ -58,6 +62,11 @@ namespace Genesis
 			return m_pRenderTargetView.Get();
 		}
 
+		inline void ToggleVsync() noexcept
+		{
+			m_vsync = m_vsync == 1 ? 0 : 1;
+		}
+
 	private:
 		bool InitializeDirectX();
 		bool InitializeShaders();
@@ -72,11 +81,25 @@ namespace Genesis
 		ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
 		ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;		
 		ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
+		ComPtr<ID3D11BlendState> m_pBlendState;
 		VertexShader m_VertexShader;
 		PixelShader m_PixelShader;
 
-		ComPtr<ID3D11Buffer> m_pVertexBuffer;
+		VertexBuffer<Vertex> m_VertexBuffer;
+		IndexBuffer m_IndicesBuffer;
 
 		ComPtr<ID3D11RasterizerState> m_pRasterizerState;
+		ComPtr<ID3D11RasterizerState> m_pRasterizerState_CullFront;
+
+		ComPtr<ID3D11SamplerState> m_pSamplerState;
+
+		ConstantBuffer<CB_VS_VertexShader> m_CB_VS_VertexShader;
+		ConstantBuffer<CB_PS_PixelShader> m_CB_PS_PixelShader;
+
+		UINT m_vsync = 1;
+
+	public:
+		Camera m_Camera;
+		float m_Alpha = 1.0f;
 	};
 }

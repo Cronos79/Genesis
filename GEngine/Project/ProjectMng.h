@@ -17,45 +17,34 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "EngineApp.h"
-#include "Gengine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
-#include "../Project/ProjectMng.h"
+#pragma once
+#include "Project.h"
 
 namespace Genesis
 {
-	EngineApp::EngineApp()
+	class ProjectMng
 	{
-		m_timer = new GenTimer();
-	}
-
-	int EngineApp::Run()
-	{
-		Init();	
-		float deltaTime = 0.0f;
-		while (GContext::Get().IsRunning())
+	public:
+		inline Project& GetCurrentProject()
 		{
-			if (const auto ecode = GContext::Get().GetWindow()->ProcessMessages())
-			{
-				// if return optional has value, means we're quitting so return exit code
-				Shutdown();
-				GContext::Get().Shutdown();
-				return *ecode;
-			}
-			deltaTime = m_timer->Mark();
-			GContext::Get().GetGraphics()->BeginFrame(deltaTime);
-			HandleInput(deltaTime);
-			UpdateLocal(deltaTime);
-			Update(deltaTime);
-			GContext::Get().GetGraphics()->EndFrame(deltaTime);
+			return m_CurrentProject;
 		}
-		Shutdown();
-		GContext::Get().Shutdown();
-		return -1;
-	}
-	void EngineApp::UpdateLocal(float deltaTime)
-	{
-		// Update scene
-		ProjectMng::Get().GetCurrentProject().GetCurrentScene().Update(deltaTime);
-	}
+
+	private:
+		Project m_CurrentProject;
+
+		// Singleton
+	public:
+		inline static ProjectMng& Get()
+		{
+			static ProjectMng instance;
+			return instance;
+		}
+		// Delete copy constructor and assignment operator
+		ProjectMng(const ProjectMng&) = delete;
+		ProjectMng& operator=(const ProjectMng&) = delete;
+	private:
+		ProjectMng() = default;
+		~ProjectMng() = default;
+	};
 }

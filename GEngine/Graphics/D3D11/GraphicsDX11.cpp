@@ -76,7 +76,7 @@ namespace Genesis
 		static float f = 0.0f;
 		f += deltaTime;
 		const float c = sin(f) / 2.0f + 0.5f;
-		ClearBuffer(c, c, c);
+		ClearBuffer(0.2f, 0.2f, 1.0f);
 	}
 
 	void GraphicsDX11::EndFrame(float deltaTime)
@@ -89,14 +89,30 @@ namespace Genesis
 		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		m_pDeviceContext->RSSetState(m_pRasterizerState.Get());
 		m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 1u);
+		m_pDeviceContext->OMSetBlendState(m_pBlendState.Get(), nullptr, 0xFFFFFFFF);
+		m_pDeviceContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
 
 		m_pDeviceContext->VSSetShader(m_VertexShader.GetShader(), nullptr, 0);
 		m_pDeviceContext->PSSetShader(m_PixelShader.GetShader(), nullptr, 0);
-
-		UINT stride = sizeof(Vertex);
+		
 		UINT offset = 0;
-		m_pDeviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
-		m_pDeviceContext->Draw(3, 0);
+
+		// Update constant buffer
+		dx::XMMATRIX world = dx::XMMatrixIdentity();
+		m_CB_VS_VertexShader.data.mat = world * m_Camera.GetViewMatrix() * m_Camera.GetProjectionMatrix();
+		m_CB_VS_VertexShader.data.mat = dx::XMMatrixTranspose(m_CB_VS_VertexShader.data.mat);
+		if (!m_CB_VS_VertexShader.ApplyChanges()) return;
+		m_pDeviceContext->VSSetConstantBuffers(0u, 1u, m_CB_VS_VertexShader.GetAddressOf());
+
+		// Update pixel shader constant buffer
+		m_CB_PS_PixelShader.data.alpha = m_Alpha;
+		if (!m_CB_PS_PixelShader.ApplyChanges()) return;
+		m_pDeviceContext->PSSetConstantBuffers(0u, 1u, m_CB_PS_PixelShader.GetAddressOf());
+
+		m_pDeviceContext->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), m_VertexBuffer.StridePtr(), &offset);
+		m_pDeviceContext->IASetIndexBuffer(m_IndicesBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		m_pDeviceContext->DrawIndexed(m_IndicesBuffer.BufferSize(), 0, 0);
 
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		// Update and Render additional Platform Windows
@@ -106,146 +122,169 @@ namespace Genesis
 			ImGui::RenderPlatformWindowsDefault();
 		}
 
-		m_pSwapChain->Present(1u, 0u);
+		m_pSwapChain->Present(m_vsync, 0u);
 	}
 
 	bool GraphicsDX11::InitializeDirectX()
 	{
-		infoManager = new DxgiInfoManager();
-		HRESULT hr = S_OK;
-		std::vector<AdapterData> adapters = AdapterReader::GetAdapters();
-		if (adapters.size() < 1)
+		try
 		{
-			throw GHWND_EXCEPT(hr);
-		}
+			infoManager = new DxgiInfoManager();
+			HRESULT hr = S_OK;
+			std::vector<AdapterData> adapters = AdapterReader::GetAdapters();
+			if (adapters.size() < 1)
+			{
+				throw GHWND_EXCEPT(hr);
+			}
 
-		// swap chain desc
-		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-		swapChainDesc.BufferDesc.Width = GContext::Get().GetWidth();
-		swapChainDesc.BufferDesc.Height = GContext::Get().GetHeight();
-		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
-		swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		swapChainDesc.SampleDesc.Count = 1;
-		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = 1;
-		swapChainDesc.OutputWindow = GContext::Get().GetHWnd();
-		swapChainDesc.Windowed = TRUE;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+			// swap chain desc
+			DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+			swapChainDesc.BufferDesc.Width = GContext::Get().GetWidth();
+			swapChainDesc.BufferDesc.Height = GContext::Get().GetHeight();
+			swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+			swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+			swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+			swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+			swapChainDesc.SampleDesc.Count = 1;
+			swapChainDesc.SampleDesc.Quality = 0;
+			swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+			swapChainDesc.BufferCount = 1;
+			swapChainDesc.OutputWindow = GContext::Get().GetHWnd();
+			swapChainDesc.Windowed = TRUE;
+			swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+			swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		UINT swapCreateFlags = 0u;
+			UINT swapCreateFlags = 0u;
 #ifdef _DEBUG
-		swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
+			swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-		hr = D3D11CreateDeviceAndSwapChain(
-			adapters[0].m_pAdapter, // adapter
-			D3D_DRIVER_TYPE_UNKNOWN, // driver type
-			nullptr, // software
-			swapCreateFlags, // flags
-			nullptr, // feature levels
-			NULL,//D3D_FEATURE_LEVEL_11_1, // feature level
-			D3D11_SDK_VERSION, // sdk version
-			&swapChainDesc, // swap chain desc
-			m_pSwapChain.GetAddressOf(), // swap chain
-			m_pDevice.GetAddressOf(), // device
-			nullptr, // feature level
-			m_pDeviceContext.GetAddressOf()
-		); // device context
-		if (FAILED(hr))
-		{
-			LOG_ERROR("Failed to get backbuffer");
-			throw GHWND_EXCEPT(hr);
+			GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
+				adapters[0].m_pAdapter, // adapter
+				D3D_DRIVER_TYPE_UNKNOWN, // driver type
+				nullptr, // software
+				swapCreateFlags, // flags
+				nullptr, // feature levels
+				NULL,//D3D_FEATURE_LEVEL_11_1, // feature level
+				D3D11_SDK_VERSION, // sdk version
+				&swapChainDesc, // swap chain desc
+				m_pSwapChain.GetAddressOf(), // swap chain
+				m_pDevice.GetAddressOf(), // device
+				nullptr, // feature level
+				m_pDeviceContext.GetAddressOf()
+			)); // device context
+
+			ComPtr<ID3D11Resource> backBuffer;
+			GFX_THROW_INFO(m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)));
+
+			GFX_THROW_INFO(m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf()));
+
+			// Create depth stencil state
+			ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+			D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+			dsDesc.DepthEnable = TRUE;
+			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			dsDesc.DepthFunc = D3D11_COMPARISON_LESS; // #NOTE: LESS_EQUAL will also replace if the pixel is the same
+
+			GFX_THROW_INFO(m_pDevice->CreateDepthStencilState(&dsDesc, m_pDepthStencilState.GetAddressOf()));
+
+			// Create the viewport
+			D3D11_VIEWPORT vp = {};
+			vp.TopLeftX = 0;
+			vp.TopLeftY = 0;
+			vp.Width = GContext::Get().GetWidth();
+			vp.Height = GContext::Get().GetHeight();
+			vp.MinDepth = 0.0f;
+			vp.MaxDepth = 1.0f;
+
+			m_pDeviceContext->RSSetViewports(1u, &vp);
+
+			// Create depth stencil texture
+			D3D11_TEXTURE2D_DESC descDepth = {};
+			descDepth.Width = GContext::Get().GetWidth();
+			descDepth.Height = GContext::Get().GetHeight();
+			descDepth.MipLevels = 1u;
+			descDepth.ArraySize = 1u;
+			descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+			descDepth.SampleDesc.Count = 1u;
+			descDepth.SampleDesc.Quality = 0u;
+			descDepth.Usage = D3D11_USAGE_DEFAULT;
+			descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+			ComPtr<ID3D11Texture2D> pDepthStencilTexture;
+			GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencilTexture));
+
+			// Create view of depth stencil texture
+			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+			descDSV.Format = descDepth.Format;
+			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			descDSV.Texture2D.MipSlice = 0u;
+			GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencilTexture.Get(), &descDSV, m_pDepthStencilView.GetAddressOf()));
+
+			//Create rasterizer state
+			D3D11_RASTERIZER_DESC rasterizerDesc = {};
+			rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+			rasterizerDesc.CullMode = D3D11_CULL_BACK;
+			rasterizerDesc.FrontCounterClockwise = FALSE;
+			rasterizerDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
+			rasterizerDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
+			rasterizerDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+			rasterizerDesc.DepthClipEnable = TRUE;
+			rasterizerDesc.ScissorEnable = FALSE;
+			rasterizerDesc.MultisampleEnable = FALSE;
+			rasterizerDesc.AntialiasedLineEnable = FALSE;
+			GFX_THROW_INFO(m_pDevice->CreateRasterizerState(&rasterizerDesc, m_pRasterizerState.GetAddressOf()));
+
+			// Create rasterizer state for culling front face
+			D3D11_RASTERIZER_DESC rasterizerDesc_CullFront = {};
+			rasterizerDesc_CullFront.FillMode = D3D11_FILL_SOLID;
+			rasterizerDesc_CullFront.CullMode = D3D11_CULL_FRONT;
+			GFX_THROW_INFO(m_pDevice->CreateRasterizerState(&rasterizerDesc_CullFront, m_pRasterizerState_CullFront.GetAddressOf()));
+
+			// Create blend state
+			D3D11_BLEND_DESC blendDesc = {};
+
+			D3D11_RENDER_TARGET_BLEND_DESC rtbd = {};
+			rtbd.BlendEnable = true;
+			rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+			rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+			rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+			rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+			rtbd.DestBlendAlpha = D3D11_BLEND_ZERO;
+			rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+			rtbd.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+			blendDesc.RenderTarget[0] = rtbd;
+
+			GFX_THROW_INFO(m_pDevice->CreateBlendState(&blendDesc, m_pBlendState.GetAddressOf()));
+
+			// Bind depth stencil view to OM
+			m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+
+			// Create sampler state
+			D3D11_SAMPLER_DESC samplerDesc = {};
+			samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			samplerDesc.MipLODBias = 0.0f;
+			samplerDesc.MaxAnisotropy = 1;
+			samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+			samplerDesc.BorderColor[0] = 0;
+			samplerDesc.BorderColor[1] = 0;
+			samplerDesc.BorderColor[2] = 0;
+			samplerDesc.BorderColor[3] = 0;
+			samplerDesc.MinLOD = 0;
+			samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+			GFX_THROW_INFO(m_pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.GetAddressOf()));
+
+			ImGui_ImplDX11_Init(m_pDevice.Get(), m_pDeviceContext.Get());
 		}
-
-		ComPtr<ID3D11Resource> backBuffer;
-		hr = m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-		if (FAILED(hr))
+		catch (GenException* e)
 		{
-			LOG_ERROR("Failed to get backbuffer");
-			GHWND_EXCEPT(hr);
-		}
-
-		hr = m_pDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf());
-		if (FAILED(hr))
-		{
-			LOG_ERROR("Failed to create rtv");
-			GHWND_EXCEPT(hr);
-		}	
-
-		// Create depth stencil state
-		ComPtr<ID3D11DepthStencilState> pDepthStencilState;
-		D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-		dsDesc.DepthEnable = TRUE;
-		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		dsDesc.DepthFunc = D3D11_COMPARISON_LESS; // #NOTE: LESS_EQUAL will also replace if the pixel is the same
-		
-		hr = m_pDevice->CreateDepthStencilState(&dsDesc, m_pDepthStencilState.GetAddressOf());
-		if (FAILED(hr))
-		{
-			LOG_ERROR("Failed to create depth stencil state");
+			LOG_ERROR(e->what());
 			return false;
 		}
-
-		// Create the viewport
-		D3D11_VIEWPORT vp = {};
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		vp.Width = static_cast<float>(GContext::Get().GetWidth());
-		vp.Height = static_cast<float>(GContext::Get().GetHeight());
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-
-		m_pDeviceContext->RSSetViewports(1u, &vp);
-
-		// Create depth stencil texture
-		D3D11_TEXTURE2D_DESC descDepth = {};
-		descDepth.Width = GContext::Get().GetWidth();
-		descDepth.Height = GContext::Get().GetHeight();
-		descDepth.MipLevels = 1u;
-		descDepth.ArraySize = 1u;
-		descDepth.Format = DXGI_FORMAT_D32_FLOAT;
-		descDepth.SampleDesc.Count = 1u;
-		descDepth.SampleDesc.Quality = 0u;
-		descDepth.Usage = D3D11_USAGE_DEFAULT;
-		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		ComPtr<ID3D11Texture2D> pDepthStencilTexture;
-		GFX_THROW_INFO(m_pDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencilTexture));
-
-		// Create view of depth stencil texture
-		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-		descDSV.Format = descDepth.Format;
-		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		descDSV.Texture2D.MipSlice = 0u;
-		GFX_THROW_INFO(m_pDevice->CreateDepthStencilView(pDepthStencilTexture.Get(), &descDSV, m_pDepthStencilView.GetAddressOf()));
-
-		//Create rasterizer state
-		D3D11_RASTERIZER_DESC rasterizerDesc = {};
-		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		rasterizerDesc.CullMode = D3D11_CULL_BACK;
-		rasterizerDesc.FrontCounterClockwise = FALSE;
-		rasterizerDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
-		rasterizerDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
-		rasterizerDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-		rasterizerDesc.DepthClipEnable = TRUE;
-		rasterizerDesc.ScissorEnable = FALSE;
-		rasterizerDesc.MultisampleEnable = FALSE;
-		rasterizerDesc.AntialiasedLineEnable = FALSE;
-		hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, m_pRasterizerState.GetAddressOf());
-		if (FAILED(hr))
-		{
-			LOG_ERROR("Failed to create rasterizer state");
-			return false;
-		}
-
-		// Bind depth stencil view to OM
-		m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
-
-		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pDeviceContext.Get());
 	
 		LOG_INFO("DirectX 11 Initialized");
 		return true;
@@ -267,7 +306,7 @@ namespace Genesis
 		D3D11_INPUT_ELEMENT_DESC ied[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // D3D11_APPEND_ALIGNED_ELEMENT
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // D3D11_APPEND_ALIGNED_ELEMENT
 		};
 		UINT numElements = ARRAYSIZE(ied);
 
@@ -292,27 +331,44 @@ namespace Genesis
 		// Create vertex buffer
 		Vertex vertices[] =
 		{
-			Vertex(-0.5f, -0.5f, 0.0f, 1.0f,	1.0f, 0.0f, 0.0f, 1.0f), // bottom left red
-			Vertex(0.0f, 0.5f, 0.0f, 1.0f,		0.0f, 1.0f, 0.0f, 1.0f), // top middle green
-			Vertex(0.5f, -0.5f, 0.0f, 1.0f,		0.0f, 0.0f, 1.0f, 1.0f), // bottom right blue	
+			Vertex(-0.5f, -0.5f, -0.5f, 1.0f,	0.0f, 1.0f), //FRONT Bottom Left   - [0]
+			Vertex(-0.5f,  0.5f, -0.5f, 1.0f,	0.0f, 0.0f), //FRONT Top Left      - [1]
+			Vertex(0.5f,   0.5f, -0.5f, 1.0f,	1.0f, 0.0f), //FRONT Top Right     - [2]
+			Vertex(0.5f,  -0.5f, -0.5f, 1.0f,	1.0f, 1.0f), //FRONT Bottom Right   - [3]
+			Vertex(-0.5f, -0.5f,  0.5f, 1.0f,	0.0f, 1.0f), //BACK Bottom Left   - [4]
+			Vertex(-0.5f,  0.5f,  0.5f, 1.0f,	0.0f, 0.0f), //BACK Top Left      - [5]
+			Vertex(0.5f,   0.5f,  0.5f, 1.0f,	1.0f, 0.0f), //BACK Top Right     - [6]
+			Vertex(0.5f,  -0.5f,  0.5f, 1.0f,	1.0f, 1.0f), //BACK Bottom Right   - [7]
 		};
 
-		D3D11_BUFFER_DESC bd = {};
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0u;
-		bd.MiscFlags = 0u;
+		HRESULT hr;
+		GFX_THROW_INFO(m_VertexBuffer.Initialize(m_pDevice.Get(), vertices, ARRAYSIZE(vertices)));
 
-		D3D11_SUBRESOURCE_DATA sd = {};
-		sd.pSysMem = vertices;
-
-		HRESULT hr = m_pDevice->CreateBuffer(&bd, &sd, m_pVertexBuffer.GetAddressOf());
-		if (FAILED(hr))
+		DWORD indices[] =
 		{
-			LOG_ERROR("Failed to create vertex buffer");
-			return false;
-		}
+			0, 1, 2, //FRONT
+			0, 2, 3, //FRONT
+			4, 7, 6, //BACK 
+			4, 6, 5, //BACK
+			3, 2, 6, //RIGHT SIDE
+			3, 6, 7, //RIGHT SIDE
+			4, 5, 1, //LEFT SIDE
+			4, 1, 0, //LEFT SIDE
+			1, 5, 6, //TOP
+			1, 6, 2, //TOP
+			0, 3, 7, //BOTTOM
+			0, 7, 4, //BOTTOM
+		};	
+
+		GFX_THROW_INFO(m_IndicesBuffer.Initialize(m_pDevice.Get(), indices, ARRAYSIZE(indices)));
+
+		GFX_THROW_INFO(m_CB_VS_VertexShader.Initialize(m_pDevice.Get(), m_pDeviceContext.Get()));
+
+		GFX_THROW_INFO(m_CB_PS_PixelShader.Initialize(m_pDevice.Get(), m_pDeviceContext.Get()));
+
+		m_Camera.SetPosition(0.0f, 0.0f, -2.0f);
+		float aspectRatio = (float)GContext::Get().GetWidth() / (float)GContext::Get().GetHeight();
+		m_Camera.SetProjectionValues(90.0f, aspectRatio, 0.1f, 1000.0f);
 
 		LOG_INFO("Scene initialized");
 		return true;

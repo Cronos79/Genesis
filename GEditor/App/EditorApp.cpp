@@ -21,6 +21,7 @@
 #include "Gengine/Win/EntryPoint.cpp"
 #include "GEngine/Core/GContext.h"
 #include "GEngine/Win/Window.h"
+#include "../Project/ProjectMng.h"
 
 namespace Genesis
 {
@@ -38,39 +39,57 @@ namespace Genesis
 	void EditorApp::Init()
 	{
 		GContext::Get().Init(1920, 1080, "Genesis Editor");	
-		//GContext::Get().Init(800, 600, "Genesis Editor");
+		
 	}
 
 	void EditorApp::HandleInput(float deltaTime)
 	{
+		// Raw mouse input event #TODO: Needs a lot of work
+	/*	if (GContext::Get().GetWindow()->mouse.RightIsPressed())
+		{
+			if (auto md = GContext::Get().GetWindow()->mouse.ReadRawDelta())
+			{
+				GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustRotation((float)md->y * 0.001f, (float)md->x * 0.001f, 0.0f);
+			}
+		}*/
 
+		const float cameraSpeed = m_ui.m_CameraSpeed;
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('W'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(GContext::Get().GetGraphics()->GetDX11()->m_Camera.GetForwardVector() * cameraSpeed * deltaTime);
+		}
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('S'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(GContext::Get().GetGraphics()->GetDX11()->m_Camera.GetBackwardVector() * cameraSpeed * deltaTime);
+		}
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('A'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(GContext::Get().GetGraphics()->GetDX11()->m_Camera.GetLeftVector() * cameraSpeed * deltaTime);
+		}
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('D'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(GContext::Get().GetGraphics()->GetDX11()->m_Camera.GetRightVector() * cameraSpeed * deltaTime);
+		}
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('Q'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(0.0f, -cameraSpeed * deltaTime, 0.0f);
+		}
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('E'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->m_Camera.AdjustPosition(0.0f, cameraSpeed * deltaTime, 0.0f);
+		}
+
+		// Toggle Vsync
+		if (GContext::Get().GetWindow()->kbd.KeyIsPressed('V'))
+		{
+			GContext::Get().GetGraphics()->GetDX11()->ToggleVsync();
+		}
 	}
 
 	void EditorApp::Update(float deltaTime)
 	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		ImGui::Begin("FPS");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();		
-
-		ImGui::Begin("Mouse");
-		ImGui::Text("Mouse X %.1f Mouse Y %.1f", (float)GContext::Get().GetWindow()->mouse.GetPosX(), (float)GContext::Get().GetWindow()->mouse.GetPosY());
-		ImGui::End();
-		/*
-		float width = (float)GContext::Get().GetWidth() / 2.0f;
-		float height = (float)GContext::Get().GetHeight() / 4.0f;
-		static float f = 0.0f;
-		f += deltaTime;*/
-		/*GContext::Get().GetGraphics()->GetDX11Core()->DrawCube(
-			f,
-			0,
-			0,
-			0.0f);
-		GContext::Get().GetGraphics()->GetDX11Core()->DrawCube(
-			f,
-			(float)GContext::Get().GetWindow()->mouse.GetPosX() / width - 1.0f,
-			0.0f,
-			-(float)GContext::Get().GetWindow()->mouse.GetPosY() / height + 2.0f);*/
+		// Update the main UI
+		m_ui.Draw(deltaTime);
 	}
 
 	void EditorApp::Shutdown()

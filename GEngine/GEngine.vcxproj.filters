@@ -23,6 +23,11 @@
     <ClCompile Include="Graphics\D3D11\GraphicsDX11.cpp" />
     <ClCompile Include="Graphics\D3D11\AdapterReader.cpp" />
     <ClCompile Include="Graphics\D3D11\Shaders.cpp" />
+    <ClCompile Include="Graphics\D3D11\Model.cpp" />
+    <ClCompile Include="Graphics\D3D11\Camera.cpp" />
+    <ClCompile Include="Project\Project.cpp" />
+    <ClCompile Include="Project\ProjectMng.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
@@ -50,6 +55,15 @@
     <ClInclude Include="Graphics\D3D11\GraphicsDX11.h" />
     <ClInclude Include="Graphics\D3D11\AdapterReader.h" />
     <ClInclude Include="Graphics\D3D11\Shaders.h" />
+    <ClInclude Include="Graphics\D3D11\Model.h" />
+    <ClInclude Include="Graphics\D3D11\VertexBuffer.h" />
+    <ClInclude Include="Graphics\D3D11\IndexBuffer.h" />
+    <ClInclude Include="Graphics\D3D11\ConstantBufferTypes.h" />
+    <ClInclude Include="Graphics\D3D11\ConstantBuffer.h" />
+    <ClInclude Include="Graphics\D3D11\Camera.h" />
+    <ClInclude Include="Project\Project.h" />
+    <ClInclude Include="Project\ProjectMng.h" />
+    <ClInclude Include="Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

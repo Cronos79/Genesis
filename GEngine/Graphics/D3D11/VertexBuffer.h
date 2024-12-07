@@ -20,45 +20,73 @@
 #pragma once
 #include "GEngine/Graphics/GraphicsIncludes.h"
 
-namespace Genesis
+template<class T>
+class VertexBuffer
 {
-	struct Vertex
+private:
+	VertexBuffer(const VertexBuffer<T>& rhs);
+private:
+	ComPtr<ID3D11Buffer> m_pBuffer;
+	std::unique_ptr<UINT> m_pStride;
+	UINT m_BufferSize;
+public:
+	VertexBuffer()
 	{
-		Vertex()
+	}
+
+	ID3D11Buffer* Get() const noexcept
+	{
+		return m_pBuffer.Get();
+	}
+
+	ID3D11Buffer* const* GetAddressOf() const noexcept
+	{
+		return m_pBuffer.GetAddressOf();
+	}
+
+	UINT BufferSize() const noexcept
+	{
+		return m_BufferSize;
+	}
+
+	const UINT Stride() const noexcept
+	{
+		return *m_pStride.get();
+	}
+
+	const UINT* StridePtr() const noexcept
+	{
+		return m_pStride.get();
+	}
+
+	HRESULT Initialize(ID3D11Device* pDevice, T* data, UINT numVertices)
+	{
+		if (m_pBuffer.Get() != nullptr)
 		{
-			position = { 0.0f, 0.0f, 0.0f, 1.0f };
-			texCoord = { 0.0f, 0.0f };
+			m_pBuffer.Reset();
 		}
-		Vertex(float x, float y, float z,float w, float u, float v)
-			: position(x, y, z, w), texCoord(u, v)
+		m_BufferSize = numVertices;
+		if (m_pStride.get() == nullptr)
 		{
+			m_pStride = std::make_unique<UINT>(sizeof(T));
+		}		
+
+		D3D11_BUFFER_DESC bd = {};
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(T) * numVertices;
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0u;
+		bd.MiscFlags = 0u;
+
+		D3D11_SUBRESOURCE_DATA sd = {};
+		sd.pSysMem = data;
+
+		HRESULT hr = pDevice->CreateBuffer(&bd, &sd, m_pBuffer.GetAddressOf());
+		if (FAILED(hr))
+		{
+			LOG_ERROR("Failed to create vertex buffer");
+			return hr;
 		}
-
-		dx::XMFLOAT4 position{};
-		dx::XMFLOAT2 texCoord{};
-	};
-
-	class VertexShader
-	{
-	public:
-		bool Initialize(ComPtr<ID3D11Device>& pDevice, const std::wstring& shaderPath, const D3D11_INPUT_ELEMENT_DESC* layout, UINT numElements);
-		ID3D11VertexShader* GetShader() const noexcept;
-		ID3D10Blob* GetBlob() const noexcept;
-		ID3D11InputLayout* GetInputLayout() const noexcept;
-	private:
-		ComPtr<ID3D11VertexShader> m_pVertexShader = nullptr;
-		ComPtr<ID3D10Blob> m_pBlob = nullptr;
-		ComPtr<ID3D11InputLayout> m_pInputLayout;
-	};
-
-	class PixelShader
-	{
-	public:
-		bool Initialize(ComPtr<ID3D11Device>& pDevice, const std::wstring& shaderPath);
-		ID3D11PixelShader* GetShader() const noexcept;
-		ID3D10Blob* GetBlob() const noexcept;
-	private:
-		ComPtr<ID3D11PixelShader> m_pPixelShader = nullptr;
-		ComPtr<ID3D10Blob> m_pBlob = nullptr;
-	};
-}
+		return hr;
+	}
+};

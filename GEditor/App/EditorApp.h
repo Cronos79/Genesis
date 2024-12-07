@@ -19,6 +19,7 @@
 ******************************************************************************************/
 #pragma once
 #include "GEngine/App/EngineApp.h"
+#include "../UI/MainUI.h"
 
 namespace Genesis
 {
@@ -33,6 +34,7 @@ namespace Genesis
 		void  Update(float deltaTime) override;
 		void Shutdown() override;
 	private:
+		MainUI m_ui;
 	};
 }
 

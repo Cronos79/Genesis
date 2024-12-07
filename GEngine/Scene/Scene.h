@@ -17,45 +17,24 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "EngineApp.h"
-#include "Gengine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
-#include "../Project/ProjectMng.h"
+#pragma once
+#include "GEngine/Core/CommonHeaders.h"
 
 namespace Genesis
 {
-	EngineApp::EngineApp()
+	class Scene
 	{
-		m_timer = new GenTimer();
-	}
+	public:
+		Scene();
+		~Scene();
 
-	int EngineApp::Run()
-	{
-		Init();	
-		float deltaTime = 0.0f;
-		while (GContext::Get().IsRunning())
+		bool Update(float deltaTime);
+
+		inline std::string GetSceneName() const
 		{
-			if (const auto ecode = GContext::Get().GetWindow()->ProcessMessages())
-			{
-				// if return optional has value, means we're quitting so return exit code
-				Shutdown();
-				GContext::Get().Shutdown();
-				return *ecode;
-			}
-			deltaTime = m_timer->Mark();
-			GContext::Get().GetGraphics()->BeginFrame(deltaTime);
-			HandleInput(deltaTime);
-			UpdateLocal(deltaTime);
-			Update(deltaTime);
-			GContext::Get().GetGraphics()->EndFrame(deltaTime);
+			return m_SceneName;
 		}
-		Shutdown();
-		GContext::Get().Shutdown();
-		return -1;
-	}
-	void EngineApp::UpdateLocal(float deltaTime)
-	{
-		// Update scene
-		ProjectMng::Get().GetCurrentProject().GetCurrentScene().Update(deltaTime);
-	}
+	private:
+		std::string m_SceneName = "DefaultScene";
+	};
 }
