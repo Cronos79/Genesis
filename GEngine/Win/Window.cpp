@@ -22,6 +22,8 @@
 #include "GEngine/Core/GContext.h"
 #include "../Logger/Log.h"
 
+#include "imgui_impl_win32.h"
+
 Genesis::Window::WindowClass Genesis::Window::WindowClass::wndClass;
 
 namespace Genesis
@@ -175,11 +177,14 @@ namespace Genesis
 
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
-	/*	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		if (GContext::Get().IsRunning())
 		{
-			return true;
+			if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+			{
+				return true;
+			}
+			const auto& imio = ImGui::GetIO();
 		}
-		const auto& imio = ImGui::GetIO();*/
 
 		switch (msg)
 		{

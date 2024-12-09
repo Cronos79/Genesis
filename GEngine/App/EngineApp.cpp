@@ -41,8 +41,10 @@ namespace Genesis
 				GContext::Get().Shutdown();
 				return *ecode;
 			}
+			GContext::Get().GetGraphics()->BeginFrame(deltaTime);
 			HandleInput(deltaTime);
 			Update(deltaTime);
+			GContext::Get().GetGraphics()->EndFrame(deltaTime);
 		}
 		Shutdown();
 		GContext::Get().Shutdown();

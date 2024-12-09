@@ -28,10 +28,16 @@ namespace Genesis
 		return m_Window;
 	}
 
+	Genesis::Graphics* GContext::GetGraphics() const
+	{
+		return m_Graphics;
+	}
+
 	void GContext::Init(int32 width, int32 height, std::string title)
 	{
 		m_Window = new Window(width, height, title.c_str());
 		m_Window->SetTitle(title);
+		m_Graphics = new Graphics(GetHWnd(), width, height);
 	}	
 
 	void GContext::Shutdown()
