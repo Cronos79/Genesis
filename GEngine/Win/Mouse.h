@@ -18,7 +18,7 @@
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
 #pragma once
-#include "GEngine/Core/CommonHeaders.h"
+#include "GEngine/Core/GEnginePCH.h"
 
 namespace Genesis
 {

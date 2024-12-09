@@ -17,6 +17,7 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
+#include "GEngine/Core/GEnginePCH.h"
 #include "WinInclude.h"
 #include "GEngine/App/EngineApp.h"
 

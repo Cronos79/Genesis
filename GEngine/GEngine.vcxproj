@@ -67,6 +67,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>GEngine/Core/GEnginePCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,6 +84,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>GEngine/Core/GEnginePCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,6 +103,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>GEngine/Core/GEnginePCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,6 +116,7 @@
   <ItemGroup>
     <ClCompile Include="App\EngineApp.cpp" />
     <ClCompile Include="Core\GContext.cpp" />
+    <ClCompile Include="Core\StringHelper.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Logger\Log.cpp" />
     <ClCompile Include="Win\Mouse.cpp" />
@@ -119,8 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\EngineApp.h" />
-    <ClInclude Include="Core\CommonHeaders.h" />
+    <ClInclude Include="Core\GEnginePCH.h" />
     <ClInclude Include="Core\GContext.h" />
+    <ClInclude Include="Core\StringHelper.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsIncludes.h" />
     <ClInclude Include="Logger\Log.h" />

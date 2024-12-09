@@ -9,17 +9,21 @@
     <ClCompile Include="Win\Mouse.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Logger\Log.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Core\StringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
     <ClInclude Include="App\EngineApp.h" />
     <ClInclude Include="Win\Window.h" />
     <ClInclude Include="Core\GContext.h" />
-    <ClInclude Include="Core\CommonHeaders.h" />
+    <ClInclude Include="Core\GEnginePCH.h" />
     <ClInclude Include="Win\Keyboard.h" />
     <ClInclude Include="Win\Mouse.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Logger\Log.h" />
     <ClInclude Include="Graphics\GraphicsIncludes.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Core\StringHelper.h" />
   </ItemGroup>
 </Project>

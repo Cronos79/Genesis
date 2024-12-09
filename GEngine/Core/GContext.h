@@ -19,8 +19,7 @@
 ******************************************************************************************/
 #pragma once
 #include "GEngine/Win/WinInclude.h"
-#include "GEngine/Core/CommonHeaders.h"
-#include <GEngine/Graphics/Graphics.h>
+#include "GEngine/Core/GEnginePCH.h"
 
 namespace Genesis
 {
@@ -63,7 +62,6 @@ namespace Genesis
 		}	
 		
 		Window* GetWindow() const;
-		Graphics* GetGraphics() const;
 
 		void Init(int32 width, int32 height, std::string title);
 		void Shutdown();
@@ -72,7 +70,6 @@ namespace Genesis
 		int32 m_Height;
 		HWND m_HWnd;
 		Window* m_Window;
-		Graphics* m_Graphics;
 		bool m_Running = true;
 
 		// Singleton

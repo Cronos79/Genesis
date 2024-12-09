@@ -17,6 +17,7 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
+#include "GEngine/Core/GEnginePCH.h"
 #include "GContext.h"
 #include "GEngine/Win/Window.h"
 
@@ -27,22 +28,14 @@ namespace Genesis
 		return m_Window;
 	}
 
-	Genesis::Graphics* GContext::GetGraphics() const
-	{
-		return m_Graphics;
-	}
-
 	void GContext::Init(int32 width, int32 height, std::string title)
 	{
 		m_Window = new Window(width, height, title.c_str());
 		m_Window->SetTitle(title);
-		m_Graphics = new Graphics();
-		m_Graphics->Init();
 	}	
 
 	void GContext::Shutdown()
 	{
 		m_Window->Shutdown();
-		m_Graphics->Shutdown();
 	}
 }

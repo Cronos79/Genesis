@@ -17,6 +17,7 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
+#include "GEngine/Core/GEnginePCH.h"
 #include "EngineApp.h"
 #include "Gengine/Core/GContext.h"
 #include "GEngine/Win/Window.h"
@@ -40,10 +41,8 @@ namespace Genesis
 				GContext::Get().Shutdown();
 				return *ecode;
 			}
-			GContext::Get().GetGraphics()->BeginFrame();
 			HandleInput(deltaTime);
 			Update(deltaTime);
-			GContext::Get().GetGraphics()->EndFrame();
 		}
 		Shutdown();
 		GContext::Get().Shutdown();
