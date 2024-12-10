@@ -1,9 +1,31 @@
+/******************************************************************************************
+*	CronoGames Game Engine																  *
+*	Copyright © 2024 CronoGames <http://www.cronogames.net>								  *
+*																						  *
+*	This file is part of CronoGames Game Engine.										  *
+*																						  *
+*	CronoGames Game Engine is free software: you can redistribute it and/or modify		  *
+*	it under the terms of the GNU General Public License as published by				  *
+*	the Free Software Foundation, either version 3 of the License, or					  *
+*	(at your option) any later version.													  *
+*																						  *
+*	The CronoGames Game Engine is distributed in the hope that it will be useful,		  *
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
+*	GNU General Public License for more details.										  *
+*																						  *
+*	You should have received a copy of the GNU General Public License					  *
+*	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
+******************************************************************************************/
 #include "GEngine/Core/GEnginePCH.h"
 #include "Graphics12.h"
 #include <GEngine/Logger/Log.h>
 #include <GEngine/Core/GenException.h>
 #include "GEngine/Core/GContext.h"
 #include "GEngine/Graphics/GraphicsError.h"
+
+#include <cmath>
+#include <numbers>
 
 namespace Genesis
 {
@@ -22,8 +44,10 @@ namespace Genesis
 			CreateCommandObjects();
 			CreateFence();
 			CheckFeatureSupport();
+			InitImGui(hWnd);
 
-			GContext::Get().SetRunning(true);
+			LOG_INFO("Graphics12 initialized.");
+			GContext::Get()->SetRunning(true);
 		}
 	}
 
@@ -34,6 +58,11 @@ namespace Genesis
 
 	void Graphics12::BeginFrame(float deltaTime)
 	{
+		// Start the Dear ImGui frame
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
 		m_CurrentBackBufferIndex = m_pSwapChain->GetCurrentBackBufferIndex();
 		m_pCommandAllocator->Reset() >> chk;
 		m_pCommandList->Reset(m_pCommandAllocator.Get(), nullptr) >> chk;
@@ -44,16 +73,28 @@ namespace Genesis
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 		m_pCommandList->ResourceBarrier(1, &barrier);
 
-		ClearFrame();
+		ClearFrame(deltaTime);
 	}
 
 	void Graphics12::EndFrame(float deltaTime)
 	{
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		// Rendering
+		ImGui::Render();
+		
 		// Barrier
 		const CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 			m_pRenderTargets[m_CurrentBackBufferIndex].Get(),
 			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 		m_pCommandList->ResourceBarrier(1, &barrier);
+
+		// Render ImGui
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+			m_pRtvDescHeap->GetCPUDescriptorHandleForHeapStart(),
+			m_CurrentBackBufferIndex, m_RtvDescriptorSize);
+		m_pCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+		m_pCommandList->SetDescriptorHeaps(1, m_pSrvDescHeap.GetAddressOf());
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), m_pCommandList.Get());
 
 		// Close the list
 		m_pCommandList->Close();
@@ -62,13 +103,20 @@ namespace Genesis
 		ID3D12CommandList* ppCommandLists[] = { m_pCommandList.Get() };
 		m_pCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
+		// Update and Render additional Platform Windows
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
+
 		// Signal
 		const uint64 fence = m_FenceValue;
 		m_pCommandQueue->Signal(m_pFence.Get(), fence) >> chk;
 		m_FenceValue++;
 
 		// Present
-		m_pSwapChain->Present(1, 0) >> chk;
+		m_pSwapChain->Present(m_VSync, 0) >> chk;
 
 		// Fence event
 		if (m_pFence->GetCompletedValue() < fence)
@@ -80,7 +128,13 @@ namespace Genesis
 
 	void Graphics12::Shutdown()
 	{
+		Flush();
+		LOG_INFO("Graphics12 shutdown.");
+	}
 
+	void Graphics12::ToggleVSync()
+	{
+		m_VSync = !m_VSync;
 	}
 
 	void Graphics12::SetupDebugLayer()
@@ -106,7 +160,7 @@ namespace Genesis
 		}
 
 		ComPtr<ID3D12Device4> device4;
-		D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_12_2, IID_PPV_ARGS(&device4)) >> chk;
+		D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&device4)) >> chk;
 
 		//D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&device4)) >> chk;
 		// Set m_pDevice
@@ -225,11 +279,10 @@ namespace Genesis
 	}
 
 	void Graphics12::CheckFeatureSupport()
-	{
-		INFOMAN();
+	{		
 		// Check feature support
 		D3D12_FEATURE_DATA_D3D12_OPTIONS featureData = {};
-		GFX_THROW_INFO(m_pDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &featureData, sizeof(featureData)));
+		m_pDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &featureData, sizeof(featureData)) >> chk;
 
 		// Check for 4x MSAA quality levels
 		DXGI_SAMPLE_DESC msaaQualityLevels;
@@ -259,6 +312,41 @@ namespace Genesis
 		}
 	}
 
+	bool Graphics12::InitImGui(HWND hWnd)
+	{
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+		//io.ConfigViewportsNoAutoMerge = true;
+		//io.ConfigViewportsNoTaskBarIcon = true;
+
+		// Setup Dear ImGui style
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsLight();
+
+		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+
+		// Setup Platform/Renderer backends
+		ImGui_ImplWin32_Init(hWnd);
+		ImGui_ImplDX12_Init(m_pDevice.Get(), m_NumBuffers,
+			DXGI_FORMAT_R8G8B8A8_UNORM, m_pSrvDescHeap.Get(),
+			m_pSrvDescHeap->GetCPUDescriptorHandleForHeapStart(),
+			m_pSrvDescHeap->GetGPUDescriptorHandleForHeapStart());
+
+		return true;
+	}
+
 	void Graphics12::WaitForPreviousFrame()
 	{
 		// Wait for previous frame
@@ -273,14 +361,42 @@ namespace Genesis
 		}
 	}
 
-	void Graphics12::ClearFrame()
+	void Graphics12::ClearFrame(float deltaTime)
 	{
+		static float t = 0.0f;
+		if ((t += deltaTime) >= 2.0f * std::numbers::pi_v<float>)
+		{
+			t = 0.f;
+		}
 		// Clear the render target
-		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		const float clearColor[] = {
+			sin(2.0f * t + 1.0f) / 2.0f + 0.5f,
+			sin(3.0f * t + 2.0f) / 2.0f + 0.5f,
+			sin(5.0f * t + 3.0f) / 2.0f + 0.5f,
+			1.0f };
+		//const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
 			m_pRtvDescHeap->GetCPUDescriptorHandleForHeapStart(),
 			m_CurrentBackBufferIndex, m_RtvDescriptorSize);
 		m_pCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	}
+
+	void Graphics12::Flush()
+	{
+		// Flush the queue
+		const uint64 fence = m_FenceValue;
+		m_pCommandQueue->Signal(m_pFence.Get(), fence) >> chk;
+		m_FenceValue++;
+
+		if (m_pFence->GetCompletedValue() < fence)
+		{
+			m_pFence->SetEventOnCompletion(fence, m_hFenceEvent) >> chk;
+			if(WaitForSingleObject(m_hFenceEvent, 2000) == WAIT_FAILED)
+			{
+				LOG_ERROR("Failed to flush the queue.");
+				GetLastError() >> chk;
+			}
+		}
 	}
 
 	ComPtr<IDXGIAdapter4> Graphics12::GetHardwareAdapter(IDXGIFactory4* factory)

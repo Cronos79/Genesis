@@ -21,6 +21,8 @@
     <ClCompile Include="Graphics\Graphics12.cpp" />
     <ClCompile Include="Core\GenException.cpp" />
     <ClCompile Include="Graphics\GraphicsError.cpp" />
+    <ClCompile Include="Core\GenTimer.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win\WinInclude.h" />
@@ -47,6 +49,8 @@
     <ClInclude Include="Graphics\Graphics12.h" />
     <ClInclude Include="Core\GenException.h" />
     <ClInclude Include="Graphics\GraphicsError.h" />
+    <ClInclude Include="Core\GenTimer.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

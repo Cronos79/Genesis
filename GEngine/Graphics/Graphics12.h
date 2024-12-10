@@ -1,3 +1,22 @@
+/******************************************************************************************
+*	CronoGames Game Engine																  *
+*	Copyright © 2024 CronoGames <http://www.cronogames.net>								  *
+*																						  *
+*	This file is part of CronoGames Game Engine.										  *
+*																						  *
+*	CronoGames Game Engine is free software: you can redistribute it and/or modify		  *
+*	it under the terms of the GNU General Public License as published by				  *
+*	the Free Software Foundation, either version 3 of the License, or					  *
+*	(at your option) any later version.													  *
+*																						  *
+*	The CronoGames Game Engine is distributed in the hope that it will be useful,		  *
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of						  *
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the						  *
+*	GNU General Public License for more details.										  *
+*																						  *
+*	You should have received a copy of the GNU General Public License					  *
+*	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
+******************************************************************************************/
 #pragma once
 #include "GEngine/Graphics/GraphicIncludes.h"
 
@@ -11,6 +30,7 @@ namespace Genesis
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);
 		void Shutdown();
+		void ToggleVSync();
 	private:
 		void SetupDebugLayer();
 		bool CreateDevice();
@@ -21,13 +41,16 @@ namespace Genesis
 		bool CreateCommandObjects();
 		bool CreateFence();
 		void CheckFeatureSupport();
+		bool InitImGui(HWND hWnd);
 		void WaitForPreviousFrame();
-		void ClearFrame();
+		void ClearFrame(float deltaTime);
+		void Flush();
 		ComPtr<IDXGIAdapter4> GetHardwareAdapter(IDXGIFactory4* factory);
 	private:
 		bool m_b4xMSAAEnabled = false;
 		bool m_bRayTracingSupported = false;
 		UINT m_CurrentBackBufferIndex = 0;
+		bool m_VSync = true;
 
 		static const uint32 m_NumBuffers = 2;
 

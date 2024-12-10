@@ -20,6 +20,7 @@
 #include "GEngine/Core/GEnginePCH.h"
 #include "GContext.h"
 #include "GEngine/Win/Window.h"
+#include <GEngine/Logger/Log.h>
 
 namespace Genesis
 {
@@ -48,6 +49,7 @@ namespace Genesis
 
 	void GContext::Init(int32 width, int32 height, std::string title)
 	{
+		LOG_INFO("Context initialized.");
 		m_Window = new Window(width, height, title.c_str());
 		m_Window->SetTitle(title);
 		m_Graphics12 = new Graphics12(GetHWnd(), width, height);
@@ -56,5 +58,8 @@ namespace Genesis
 	void GContext::Shutdown()
 	{
 		m_Window->Shutdown();
+		m_Graphics12->Shutdown();
+		LOG_INFO("Context shutdown.");
+		delete Get();
 	}
 }

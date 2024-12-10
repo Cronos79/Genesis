@@ -139,7 +139,7 @@ namespace Genesis
 		ImGui_ImplWin32_Init(hWnd);
 		ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get());
 
-		GContext::Get().SetRunning(true);
+		GContext::Get()->SetRunning(true);
 		LOG_INFO("Graphics initialized.");
 	}
 	Graphics::~Graphics()

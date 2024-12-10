@@ -119,6 +119,7 @@
     <ClCompile Include="Core\GContext.cpp" />
     <ClCompile Include="Core\StringHelper.cpp" />
     <ClCompile Include="Core\GenException.cpp" />
+    <ClCompile Include="Core\GenTimer.cpp" />
     <ClCompile Include="Graphics\GraphicsError.cpp" />
     <ClCompile Include="Graphics\Graphics12.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
@@ -126,6 +127,7 @@
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
@@ -141,6 +143,7 @@
     <ClInclude Include="Core\GContext.h" />
     <ClInclude Include="Core\StringHelper.h" />
     <ClInclude Include="Core\GenException.h" />
+    <ClInclude Include="Core\GenTimer.h" />
     <ClInclude Include="Graphics\GraphicsError.h" />
     <ClInclude Include="Graphics\Graphics12.h" />
     <ClInclude Include="Graphics\GraphicIncludes.h" />
@@ -149,6 +152,7 @@
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
     <ClInclude Include="imgui\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="imgui\imstb_rectpack.h" />

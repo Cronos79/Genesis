@@ -17,56 +17,18 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "EditorApp.h"
-#include "Gengine/Win/EntryPoint.cpp"
-#include "GEngine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
-
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+#pragma once
+#include <chrono>
 
 namespace Genesis
 {
-
-	EditorApp::EditorApp()
+	class GenTimer
 	{
-
-	}
-
-	EditorApp::~EditorApp()
-	{
-
-	}
-
-	void EditorApp::Init()
-	{
-		GContext::Get()->Init(1920, 1080, "Genesis Editor");		
-	}
-
-	void EditorApp::HandleInput(float deltaTime)
-	{
-		if (GContext::Get()->GetWindow()->kbd.KeyIsPressed('V'))
-		{
-			GContext::Get()->GetGraphics12()->ToggleVSync();
-		}
-	}
-
-	void EditorApp::Update(float deltaTime)
-	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		ImGui::Begin("FPS");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
-	}
-
-	void EditorApp::Shutdown()
-	{
-		
-	}
-}
-
-Genesis::EngineApp* CreateEngineApp()
-{
-	return new Genesis::EditorApp();
+	public:
+		GenTimer() noexcept;
+		float Mark() noexcept;
+		float Peek() const noexcept;
+	private:
+		std::chrono::steady_clock::time_point last;
+	};
 }

@@ -31,23 +31,25 @@ namespace Genesis
 	int EngineApp::Run()
 	{
 		Init();
+		m_Timer = new GenTimer();
 		float deltaTime = 0.0f;
-		while (GContext::Get().IsRunning())
+		while (GContext::Get()->IsRunning())
 		{
-			if (const auto ecode = GContext::Get().GetWindow()->ProcessMessages())
+			if (const auto ecode = GContext::Get()->GetWindow()->ProcessMessages())
 			{
 				// if return optional has value, means we're quitting so return exit code
 				Shutdown();
-				GContext::Get().Shutdown();
+				GContext::Get()->Shutdown();
 				return *ecode;
 			}
-			GContext::Get().GetGraphics12()->BeginFrame(deltaTime);
+			deltaTime = m_Timer->Mark() * m_speedFactor;
+			GContext::Get()->GetGraphics12()->BeginFrame(deltaTime);
 			HandleInput(deltaTime);
 			Update(deltaTime);
-			GContext::Get().GetGraphics12()->EndFrame(deltaTime);
+			GContext::Get()->GetGraphics12()->EndFrame(deltaTime);
 		}
 		Shutdown();
-		GContext::Get().Shutdown();
+		GContext::Get()->Shutdown();
 		return -1;
 	}
 }

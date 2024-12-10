@@ -67,8 +67,8 @@ namespace Genesis
 	// Window Stuff
 	Window::Window(int width, int height, const char* name)
 	{
-		GContext::Get().SetHeight(height);
-		GContext::Get().SetWidth(width);
+		GContext::Get()->SetHeight(height);
+		GContext::Get()->SetWidth(width);
 		// calculate window size based on desired client region size
 		RECT wr;
 		wr.left = 100;
@@ -80,19 +80,19 @@ namespace Genesis
 			throw;
 		}
 		// create window & get hWnd
-		GContext::Get().SetHWnd(CreateWindowA(
+		GContext::Get()->SetHWnd(CreateWindowA(
 			WindowClass::GetName(), name,
 			WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 			CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
 			nullptr, nullptr, WindowClass::GetInstance(), this
 		));
 		// check for error
-		if (GContext::Get().GetHWnd() == nullptr)
+		if (GContext::Get()->GetHWnd() == nullptr)
 		{
 			throw;
 		}
 		// newly created windows start off as hidden
-		ShowWindow(GContext::Get().GetHWnd(), SW_SHOWDEFAULT);
+		ShowWindow(GContext::Get()->GetHWnd(), SW_SHOWDEFAULT);
 		// Init ImGui Win32 Impl
 		//ImGui_ImplWin32_Init(hWnd);
 		// register mouse raw input device
@@ -110,12 +110,12 @@ namespace Genesis
 
 	Window::~Window()
 	{
-		DestroyWindow(GContext::Get().GetHWnd());
+		DestroyWindow(GContext::Get()->GetHWnd());
 	}
 
 	void Window::SetTitle(const std::string& title)
 	{
-		if (SetWindowTextA(GContext::Get().GetHWnd(), title.c_str()) == 0)
+		if (SetWindowTextA(GContext::Get()->GetHWnd(), title.c_str()) == 0)
 		{
 			throw;
 		}
@@ -177,13 +177,13 @@ namespace Genesis
 
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
-		if (GContext::Get().IsRunning())
+		if (GContext::Get()->IsRunning())
 		{
-			/*if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+			if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 			{
 				return true;
 			}
-			const auto& imio = ImGui::GetIO();*/
+			const auto& imio = ImGui::GetIO();
 		}
 
 		switch (msg)
@@ -240,7 +240,7 @@ namespace Genesis
 				break;
 			}*/
 			// in client region -> log move, and log enter + capture mouse (if not previously in window)
-			if (pt.x >= 0 && pt.x < GContext::Get().GetWidth() && pt.y >= 0 && pt.y < GContext::Get().GetHeight())
+			if (pt.x >= 0 && pt.x < GContext::Get()->GetWidth() && pt.y >= 0 && pt.y < GContext::Get()->GetHeight())
 			{
 				mouse.OnMouseMove(pt.x, pt.y);
 				if (!mouse.IsInWindow())
@@ -298,7 +298,7 @@ namespace Genesis
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnLeftReleased(pt.x, pt.y);
 			// release mouse if outside of window
-			if (pt.x < 0 || pt.x >= GContext::Get().GetWidth() || pt.y < 0 || pt.y >= GContext::Get().GetHeight())
+			if (pt.x < 0 || pt.x >= GContext::Get()->GetWidth() || pt.y < 0 || pt.y >= GContext::Get()->GetHeight())
 			{
 				ReleaseCapture();
 				mouse.OnMouseLeave();
@@ -315,7 +315,7 @@ namespace Genesis
 			const POINTS pt = MAKEPOINTS(lParam);
 			mouse.OnRightReleased(pt.x, pt.y);
 			// release mouse if outside of window
-			if (pt.x < 0 || pt.x >= GContext::Get().GetWidth() || pt.y < 0 || pt.y >= GContext::Get().GetHeight())
+			if (pt.x < 0 || pt.x >= GContext::Get()->GetWidth() || pt.y < 0 || pt.y >= GContext::Get()->GetHeight())
 			{
 				ReleaseCapture();
 				mouse.OnMouseLeave();

@@ -83,9 +83,13 @@ namespace Genesis
 
 		// Singleton
 	public:
-		inline static GContext& Get()
+		inline static GContext* Get()
 		{
-			static GContext instance;
+			static GContext* instance;
+			if (!instance)
+			{
+				instance = new GContext();
+			}
 			return instance;
 		}
 		// Delete copy constructor and assignment operator

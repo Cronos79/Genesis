@@ -17,56 +17,30 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "EditorApp.h"
-#include "Gengine/Win/EntryPoint.cpp"
-#include "GEngine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
+#include "GEngine/Core/GEnginePCH.h"
+#include "GenTimer.h"
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+using namespace std::chrono;
 
 namespace Genesis
 {
 
-	EditorApp::EditorApp()
+	GenTimer::GenTimer() noexcept
 	{
-
+		last = steady_clock::now();
 	}
 
-	EditorApp::~EditorApp()
+	float GenTimer::Mark() noexcept
 	{
-
+		const auto old = last;
+		last = steady_clock::now();
+		const duration<float> frameTime = last - old;
+		return frameTime.count();
 	}
 
-	void EditorApp::Init()
+	float GenTimer::Peek() const noexcept
 	{
-		GContext::Get()->Init(1920, 1080, "Genesis Editor");		
+		return duration<float>(steady_clock::now() - last).count();
 	}
 
-	void EditorApp::HandleInput(float deltaTime)
-	{
-		if (GContext::Get()->GetWindow()->kbd.KeyIsPressed('V'))
-		{
-			GContext::Get()->GetGraphics12()->ToggleVSync();
-		}
-	}
-
-	void EditorApp::Update(float deltaTime)
-	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		ImGui::Begin("FPS");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
-	}
-
-	void EditorApp::Shutdown()
-	{
-		
-	}
-}
-
-Genesis::EngineApp* CreateEngineApp()
-{
-	return new Genesis::EditorApp();
 }

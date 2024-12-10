@@ -18,6 +18,7 @@
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
 #pragma once
+#include "../Core/GenTimer.h"
 
 namespace Genesis
 {
@@ -31,6 +32,9 @@ namespace Genesis
 		void virtual HandleInput(float deltaTime) = 0;
 		void virtual Update(float deltaTime) = 0;
 		virtual void Shutdown() = 0;
+	private:
+		GenTimer* m_Timer;
+		float m_speedFactor = 1.0f;
 	};
 }
 // To be defined in CLIENT
