@@ -51,10 +51,12 @@ namespace Genesis
 
 	void EditorApp::Update(float deltaTime)
 	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		/*ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGui::Begin("FPS");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
+		ImGui::End();*/
+
+
 	}
 
 	void EditorApp::Shutdown()

@@ -23,6 +23,14 @@
 
 namespace Genesis
 {
+	DxgiInfoManager& GContext::GetInfoManager()
+	{
+		if (infoManager == nullptr)
+		{
+			infoManager = new DxgiInfoManager;
+		}
+		return *infoManager;
+	}
 	Window* GContext::GetWindow() const
 	{
 		return m_Window;
@@ -33,11 +41,16 @@ namespace Genesis
 		return m_Graphics;
 	}
 
+	Genesis::Graphics12* GContext::GetGraphics12() const
+	{
+		return m_Graphics12;
+	}
+
 	void GContext::Init(int32 width, int32 height, std::string title)
 	{
 		m_Window = new Window(width, height, title.c_str());
 		m_Window->SetTitle(title);
-		m_Graphics = new Graphics(GetHWnd(), width, height);
+		m_Graphics12 = new Graphics12(GetHWnd(), width, height);
 	}	
 
 	void GContext::Shutdown()

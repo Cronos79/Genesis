@@ -21,6 +21,8 @@
 #include "GEngine/Win/WinInclude.h"
 #include "GEngine/Core/GEnginePCH.h"
 #include <GEngine/Graphics/Graphics.h>
+#include <GEngine/Graphics/Graphics12.h>
+#include "GenException.h"
 
 namespace Genesis
 {
@@ -61,9 +63,10 @@ namespace Genesis
 		{
 			return m_Running;
 		}	
-		
+		DxgiInfoManager& GetInfoManager();
 		Window* GetWindow() const;
 		Graphics* GetGraphics() const;
+		Graphics12* GetGraphics12() const;
 
 		void Init(int32 width, int32 height, std::string title);
 		void Shutdown();
@@ -73,7 +76,10 @@ namespace Genesis
 		HWND m_HWnd;
 		Window* m_Window;
 		Graphics* m_Graphics;
+		Graphics12* m_Graphics12;
 		bool m_Running = false;
+
+		DxgiInfoManager* infoManager;
 
 		// Singleton
 	public:

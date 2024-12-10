@@ -20,11 +20,29 @@
 #include "GEngine/Core/GEnginePCH.h"
 #include "WinInclude.h"
 #include "GEngine/App/EngineApp.h"
+#include <GEngine/Core/GenException.h>
 
 extern Genesis::EngineApp* CreateEngineApp();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {	
-	Genesis::EngineApp* app = CreateEngineApp();
-	return app->Run();
+	
+	try
+	{
+		Genesis::EngineApp* app = CreateEngineApp();
+		return app->Run();
+	}
+	catch (const Genesis::GenException& e)
+	{
+		MessageBoxA(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
+	}
+	catch (const std::exception& e)
+	{
+		MessageBoxA(nullptr, e.what(), "Standard Exception", MB_OK | MB_ICONEXCLAMATION);
+	}
+	catch (...)
+	{
+		MessageBoxA(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
+	}
+	return -1;
 }

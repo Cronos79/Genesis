@@ -179,11 +179,11 @@ namespace Genesis
 	{
 		if (GContext::Get().IsRunning())
 		{
-			if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+			/*if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 			{
 				return true;
 			}
-			const auto& imio = ImGui::GetIO();
+			const auto& imio = ImGui::GetIO();*/
 		}
 
 		switch (msg)
