@@ -17,40 +17,18 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "GEngine/Core/GEnginePCH.h"
-#include "EngineApp.h"
-#include "Gengine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
+#pragma once
 
 namespace Genesis
 {
-	EngineApp::EngineApp()
+	class EditorUI
 	{
-	}
-
-	int EngineApp::Run()
-	{
-		Init();
-		m_Timer = new GenTimer();
-		float deltaTime = 0.0f;
-		while (GContext::Get()->IsRunning())
-		{
-			if (const auto ecode = GContext::Get()->GetWindow()->ProcessMessages())
-			{
-				// if return optional has value, means we're quitting so return exit code
-				Shutdown();
-				GContext::Get()->Shutdown();
-				return *ecode;
-			}
-			deltaTime = m_Timer->Mark() * m_speedFactor;
-			GContext::Get()->GetGraphics12()->BeginFrame(deltaTime);
-			HandleInput(deltaTime);
-			Update(deltaTime);
-			Draw(deltaTime);
-			GContext::Get()->GetGraphics12()->EndFrame(deltaTime);
-		}
-		Shutdown();
-		GContext::Get()->Shutdown();
-		return -1;
-	}
+	public:
+		EditorUI() = default;
+		~EditorUI() = default;
+		void Render(float deltaTime);
+	private:
+		void MenuBar();
+		void MiscUtil(float deltaTime);
+	};
 }

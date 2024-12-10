@@ -31,6 +31,7 @@ namespace Genesis
 		virtual void Init() = 0;
 		void virtual HandleInput(float deltaTime) = 0;
 		void virtual Update(float deltaTime) = 0;
+		void virtual Draw(float deltaTime) = 0;
 		virtual void Shutdown() = 0;
 	private:
 		GenTimer* m_Timer;

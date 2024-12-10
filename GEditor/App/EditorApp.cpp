@@ -22,10 +22,6 @@
 #include "GEngine/Core/GContext.h"
 #include "GEngine/Win/Window.h"
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
 namespace Genesis
 {
 
@@ -54,15 +50,16 @@ namespace Genesis
 
 	void EditorApp::Update(float deltaTime)
 	{
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		ImGui::Begin("FPS");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
+		
 	}
 
 	void EditorApp::Shutdown()
 	{
 		
+	}
+	void EditorApp::Draw(float deltaTime)
+	{
+		m_EditorUI.Render(deltaTime);
 	}
 }
 

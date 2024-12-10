@@ -17,40 +17,66 @@
 *	You should have received a copy of the GNU General Public License					  *
 *	along with The CronoGames Game Engine.  If not, see <http://www.gnu.org/licenses/>.   *
 ******************************************************************************************/
-#include "GEngine/Core/GEnginePCH.h"
-#include "EngineApp.h"
-#include "Gengine/Core/GContext.h"
-#include "GEngine/Win/Window.h"
+#include "EditorUI.h"
+
+#include "imgui.h"
+#include "../Core/GContext.h"
 
 namespace Genesis
 {
-	EngineApp::EngineApp()
+
+	void EditorUI::Render(float deltaTime)
 	{
+		MenuBar();
+		MiscUtil(deltaTime);
 	}
 
-	int EngineApp::Run()
+	void EditorUI::MenuBar()
 	{
-		Init();
-		m_Timer = new GenTimer();
-		float deltaTime = 0.0f;
-		while (GContext::Get()->IsRunning())
+		ImGui::BeginMainMenuBar();
+
+		if (ImGui::BeginMenu("File"))
 		{
-			if (const auto ecode = GContext::Get()->GetWindow()->ProcessMessages())
+			if (ImGui::MenuItem("New"))
 			{
-				// if return optional has value, means we're quitting so return exit code
-				Shutdown();
-				GContext::Get()->Shutdown();
-				return *ecode;
+				// New
 			}
-			deltaTime = m_Timer->Mark() * m_speedFactor;
-			GContext::Get()->GetGraphics12()->BeginFrame(deltaTime);
-			HandleInput(deltaTime);
-			Update(deltaTime);
-			Draw(deltaTime);
-			GContext::Get()->GetGraphics12()->EndFrame(deltaTime);
+			if (ImGui::MenuItem("Open"))
+			{
+				// Open
+			}
+			if (ImGui::MenuItem("Save"))
+			{
+				// Save
+			}
+			if (ImGui::MenuItem("Exit"))
+			{
+				GContext::Get()->SetRunning(false);
+			}
+			ImGui::EndMenu();
 		}
-		Shutdown();
-		GContext::Get()->Shutdown();
-		return -1;
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo"))
+			{
+				// Undo
+			}
+			if (ImGui::MenuItem("Redo"))
+			{
+				// Redo
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
 	}
+
+	void EditorUI::MiscUtil(float deltaTime)
+	{
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGui::Begin("FPS");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+		ImGui::End();
+	}
+
 }

@@ -57,13 +57,8 @@ namespace Genesis
 	}
 
 	void Graphics12::BeginFrame(float deltaTime)
-	{
-		// Start the Dear ImGui frame
-		ImGui_ImplDX12_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
-		m_CurrentBackBufferIndex = m_pSwapChain->GetCurrentBackBufferIndex();
+	{	
+		
 		m_pCommandAllocator->Reset() >> chk;
 		m_pCommandList->Reset(m_pCommandAllocator.Get(), nullptr) >> chk;
 
@@ -72,6 +67,11 @@ namespace Genesis
 			m_pRenderTargets[m_CurrentBackBufferIndex].Get(),
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 		m_pCommandList->ResourceBarrier(1, &barrier);
+		
+		// Start the Dear ImGui frame
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 
 		ClearFrame(deltaTime);
 	}
@@ -81,12 +81,6 @@ namespace Genesis
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		// Rendering
 		ImGui::Render();
-		
-		// Barrier
-		const CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-			m_pRenderTargets[m_CurrentBackBufferIndex].Get(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-		m_pCommandList->ResourceBarrier(1, &barrier);
 
 		// Render ImGui
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
@@ -95,6 +89,12 @@ namespace Genesis
 		m_pCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 		m_pCommandList->SetDescriptorHeaps(1, m_pSrvDescHeap.GetAddressOf());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), m_pCommandList.Get());
+		
+		// Barrier
+		const CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			m_pRenderTargets[m_CurrentBackBufferIndex].Get(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+		m_pCommandList->ResourceBarrier(1, &barrier);	
 
 		// Close the list
 		m_pCommandList->Close();
@@ -108,15 +108,17 @@ namespace Genesis
 		{
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
-		}
+		}		
+
+		// Present
+		m_pSwapChain->Present(m_VSync, 0) >> chk;
+
+		m_CurrentBackBufferIndex = m_pSwapChain->GetCurrentBackBufferIndex();
 
 		// Signal
 		const uint64 fence = m_FenceValue;
 		m_pCommandQueue->Signal(m_pFence.Get(), fence) >> chk;
 		m_FenceValue++;
-
-		// Present
-		m_pSwapChain->Present(m_VSync, 0) >> chk;
 
 		// Fence event
 		if (m_pFence->GetCompletedValue() < fence)

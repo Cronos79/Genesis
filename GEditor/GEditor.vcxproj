@@ -113,9 +113,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App\EditorApp.h" />
+    <ClInclude Include="UI\EditorUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App\EditorApp.cpp" />
+    <ClCompile Include="UI\EditorUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GEngine\GEngine.vcxproj">

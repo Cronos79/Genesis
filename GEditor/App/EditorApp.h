@@ -19,6 +19,7 @@
 ******************************************************************************************/
 #pragma once
 #include "GEngine/App/EngineApp.h"
+#include "../UI/EditorUI.h"
 
 namespace Genesis
 {
@@ -28,10 +29,16 @@ namespace Genesis
 		EditorApp();
 		~EditorApp();
 
+		// Inherited via EngineApp
 		void Init() override;
 		void  HandleInput(float deltaTime) override;
-		void  Update(float deltaTime) override;
+		void  Update(float deltaTime) override;	
+		void Draw(float deltaTime) override;
 		void Shutdown() override;
+	private:
+		EditorUI m_EditorUI;
+
+		
 	};
 }
 
