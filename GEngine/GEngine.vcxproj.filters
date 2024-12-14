@@ -23,7 +23,7 @@
     <ClCompile Include="src\win\WindowClass.cpp" />
     <ClCompile Include="src\Entry\EntryPoint.cpp" />
     <ClCompile Include="Application\EngineApp.cpp" />
-    <ClCompile Include="src\Graphics\GraphicsError.cpp" />
+    <ClCompile Include="Graphics\GraphicsError.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utl\Assert.h" />
@@ -59,8 +59,8 @@
     <ClInclude Include="src\win\WindowClass.h" />
     <ClInclude Include="third\backward.hpp" />
     <ClInclude Include="Application\EngineApp.h" />
-    <ClInclude Include="src\Graphics\d3dx12.h" />
-    <ClInclude Include="src\Graphics\GraphicsError.h" />
+    <ClInclude Include="Graphics\d3dx12.h" />
+    <ClInclude Include="Graphics\GraphicsError.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
