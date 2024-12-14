@@ -1,5 +1,6 @@
-#include "App.h"
-#include "GraphicsError.h"
+#include "EngineApp.h"
+
+#include "GEngine/src/Graphics/GraphicsError.h"
 #include <GEngine/src/log/Log.h> 
 #include <GEngine/src/utl/String.h> 
 
@@ -10,7 +11,7 @@
 #include <DirectXMath.h> 
 #pragma warning(push)
 #pragma warning(disable : 26495)
-#include "d3dx12.h" 
+#include "GEngine/src/Graphics/d3dx12.h" 
 #pragma warning(pop)
 #include <DirectXTex.h>
 #include <wrl.h>
@@ -19,15 +20,26 @@
 #include <numbers> 
 #include <ranges>
 
-namespace chil::app
+
+
+
+namespace Genesis
 {
 	using Microsoft::WRL::ComPtr;
 	using namespace DirectX;
+	using namespace chil;
+	using namespace chil::app;
 	namespace rn = std::ranges;
 	namespace vi = rn::views;
 
-	int Run(win::IWindow& window)
+	EngineApp::EngineApp()
 	{
+
+	}
+
+	int EngineApp::Run(chil::win::IWindow& window)
+	{
+#pragma region Chili code
 		// constants 
 		constexpr UINT width = 1280;
 		constexpr UINT height = 720;
@@ -111,7 +123,8 @@ namespace chil::app
 		{
 			CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
 				rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-			for (int i = 0; i < bufferCount; i++) {
+			for (int i = 0; i < bufferCount; i++)
+			{
 				swapChain->GetBuffer(i, IID_PPV_ARGS(&backBuffers[i])) >> chk;
 				device->CreateRenderTargetView(backBuffers[i].Get(), nullptr, rtvHandle);
 				rtvHandle.Offset(rtvDescriptorSize);
@@ -174,7 +187,8 @@ namespace chil::app
 
 		// fence signalling event
 		HANDLE fenceEvent = CreateEventW(nullptr, FALSE, FALSE, nullptr);
-		if (!fenceEvent) {
+		if (!fenceEvent)
+		{
 			GetLastError() >> chk;
 			throw std::runtime_error{ "Failed to create fence event" };
 		}
@@ -255,7 +269,8 @@ namespace chil::app
 			// insert fence to detect when upload is complete 
 			commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
 			fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED) {
+			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED)
+			{
 				GetLastError() >> chk;
 			}
 		}
@@ -334,7 +349,8 @@ namespace chil::app
 			// insert fence to detect when upload is complete  
 			commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
 			fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED) {
+			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED)
+			{
 				GetLastError() >> chk;
 			}
 		}
@@ -385,63 +401,64 @@ namespace chil::app
 			// collect subresource data 
 			const auto subresourceData = vi::iota(0, (int)mipChain.GetImageCount()) |
 				vi::transform([&](int i) {
-					const auto img = mipChain.GetImage(i, 0, 0);
-					return D3D12_SUBRESOURCE_DATA{
-						.pData = img->pixels,
-						.RowPitch = (LONG_PTR)img->rowPitch,
-						.SlicePitch = (LONG_PTR)img->slicePitch,
-					};
-				}) |
+				const auto img = mipChain.GetImage(i, 0, 0);
+				return D3D12_SUBRESOURCE_DATA{
+					.pData = img->pixels,
+					.RowPitch = (LONG_PTR)img->rowPitch,
+					.SlicePitch = (LONG_PTR)img->slicePitch,
+				};
+					}) |
 				rn::to<std::vector>();
 
-			// create the intermediate upload buffer 
-			ComPtr<ID3D12Resource> uploadBuffer;
-			{
-				const CD3DX12_HEAP_PROPERTIES heapProps{ D3D12_HEAP_TYPE_UPLOAD };
-				const auto uploadBufferSize = GetRequiredIntermediateSize(
-					cubeFaceTexture.Get(), 0, (UINT)subresourceData.size()
-				);
-				const auto resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-				device->CreateCommittedResource(
-					&heapProps,
-					D3D12_HEAP_FLAG_NONE,
-					&resourceDesc,
-					D3D12_RESOURCE_STATE_GENERIC_READ,
-					nullptr,
-					IID_PPV_ARGS(&uploadBuffer)
-				) >> chk;
-			}
+					// create the intermediate upload buffer 
+					ComPtr<ID3D12Resource> uploadBuffer;
+					{
+						const CD3DX12_HEAP_PROPERTIES heapProps{ D3D12_HEAP_TYPE_UPLOAD };
+						const auto uploadBufferSize = GetRequiredIntermediateSize(
+							cubeFaceTexture.Get(), 0, (UINT)subresourceData.size()
+						);
+						const auto resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+						device->CreateCommittedResource(
+							&heapProps,
+							D3D12_HEAP_FLAG_NONE,
+							&resourceDesc,
+							D3D12_RESOURCE_STATE_GENERIC_READ,
+							nullptr,
+							IID_PPV_ARGS(&uploadBuffer)
+						) >> chk;
+					}
 
-			// reset command list and allocator   
-			commandAllocator->Reset() >> chk;
-			commandList->Reset(commandAllocator.Get(), nullptr) >> chk;
-			// write commands to copy data to upload texture (copying each subresource) 
-			UpdateSubresources(
-				commandList.Get(),
-				cubeFaceTexture.Get(),
-				uploadBuffer.Get(),
-				0, 0,
-				(UINT)subresourceData.size(),
-				subresourceData.data()
-			);
-			// write command to transition texture to texture state  
-			{
-				const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-					cubeFaceTexture.Get(),
-					D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-				commandList->ResourceBarrier(1, &barrier);
-			}
-			// close command list   
-			commandList->Close() >> chk;
-			// submit command list to queue as array with single element  
-			ID3D12CommandList* const commandLists[] = { commandList.Get() };
-			commandQueue->ExecuteCommandLists((UINT)std::size(commandLists), commandLists);
-			// insert fence to detect when upload is complete  
-			commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
-			fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED) {
-				GetLastError() >> chk;
-			}
+					// reset command list and allocator   
+					commandAllocator->Reset() >> chk;
+					commandList->Reset(commandAllocator.Get(), nullptr) >> chk;
+					// write commands to copy data to upload texture (copying each subresource) 
+					UpdateSubresources(
+						commandList.Get(),
+						cubeFaceTexture.Get(),
+						uploadBuffer.Get(),
+						0, 0,
+						(UINT)subresourceData.size(),
+						subresourceData.data()
+					);
+					// write command to transition texture to texture state  
+					{
+						const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+							cubeFaceTexture.Get(),
+							D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+						commandList->ResourceBarrier(1, &barrier);
+					}
+					// close command list   
+					commandList->Close() >> chk;
+					// submit command list to queue as array with single element  
+					ID3D12CommandList* const commandLists[] = { commandList.Get() };
+					commandQueue->ExecuteCommandLists((UINT)std::size(commandLists), commandLists);
+					// insert fence to detect when upload is complete  
+					commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
+					fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
+					if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED)
+					{
+						GetLastError() >> chk;
+					}
 		}
 
 		// descriptor heap for the shader resource view 
@@ -500,8 +517,10 @@ namespace chil::app
 			ComPtr<ID3DBlob> errorBlob;
 			if (const auto hr = D3D12SerializeRootSignature(
 				&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-				&signatureBlob, &errorBlob); FAILED(hr)) {
-				if (errorBlob) {
+				&signatureBlob, &errorBlob); FAILED(hr))
+			{
+				if (errorBlob)
+				{
 					auto errorBufferPtr = static_cast<const char*>(errorBlob->GetBufferPointer());
 					chilog.error(utl::ToWide(errorBufferPtr)).no_trace();
 				}
@@ -581,11 +600,16 @@ namespace chil::app
 			viewProjection = view * projection;
 		}
 
+#pragma endregion
+		Init();
+		float deltaTime = 0.0f;
 		// render loop 
 		UINT curBackBufferIndex;
 		float t = 0.f;
 		constexpr float step = 0.01f;
-		while (!window.IsClosing()) {
+		while (!window.IsClosing())
+		{
+#pragma region Chili code
 			// advance back buffer
 			curBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
 			// select current buffer to render to 
@@ -666,20 +690,25 @@ namespace chil::app
 			swapChain->Present(1, 0) >> chk;
 			// wait for command list / allocator to become free 
 			fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED) {
+			if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED)
+			{
 				GetLastError() >> chk;
 			}
 			// update simulation time 
 			t += step;
+#pragma endregion
+			HandleInput(deltaTime);
+			Update(deltaTime);
 		}
 
 		// wait for queue to become completely empty (2 seconds max) 
 		commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
 		fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-		if (WaitForSingleObject(fenceEvent, 2000) == WAIT_FAILED) {
+		if (WaitForSingleObject(fenceEvent, 2000) == WAIT_FAILED)
+		{
 			GetLastError() >> chk;
 		}
-
+		Shutdown();
 		return 0;
 	}
 }

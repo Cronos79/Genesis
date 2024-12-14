@@ -16,10 +16,12 @@ namespace chil::app
 		:
 		hr(hr),
 		loc(loc)
-	{}
+	{
+	}
 	void operator>>(HrGrabber g, CheckerToken)
 	{
-		if (FAILED(g.hr)) {
+		if (FAILED(g.hr))
+		{
 			// get error description as narrow string with crlf removed
 			auto errorString = utl::ToNarrow(win::GetErrorDescription(g.hr)) |
 				vi::transform([](char c) {return c == '\n' ? ' ' : c; }) |

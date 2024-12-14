@@ -21,6 +21,9 @@
     <ClCompile Include="src\win\Utilities.cpp" />
     <ClCompile Include="src\win\Window.cpp" />
     <ClCompile Include="src\win\WindowClass.cpp" />
+    <ClCompile Include="src\Entry\EntryPoint.cpp" />
+    <ClCompile Include="Application\EngineApp.cpp" />
+    <ClCompile Include="src\Graphics\GraphicsError.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utl\Assert.h" />
@@ -55,8 +58,15 @@
     <ClInclude Include="src\win\Window.h" />
     <ClInclude Include="src\win\WindowClass.h" />
     <ClInclude Include="third\backward.hpp" />
+    <ClInclude Include="Application\EngineApp.h" />
+    <ClInclude Include="src\Graphics\d3dx12.h" />
+    <ClInclude Include="src\Graphics\GraphicsError.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\PixelShader.hlsl" />
+    <FxCompile Include="Shaders\VertexShader.hlsl" />
   </ItemGroup>
 </Project>

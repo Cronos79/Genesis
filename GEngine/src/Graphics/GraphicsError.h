@@ -3,7 +3,8 @@
 
 namespace chil::app
 {
-	struct CheckerToken {};
+	struct CheckerToken {
+	};
 	extern CheckerToken chk;
 	struct HrGrabber {
 		HrGrabber(unsigned int hr, std::source_location = std::source_location::current()) noexcept;
