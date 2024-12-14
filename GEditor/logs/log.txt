@@ -1,0 +1,2 @@
+@Error {2024-12-14 08:32:17.9294178 CST} Graphics Error: The system cannot find the file specified.
+   C:\Projects\Genesis\GEditor\App.cpp(354)
