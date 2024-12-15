@@ -22,6 +22,8 @@
     <ClCompile Include="Application\EngineApp.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\GraphicsError.cpp" />
+    <ClCompile Include="Graphics\ModelBase.cpp" />
+    <ClCompile Include="Graphics\PrimitiveModel.cpp" />
     <ClCompile Include="src\ccr\GenericTaskQueue.cpp" />
     <ClCompile Include="src\Entry\EntryPoint.cpp" />
     <ClCompile Include="src\ioc\Container.cpp" />
@@ -48,6 +50,8 @@
     <ClInclude Include="Application\EngineApp.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsError.h" />
+    <ClInclude Include="Graphics\ModelBase.h" />
+    <ClInclude Include="Graphics\PrimitiveModel.h" />
     <ClInclude Include="src\ccr\GenericTaskQueue.h" />
     <ClInclude Include="Graphics\d3dx12.h" />
     <ClInclude Include="src\ioc\Container.h" />

@@ -25,6 +25,8 @@
     <ClCompile Include="Application\EngineApp.cpp" />
     <ClCompile Include="Graphics\GraphicsError.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\ModelBase.cpp" />
+    <ClCompile Include="Graphics\PrimitiveModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utl\Assert.h" />
@@ -63,6 +65,8 @@
     <ClInclude Include="Graphics\d3dx12.h" />
     <ClInclude Include="Graphics\GraphicsError.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\ModelBase.h" />
+    <ClInclude Include="Graphics\PrimitiveModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

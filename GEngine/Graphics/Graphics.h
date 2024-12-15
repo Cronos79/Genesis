@@ -27,7 +27,6 @@ namespace Genesis
 		void EndFrame(float deltaTime);	
 		void Shutdown();
 
-		void TestLoop();
 		// Private methods
 	private:
 		void SetupDebugLayer();
@@ -37,6 +36,7 @@ namespace Genesis
 		void CreateSwapChain(chil::win::IWindow& window);
 		void CreateRenderTargets();
 		void CreateDepthBuffer();
+		void CreateDescriptorHeaps();
 		void CreateFence();
 		
 		void ResetCommandList();
@@ -44,16 +44,6 @@ namespace Genesis
 		void SignalAndWait();	
 		void SetScissorAndViewport();
 
-		// Model class prep
-		void CreateVertexBuffer();
-		void CreateIndexBuffer();
-		void CreateTexture();
-		void SetViewMatrix();
-		void CreateDescriptorHeaps();
-		void CreateRootSignature();
-		void CreatePipelineState();
-
-		
 		// Public variables
 	public:
 
@@ -68,7 +58,7 @@ namespace Genesis
 
 		// d3d12 objects
 		Microsoft::WRL::ComPtr<IDXGIFactory4> dxgiFactory;
-		Microsoft::WRL::ComPtr<ID3D12Device2> device;
+		Microsoft::WRL::ComPtr<ID3D12Device14> device;
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 		Microsoft::WRL::ComPtr<ID3D12Resource> backBuffers[bufferCount];
 
@@ -100,24 +90,6 @@ namespace Genesis
 		float t = 0.f;
 		float step = 0.01f;	
 
-		// Model class stuff?
-		DirectX::XMMATRIX viewProjection;
-		// Vertex buffer stuff
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexUploadBuffer;
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer;
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-		// Index buffer stuff
-		Microsoft::WRL::ComPtr<ID3D12Resource> indexUploadBuffer;
-		Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer;
-		D3D12_INDEX_BUFFER_VIEW indexBufferView;		
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
-		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
-		// Texture stuff ?
-		Microsoft::WRL::ComPtr<ID3D12Resource> cubeFaceTexture;
-		Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer;
-		Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob;
-
-	
 	};
 }
 
