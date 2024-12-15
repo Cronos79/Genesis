@@ -32,11 +32,27 @@ namespace Genesis
 		void CreateFactory();
 		void CreateDevice();
 		void CreateCommandObjects();
+		void CreateSwapChain(chil::win::IWindow& window);
+		void createRenderTargets();
+		void CreateDepthBuffer();
+		void CreateFence();
+		
+		void ResetCommandList();
+		void CloseAndExecuteCommandList();
+		void SignalAndWait();	
+		void SetScissorAndViewport();
 
+		// Model class prep
+		void CreateVertexBuffer();
+		void CreateIndexBuffer();
+		void CreateTexture();
+		void SetViewMatrix();
+		void CreateDescriptorHeaps();
+		void CreateRootSignature();
+		void CreatePipelineState();
 
-		void TestInit(chil::win::IWindow& window);
 		void TestLoop();
-		// Pub;ic variables
+		// Public variables
 	public:
 
 		// Private variables
@@ -53,41 +69,53 @@ namespace Genesis
 		Microsoft::WRL::ComPtr<ID3D12Device2> device;
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 		Microsoft::WRL::ComPtr<ID3D12Resource> backBuffers[bufferCount];
+
+		// Command objects
 		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
-		UINT rtvDescriptorSize;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle;
-		Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer;
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
-		Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer;
-		Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
-		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
-		Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob;
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexUploadBuffer;
-		Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer;
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-		Microsoft::WRL::ComPtr<ID3D12Resource> indexUploadBuffer;
-		Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer;
-		D3D12_INDEX_BUFFER_VIEW indexBufferView;
-		Microsoft::WRL::ComPtr<ID3D12Resource> cubeFaceTexture;
-		CD3DX12_VIEWPORT viewport;
-		CD3DX12_RECT scissorRect;
-		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
-		DirectX::XMMATRIX viewProjection;
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
 
+		// Fence stuff
 		Microsoft::WRL::ComPtr<ID3D12Fence> fence;
 		uint64_t fenceValue = 0;
 		HANDLE fenceEvent;
 
+		// Heaps
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
+		UINT rtvDescriptorSize;	
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;	
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
+		Microsoft::WRL::ComPtr<ID3D12Resource> depthBuffer;
+		CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle;
+		
+		CD3DX12_VIEWPORT viewport;
+		CD3DX12_RECT scissorRect;
 
-		// junk
+		// other
 		float deltaTime = 0.0f;
 		// render loop 
 		UINT curBackBufferIndex;
 		float t = 0.f;
-		float step = 0.01f;
+		float step = 0.01f;	
+
+		// Model class stuff?
+		DirectX::XMMATRIX viewProjection;
+		// Vertex buffer stuff
+		Microsoft::WRL::ComPtr<ID3D12Resource> vertexUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer;
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+		// Index buffer stuff
+		Microsoft::WRL::ComPtr<ID3D12Resource> indexUploadBuffer;
+		Microsoft::WRL::ComPtr<ID3D12Resource> indexBuffer;
+		D3D12_INDEX_BUFFER_VIEW indexBufferView;		
+		Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
+		// Texture stuff ?
+		Microsoft::WRL::ComPtr<ID3D12Resource> cubeFaceTexture;
+		Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer;
+		Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob;
+
+	
 	};
 }
 

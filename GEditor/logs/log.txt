@@ -2,3 +2,5 @@
    C:\Projects\Genesis\GEditor\App.cpp(354)
 @Error {2024-12-14 13:43:11.6551025 CST} Graphics Error: The GPU device instance has been suspended. Use GetDeviceRemovedReason to determine the appropriate action.
    C:\Projects\Genesis\GEngine\Application\EngineApp.cpp(684)
+@Error {2024-12-14 17:28:02.4483537 CST} Graphics Error: The parameter is incorrect.
+   C:\Projects\Genesis\GEngine\Graphics\Graphics.cpp(583)
