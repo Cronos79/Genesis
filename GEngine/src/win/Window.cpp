@@ -67,7 +67,6 @@ namespace chil::win
 		});
 		kernelThread_.join();
 	}
-
 	
 	LRESULT Window::HandleMessage_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
