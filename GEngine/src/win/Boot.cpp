@@ -3,6 +3,7 @@
 #include <GEngine/src/ioc/Singletons.h> 
 #include "WindowClass.h" 
 #include "Window.h"
+#include "../Core/GContext.h"
 
 // how to forward this for rval goodness? 
 // how to do this for const bois? 
@@ -25,8 +26,8 @@ namespace chil::win
 		ioc::Get().Register<IWindow>([](IWindow::IocParams args) {
 			return std::make_shared<Window>(
 				(args.pClass | ioc::Sing().Resolve<IWindowClass>()),
-				args.name.value_or(L"Main Window"),
-				args.size.value_or(spa::DimensionsI{ 1280, 720 }),
+				args.name.value_or(Genesis::GContext::Get().GetTitle()),
+				args.size.value_or(spa::DimensionsI{ Genesis::GContext::Get().GetWidth(), Genesis::GContext::Get().GetHeight()}),
 				args.position
 			);
 		});

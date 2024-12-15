@@ -100,8 +100,6 @@ namespace Genesis
 		// Private variables
 	private:
 		// constants 
-		const UINT width = 1280;
-		const UINT height = 720;
 		const static UINT bufferCount = 2;
 
 		// d3d12 objects

@@ -10,6 +10,7 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx12.h"
+#include "../Core/GContext.h"
 
 namespace Genesis
 {
@@ -171,8 +172,8 @@ namespace Genesis
 	{
 		// swap chain
 		const DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {
-			.Width = width,
-			.Height = height,
+			.Width = (UINT)GContext::Get().GetWidth(),
+			.Height = (UINT)GContext::Get().GetHeight(),
 			.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
 			.Stereo = FALSE,
 			.SampleDesc = {
@@ -226,7 +227,7 @@ namespace Genesis
 		const CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
 		const CD3DX12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(
 			DXGI_FORMAT_D32_FLOAT,
-			width, height,
+			GContext::Get().GetWidth(), GContext::Get().GetHeight(),
 			1, 0, 1, 0,
 			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 		const D3D12_CLEAR_VALUE clearValue = {
@@ -355,8 +356,8 @@ namespace Genesis
 		// define viewport 
 		viewport.TopLeftX = 0;
 		viewport.TopLeftY = 0;
-		viewport.Width = float(width);
-		viewport.Height = float(height);
+		viewport.Width = float(GContext::Get().GetWidth());
+		viewport.Height = float(GContext::Get().GetHeight());
 		//viewport.MinDepth = 0;
 		//viewport.MaxDepth = 1;
 	}	

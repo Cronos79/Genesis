@@ -25,6 +25,27 @@ namespace Genesis
 		{
 			return *m_graphics;
 		}
+
+		inline const wchar_t* GetTitle() const
+		{
+			return title;
+		}
+
+		// Setters
+		inline void SetWidth(int32_t _width)
+		{
+			width = _width;
+		}
+
+		inline void SetHeight(int32_t _height)
+		{
+			height = _height;
+		}
+
+		inline void SetTitle(const wchar_t* _title)
+		{
+			title = _title;
+		}
 		// Private methods
 	private:
 
@@ -36,6 +57,7 @@ namespace Genesis
 		Graphics* m_graphics;
 		int32_t width = 1920;
 		int32_t height = 1080;
+		const wchar_t* title = L"Genesis Editor";
 
 #pragma region Singleton
 		// Singleton
