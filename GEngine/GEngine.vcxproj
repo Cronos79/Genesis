@@ -18,6 +18,108 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application\EngineApp.cpp" />
+    <ClCompile Include="Core\GContext.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\GraphicsError.cpp" />
+    <ClCompile Include="Graphics\ModelBase.cpp" />
+    <ClCompile Include="Graphics\PrimitiveModel.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\ccr\GenericTaskQueue.cpp" />
+    <ClCompile Include="src\Entry\EntryPoint.cpp" />
+    <ClCompile Include="src\ioc\Container.cpp" />
+    <ClCompile Include="src\ioc\Singletons.cpp" />
+    <ClCompile Include="src\log\Channel.cpp" />
+    <ClCompile Include="src\log\EntryBuilder.cpp" />
+    <ClCompile Include="src\log\Level.cpp" />
+    <ClCompile Include="src\log\Log.cpp" />
+    <ClCompile Include="src\log\MsvcDebugDriver.cpp" />
+    <ClCompile Include="src\log\SeverityLevelPolicy.cpp" />
+    <ClCompile Include="src\log\SimpleFileDriver.cpp" />
+    <ClCompile Include="src\log\TextFormatter.cpp" />
+    <ClCompile Include="src\utl\Assert.cpp" />
+    <ClCompile Include="src\utl\Exception.cpp" />
+    <ClCompile Include="src\utl\NoReturn.cpp" />
+    <ClCompile Include="src\utl\StackTrace.cpp" />
+    <ClCompile Include="src\utl\String.cpp" />
+    <ClCompile Include="src\win\Boot.cpp" />
+    <ClCompile Include="src\win\Utilities.cpp" />
+    <ClCompile Include="src\win\Window.cpp" />
+    <ClCompile Include="src\win\WindowClass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application\EngineApp.h" />
+    <ClInclude Include="Core\GContext.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\GraphicsError.h" />
+    <ClInclude Include="Graphics\ModelBase.h" />
+    <ClInclude Include="Graphics\PrimitiveModel.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="src\ccr\GenericTaskQueue.h" />
+    <ClInclude Include="Graphics\d3dx12.h" />
+    <ClInclude Include="src\ioc\Container.h" />
+    <ClInclude Include="src\ioc\Exception.h" />
+    <ClInclude Include="src\ioc\Singletons.h" />
+    <ClInclude Include="src\log\Channel.h" />
+    <ClInclude Include="src\log\Driver.h" />
+    <ClInclude Include="src\log\Entry.h" />
+    <ClInclude Include="src\log\EntryBuilder.h" />
+    <ClInclude Include="src\log\Level.h" />
+    <ClInclude Include="src\log\Log.h" />
+    <ClInclude Include="src\log\MsvcDebugDriver.h" />
+    <ClInclude Include="src\log\Policy.h" />
+    <ClInclude Include="src\log\SeverityLevelPolicy.h" />
+    <ClInclude Include="src\log\SimpleFileDriver.h" />
+    <ClInclude Include="src\log\TextFormatter.h" />
+    <ClInclude Include="src\spa\Dimensions.h" />
+    <ClInclude Include="src\spa\Rect.h" />
+    <ClInclude Include="src\spa\Vec2.h" />
+    <ClInclude Include="src\utl\Assert.h" />
+    <ClInclude Include="src\utl\Exception.h" />
+    <ClInclude Include="src\utl\Macro.h" />
+    <ClInclude Include="src\utl\NoReturn.h" />
+    <ClInclude Include="src\utl\StackTrace.h" />
+    <ClInclude Include="src\utl\String.h" />
+    <ClInclude Include="src\win\Boot.h" />
+    <ClInclude Include="src\win\ChilWin.h" />
+    <ClInclude Include="src\win\Exception.h" />
+    <ClInclude Include="src\win\IWindow.h" />
+    <ClInclude Include="src\win\Utilities.h" />
+    <ClInclude Include="src\win\Window.h" />
+    <ClInclude Include="src\win\WindowClass.h" />
+    <ClInclude Include="third\backward.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\PixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\VertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -40,13 +142,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -114,6 +216,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(SolutionDir)GEngine\imgui;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,6 +233,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(SolutionDir)GEngine\imgui;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,13 +242,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Application\GEngineApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Application\GEngineApp.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtex_desktop_win10.2024.10.29.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\packages\directxtex_desktop_win10.2024.10.29.1\build\native\directxtex_desktop_win10.targets')" />
+    <Import Project="..\packages\directxtk12_desktop_2019.2024.10.29.1\build\native\directxtk12_desktop_2019.targets" Condition="Exists('..\packages\directxtk12_desktop_2019.2024.10.29.1\build\native\directxtk12_desktop_2019.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtex_desktop_win10.2024.10.29.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtex_desktop_win10.2024.10.29.1\build\native\directxtex_desktop_win10.targets'))" />
+    <Error Condition="!Exists('..\packages\directxtk12_desktop_2019.2024.10.29.1\build\native\directxtk12_desktop_2019.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk12_desktop_2019.2024.10.29.1\build\native\directxtk12_desktop_2019.targets'))" />
+  </Target>
 </Project>
