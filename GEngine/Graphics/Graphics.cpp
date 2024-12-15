@@ -56,7 +56,7 @@ namespace Genesis
 		CreateDevice();
 		CreateCommandObjects();
 		CreateSwapChain(window);
-		createRenderTargets();
+		CreateRenderTargets();
 		CreateDepthBuffer();
 		CreateFence();
 		SetScissorAndViewport();
@@ -74,11 +74,98 @@ namespace Genesis
 
 	void Graphics::BeginFrame(float deltaTime)
 	{
+		// advance back buffer
+		curBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
+		ResetCommandList();
+
+		// transition buffer resource to render target state 
+		const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+			backBuffers[curBackBufferIndex].Get(),
+			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		commandList->ResourceBarrier(1, &barrier);
+
+		const CD3DX12_CPU_DESCRIPTOR_HANDLE rtv{
+		rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		(INT)curBackBufferIndex, rtvDescriptorSize };
+
+		// calculate clear color 
+		const FLOAT clearColor[] = {
+			sin(2.f * t + 1.f) / 2.f + .5f,
+			sin(3.f * t + 2.f) / 2.f + .5f,
+			sin(5.f * t + 3.f) / 2.f + .5f,
+			1.0f
+		};
+		// clear rtv 
+		commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
+		// clear the depth buffer 
+		commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.f, 0, 0, nullptr);
+
+		// configure RS 
+		commandList->RSSetViewports(1, &viewport);
+		commandList->RSSetScissorRects(1, &scissorRect);
 	}
 
 	void Graphics::EndFrame(float deltaTime)
 	{
-		TestLoop();
+		
+
+		// prepare buffer for presentation by transitioning to present state
+		{
+			const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+				backBuffers[curBackBufferIndex].Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+			commandList->ResourceBarrier(1, &barrier);
+		}
+
+		CloseAndExecuteCommandList();
+
+		// insert fence to mark command list completion 
+		commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
+		// present frame 
+		swapChain->Present(1, 0) >> chk;
+
+		SignalAndWait();
+
+		// update simulation time 
+		t += step;
+	}
+
+	void Graphics::TestLoop()
+	{
+#pragma region Chili code
+		// set pipeline state 
+		commandList->SetPipelineState(pipelineState.Get());
+		commandList->SetGraphicsRootSignature(rootSignature.Get());
+		// get rtv handle for the buffer used in this frame
+		const CD3DX12_CPU_DESCRIPTOR_HANDLE rtv{
+			rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+			(INT)curBackBufferIndex, rtvDescriptorSize };
+
+		// bind render target and depth
+		commandList->OMSetRenderTargets(1, &rtv, TRUE, &dsvHandle);
+		// configure IA 
+		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+		commandList->IASetIndexBuffer(&indexBufferView);
+		// bind the heap containing the texture descriptor 
+		commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
+		// bind the descriptor table containing the texture descriptor 
+		commandList->SetGraphicsRootDescriptorTable(1, srvHeap->GetGPUDescriptorHandleForHeapStart());		
+
+		// draw cube #1 
+		{
+			// bind the transformation matrix 
+			const auto mvp = XMMatrixTranspose(
+				XMMatrixRotationX(1.0f * t + 1.f) *
+				XMMatrixRotationY(1.2f * t + 2.f) *
+				XMMatrixRotationZ(1.1f * t + 0.f) *
+				viewProjection
+			);
+			commandList->SetGraphicsRoot32BitConstants(0, sizeof(mvp) / 4, &mvp, 0);
+			// draw the geometry  
+			commandList->DrawIndexedInstanced(nIndices, 1, 0, 0, 0);
+		}
+#pragma endregion
 	}
 
 	void Graphics::SetupDebugLayer()
@@ -156,7 +243,7 @@ namespace Genesis
 		swapChain1.As(&swapChain) >> chk;
 	}
 
-	void Graphics::createRenderTargets()
+	void Graphics::CreateRenderTargets()
 	{
 		// rtv descriptor heap
 		const D3D12_DESCRIPTOR_HEAP_DESC desc = {
@@ -623,98 +710,6 @@ namespace Genesis
 			// combine matrices
 			viewProjection = view * projection;
 		}
-	}
-
-	void Graphics::TestLoop()
-	{
-#pragma region Chili code
-		// advance back buffer
-		curBackBufferIndex = swapChain->GetCurrentBackBufferIndex();
-		// select current buffer to render to 
-		auto& backBuffer = backBuffers[curBackBufferIndex];
-		// reset command list and allocator 
-		commandAllocator->Reset() >> chk;
-		commandList->Reset(commandAllocator.Get(), nullptr) >> chk;
-		// get rtv handle for the buffer used in this frame
-		const CD3DX12_CPU_DESCRIPTOR_HANDLE rtv{
-			rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-			(INT)curBackBufferIndex, rtvDescriptorSize };
-		// clear the render target 
-		{
-			// transition buffer resource to render target state 
-			const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-				backBuffer.Get(),
-				D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-			commandList->ResourceBarrier(1, &barrier);
-			// calculate clear color 
-			const FLOAT clearColor[] = {
-				sin(2.f * t + 1.f) / 2.f + .5f,
-				sin(3.f * t + 2.f) / 2.f + .5f,
-				sin(5.f * t + 3.f) / 2.f + .5f,
-				1.0f
-			};
-			// clear rtv 
-			commandList->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
-		}
-		// clear the depth buffer 
-		commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.f, 0, 0, nullptr);
-		// set pipeline state 
-		commandList->SetPipelineState(pipelineState.Get());
-		commandList->SetGraphicsRootSignature(rootSignature.Get());
-		// configure IA 
-		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-		commandList->IASetIndexBuffer(&indexBufferView);
-		// configure RS 
-		commandList->RSSetViewports(1, &viewport);
-		commandList->RSSetScissorRects(1, &scissorRect);
-		// bind the heap containing the texture descriptor 
-		commandList->SetDescriptorHeaps(1, srvHeap.GetAddressOf());
-		// bind the descriptor table containing the texture descriptor 
-		commandList->SetGraphicsRootDescriptorTable(1, srvHeap->GetGPUDescriptorHandleForHeapStart());
-		// bind render target and depth
-		commandList->OMSetRenderTargets(1, &rtv, TRUE, &dsvHandle);
-		// draw cube #1 
-		{
-			// bind the transformation matrix 
-			const auto mvp = XMMatrixTranspose(
-				XMMatrixRotationX(1.0f * t + 1.f) *
-				XMMatrixRotationY(1.2f * t + 2.f) *
-				XMMatrixRotationZ(1.1f * t + 0.f) *
-				viewProjection
-			);
-			commandList->SetGraphicsRoot32BitConstants(0, sizeof(mvp) / 4, &mvp, 0);
-			// draw the geometry  
-			commandList->DrawIndexedInstanced(nIndices, 1, 0, 0, 0);
-		}
-		// prepare buffer for presentation by transitioning to present state
-		{
-			const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-				backBuffer.Get(),
-				D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-			commandList->ResourceBarrier(1, &barrier);
-		}
-		// submit command list 
-		{
-			// close command list 
-			commandList->Close() >> chk;
-			// submit command list to queue as array with single element
-			ID3D12CommandList* const commandLists[] = { commandList.Get() };
-			commandQueue->ExecuteCommandLists((UINT)std::size(commandLists), commandLists);
-		}
-		// insert fence to mark command list completion 
-		commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
-		// present frame 
-		swapChain->Present(1, 0) >> chk;
-		// wait for command list / allocator to become free 
-		fence->SetEventOnCompletion(fenceValue, fenceEvent) >> chk;
-		if (WaitForSingleObject(fenceEvent, INFINITE) == WAIT_FAILED)
-		{
-			GetLastError() >> chk;
-		}
-		// update simulation time 
-		t += step;
-#pragma endregion
 	}
 
 	void Graphics::Shutdown()

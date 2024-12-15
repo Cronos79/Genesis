@@ -19,6 +19,7 @@ namespace Genesis
 			m_Graphics.BeginFrame(deltaTime);
 			HandleInput(deltaTime);
 			Update(deltaTime);
+			m_Graphics.TestLoop();
 			m_Graphics.EndFrame(deltaTime);
 		}
 

@@ -26,6 +26,8 @@ namespace Genesis
 		void BeginFrame(float deltaTime);
 		void EndFrame(float deltaTime);	
 		void Shutdown();
+
+		void TestLoop();
 		// Private methods
 	private:
 		void SetupDebugLayer();
@@ -33,7 +35,7 @@ namespace Genesis
 		void CreateDevice();
 		void CreateCommandObjects();
 		void CreateSwapChain(chil::win::IWindow& window);
-		void createRenderTargets();
+		void CreateRenderTargets();
 		void CreateDepthBuffer();
 		void CreateFence();
 		
@@ -51,7 +53,7 @@ namespace Genesis
 		void CreateRootSignature();
 		void CreatePipelineState();
 
-		void TestLoop();
+		
 		// Public variables
 	public:
 
