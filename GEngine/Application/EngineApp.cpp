@@ -1,4 +1,5 @@
 #include "EngineApp.h"
+#include "imgui.h"
 
 namespace Genesis
 {
@@ -23,6 +24,10 @@ namespace Genesis
 			Update(deltaTime);
 			m_PrimitiveModel.Draw(0.001f);
 			m_PrimitiveModel2.Draw(0.01f);
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			ImGui::Begin("FPS");   
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+			ImGui::End();
 			GContext::Get().GetGraphics().EndFrame(deltaTime);
 		}
 		m_PrimitiveModel.Shutdown();

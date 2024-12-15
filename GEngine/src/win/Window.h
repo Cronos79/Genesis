@@ -21,6 +21,7 @@ namespace chil::win
 		bool IsClosing() const override;
 		std::future<void> SetTitle(std::wstring title) override;
 		~Window() override;
+		
 	protected:
 		// constants 
 		static constexpr UINT CustomTaskMessageId = WM_USER + 0;

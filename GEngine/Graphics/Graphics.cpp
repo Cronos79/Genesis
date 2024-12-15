@@ -7,6 +7,10 @@
 #include <numbers> 
 #include <ranges>
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx12.h"
+
 namespace Genesis
 {
 	using Microsoft::WRL::ComPtr;
@@ -34,7 +38,9 @@ namespace Genesis
 		CreateDepthBuffer();
 		CreateFence();
 		CreateDescriptorHeaps();
-		SetScissorAndViewport();		
+		SetScissorAndViewport();	
+
+		InitImGui(window);
 	}
 
 	void Graphics::BeginFrame(float deltaTime)
@@ -68,10 +74,26 @@ namespace Genesis
 		// configure RS 
 		commandList->RSSetViewports(1, &viewport);
 		commandList->RSSetScissorRects(1, &scissorRect);
+
+		// Start the Dear ImGui frame
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Graphics::EndFrame(float deltaTime)
 	{
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		// Rendering
+		ImGui::Render();
+
+		/*const CD3DX12_CPU_DESCRIPTOR_HANDLE rtv{
+		rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		(INT)curBackBufferIndex, rtvDescriptorSize };*/
+		//commandList->OMSetRenderTargets(1, &rtv, FALSE, nullptr);
+		//commandList->SetDescriptorHeaps(1, &srvHeap);
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
+
 		// prepare buffer for presentation by transitioning to present state
 		{
 			const auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
@@ -81,6 +103,13 @@ namespace Genesis
 		}
 
 		CloseAndExecuteCommandList();
+
+		// Update and Render additional Platform Windows
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 
 		// insert fence to mark command list completion 
 		commandQueue->Signal(fence.Get(), ++fenceValue) >> chk;
@@ -240,13 +269,48 @@ namespace Genesis
 		}
 	}
 
+	void Graphics::InitImGui(chil::win::IWindow& window)
+	{
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+		//io.ConfigViewportsNoAutoMerge = true;
+		//io.ConfigViewportsNoTaskBarIcon = true;
+
+		// Setup Dear ImGui style
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsLight();
+
+		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+		ImGuiStyle& style = ImGui::GetStyle();
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		}
+
+		// Setup Platform/Renderer backends
+		ImGui_ImplWin32_Init(window.GetHandle());
+
+		// Setup Platform/Renderer bindings
+		ImGui_ImplDX12_Init(device.Get(), bufferCount,
+			DXGI_FORMAT_R8G8B8A8_UNORM, srvHeap.Get(),
+			srvHeap->GetCPUDescriptorHandleForHeapStart(),
+			srvHeap->GetGPUDescriptorHandleForHeapStart());
+	}
+
 	void Graphics::CreateDescriptorHeaps()
 	{
 		// descriptor heap for the shader resource view 
 		{
 			const D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{
 				.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-				.NumDescriptors = 1,
+				.NumDescriptors = 1, // #TODO: Was 1 in the tutorial, but I don't know why
 				.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 			};
 			device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap)) >> chk;

@@ -4,6 +4,7 @@
 #include <format> 
 #include <GEngine/src/log/Log.h> 
 #include <GEngine/src/utl/String.h> 
+#include "imgui_impl_win32.h"
 
 namespace chil::win
 {
@@ -66,8 +67,15 @@ namespace chil::win
 		});
 		kernelThread_.join();
 	}
+
+	
 	LRESULT Window::HandleMessage_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		{
+			return DefWindowProcW(hWnd, msg, wParam, lParam); // #TODO: Was return true
+		}
+		//const auto& imio = ImGui::GetIO();
 		try {
 			switch (msg) {
 			case WM_DESTROY:

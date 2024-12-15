@@ -88,6 +88,8 @@ namespace Genesis
 		void CreateDepthBuffer();
 		void CreateDescriptorHeaps();
 		void CreateFence();
+
+		void InitImGui(chil::win::IWindow& window);
 		
 		
 		void SetScissorAndViewport();
