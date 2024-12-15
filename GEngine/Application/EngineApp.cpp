@@ -11,17 +11,21 @@ namespace Genesis
 
 	int EngineApp::Run(chil::win::IWindow& window)
 	{
-		m_Graphics.Initialize(window);
+		GContext::Get().Initialize(window);
+		m_PrimitiveModel.Initialize();
+		m_PrimitiveModel2.Initialize();
 		Init();
 		float deltaTime = 0.0f;
 		while (!window.IsClosing())
 		{
-			m_Graphics.BeginFrame(deltaTime);
+			GContext::Get().GetGraphics().BeginFrame(deltaTime);
 			HandleInput(deltaTime);
 			Update(deltaTime);
-			m_Graphics.EndFrame(deltaTime);
+			m_PrimitiveModel.Draw(0.001f);
+			m_PrimitiveModel2.Draw(0.01f);
+			GContext::Get().GetGraphics().EndFrame(deltaTime);
 		}
-
+		m_PrimitiveModel.Shutdown();
 		Shutdown();
 		return 0;
 	}

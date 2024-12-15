@@ -27,6 +27,7 @@
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\ModelBase.cpp" />
     <ClCompile Include="Graphics\PrimitiveModel.cpp" />
+    <ClCompile Include="Core\GContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utl\Assert.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\ModelBase.h" />
     <ClInclude Include="Graphics\PrimitiveModel.h" />
+    <ClInclude Include="Core\GContext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

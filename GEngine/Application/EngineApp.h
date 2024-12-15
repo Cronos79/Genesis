@@ -1,6 +1,8 @@
 #pragma once
 #include <GEngine/src/win/IWindow.h>
 #include <GEngine/Graphics/Graphics.h>
+#include "../Graphics/PrimitiveModel.h"
+#include <GEngine/Core/GContext.h>
 
 
 namespace Genesis
@@ -20,7 +22,8 @@ namespace Genesis
 		
 		// Private variables
 	private:
-		Graphics m_Graphics;
+		PrimitiveModel m_PrimitiveModel;
+		PrimitiveModel m_PrimitiveModel2;
 	};
 }
 

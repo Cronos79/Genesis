@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\EngineApp.cpp" />
+    <ClCompile Include="Core\GContext.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\GraphicsError.cpp" />
     <ClCompile Include="Graphics\ModelBase.cpp" />
@@ -48,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\EngineApp.h" />
+    <ClInclude Include="Core\GContext.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsError.h" />
     <ClInclude Include="Graphics\ModelBase.h" />

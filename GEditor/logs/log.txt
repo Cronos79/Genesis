@@ -4,3 +4,21 @@
    C:\Projects\Genesis\GEngine\Application\EngineApp.cpp(684)
 @Error {2024-12-14 17:28:02.4483537 CST} Graphics Error: The parameter is incorrect.
    C:\Projects\Genesis\GEngine\Graphics\Graphics.cpp(583)
+@Error {2024-12-15 09:39:08.8668169 CST} Unsupported RangeType value 3773822664 (descriptor table slot [0], root parameter [1]).
+
+  >> at Genesis::PrimitiveModel::CreateRootSignature
+     C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(355)
+@Error {2024-12-15 09:39:08.9333549 CST} Graphics Error: The parameter is incorrect.
+   C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(357)
+@Error {2024-12-15 09:46:03.7417132 CST} Unsupported RangeType value 1404892200 (descriptor table slot [0], root parameter [1]).
+
+  >> at Genesis::PrimitiveModel::CreateRootSignature
+     C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(355)
+@Error {2024-12-15 09:46:03.7959926 CST} Graphics Error: The parameter is incorrect.
+   C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(357)
+@Error {2024-12-15 09:50:02.5803965 CST} Unsupported RangeType value 2920871784 (descriptor table slot [0], root parameter [1]).
+
+  >> at Genesis::PrimitiveModel::CreateRootSignature
+     C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(355)
+@Error {2024-12-15 09:50:02.6290166 CST} Graphics Error: The parameter is incorrect.
+   C:\Projects\Genesis\GEngine\Graphics\PrimitiveModel.cpp(357)

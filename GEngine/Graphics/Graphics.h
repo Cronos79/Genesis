@@ -27,6 +27,56 @@ namespace Genesis
 		void EndFrame(float deltaTime);	
 		void Shutdown();
 
+		void ResetCommandList();
+		void CloseAndExecuteCommandList();
+		void SignalAndWait();
+
+		// Get device
+		inline ID3D12Device14* GetDevice()
+		{
+			return device.Get();
+		}
+
+		// Get command list
+		inline ID3D12GraphicsCommandList* GetCommandList()
+		{
+			return commandList.Get();
+		}
+
+		// Get srvHeap
+		inline ID3D12DescriptorHeap* GetSrvHeap()
+		{
+			return srvHeap.Get();
+		}
+		inline Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvHeapPtr()
+		{
+			return srvHeap;
+		}
+
+		// Get RTV descriptor heap
+		inline ID3D12DescriptorHeap* GetRtvDescriptorHeap()
+		{
+			return rtvDescriptorHeap.Get();
+		}
+
+		// Get Current back buffer index
+		inline UINT GetCurrentBackBufferIndex()
+		{
+			return curBackBufferIndex;
+		}
+
+		// Get RTV Descriptor Size
+		inline UINT GetRtvDescriptorSize()
+		{
+			return rtvDescriptorSize;
+		}
+
+		// Get dsv Handle
+		inline CD3DX12_CPU_DESCRIPTOR_HANDLE GetDsvHandle()
+		{
+			return dsvHandle;
+		}
+
 		// Private methods
 	private:
 		void SetupDebugLayer();
@@ -39,9 +89,7 @@ namespace Genesis
 		void CreateDescriptorHeaps();
 		void CreateFence();
 		
-		void ResetCommandList();
-		void CloseAndExecuteCommandList();
-		void SignalAndWait();	
+		
 		void SetScissorAndViewport();
 
 		// Public variables
@@ -53,8 +101,6 @@ namespace Genesis
 		const UINT width = 1280;
 		const UINT height = 720;
 		const static UINT bufferCount = 2;
-		UINT nIndices;
-		UINT nVertices;
 
 		// d3d12 objects
 		Microsoft::WRL::ComPtr<IDXGIFactory4> dxgiFactory;
